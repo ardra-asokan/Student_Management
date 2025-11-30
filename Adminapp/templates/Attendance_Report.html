@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Reports</title>
+
+    <style>
+        .card {
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            background: #fff;
+        }
+        .card-body { padding: 30px; }
+        .form-control { border-radius: 8px; }
+    </style>
+</head>
+
+<body>
+
+<div class="d-flex justify-content-center align-items-start" style="min-height: 90vh; padding-top: 60px;">
+<div class="card shadow-lg">
+<div class="card-body">
+
+<h4 class="card-title text-center mb-4 fw-bold">Attendance Reports</h4>
+
+<form>
+
+    <!-- From Date -->
+    <div class="form-group mb-3">
+        <label>From Date</label>
+        <input type="date" class="form-control" name="from_date">
+    </div>
+
+    <!-- To Date -->
+    <div class="form-group mb-3">
+        <label>To Date</label>
+        <input type="date" class="form-control" name="to_date">
+    </div>
+
+    <!-- Department -->
+    <div class="form-group mb-3">
+        <label>Department</label>
+        <select class="form-control" name="department">
+            <option selected>Select Department</option>
+            <option>CSE</option>
+            <option>ECE</option>
+            <option>MECH</option>
+            <option>CIVIL</option>
+            <option>EEE</option>
+        </select>
+    </div>
+
+    <!-- Semester -->
+    <div class="form-group mb-3">
+        <label>Semester</label>
+        <select class="form-control" name="semester">
+            <option selected>Select Semester</option>
+            <option>S1</option>
+            <option>S2</option>
+            <option>S3</option>
+            <option>S4</option>
+            <option>S5</option>
+            <option>S6</option>
+            <option>S7</option>
+            <option>S8</option>
+        </select>
+    </div>
+
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+        <button type="reset" class="btn btn-light">Reset</button>
+    </div>
+
+</form>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>
+{% endblock %}

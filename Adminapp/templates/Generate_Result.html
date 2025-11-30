@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Generate Result PDF</title>
+</head>
+
+<body>
+
+<div class="container d-flex justify-content-center mt-5" style="margin-bottom: 480px;">
+    <div class="card shadow-lg w-100" style="max-width: 600px;">
+<div class="card-body">
+
+<h4 class="text-center fw-bold mb-4">Generate Result PDF</h4>
+
+<form>
+
+    <div class="form-group mb-3">
+        <label>Student Roll Number</label>
+        <input type="text" class="form-control" name="roll">
+    </div>
+
+    <div class="text-center mt-4">
+        <button class="btn btn-primary">Generate PDF</button>
+    </div>
+
+</form>
+
+</div>
+</div>
+</div>
+
+</body>
+</html>
+{% endblock %}

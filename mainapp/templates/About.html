@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>About - CampusConnect</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="{% static 'landing/assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'landing/assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'landing/assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'landing/assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'landing/assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'landing/assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'landing/assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="{% static 'landing/assets/css/main.css' %}" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Nova
+  * Template URL: https://bootstrapmade.com/nova-bootstrap-business-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body class="about-page">
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
+        <h1 class="sitename">CampusConnect</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="{% url 'home_page' %}">Home<br></a></li>
+          <li><a href="{% url 'about_page' %}" class="active">About</a></li>
+<!--          <li><a href="services.html">Services</a></li>-->
+          <li><a href="{% url 'contact_page' %}">Contact</a></li>
+        </ul>
+          <a href="{% url 'login_page' %}" class="btn btn-primary ms-3 px-3 py-2"
+           style="border-radius: 8px; font-size: 15px;">
+           Login
+        </a>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title dark-background" data-aos="fade" style="background-image: url('{% static "landing/assets/img/about-page-title-bg.jpg" %}');">
+      <div class="container">
+        <h1>About</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">About</li>
+          </ol>
+        </nav>
+      </div>
+    </div><!-- End Page Title -->
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+
+      <div class="container">
+
+        <div class="row gy-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-lg-5">
+            <img src="{% static 'landing/assets/img/about.jpg' %}" class="img-fluid" alt="">
+          </div>
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="200">
+            <div class="content">
+              <h3 style="font-size:45px;">CampusConnect Portal</h3>
+              <p style="font-size:20px;">
+                CampusConnect Portal is a digital system designed to simplify academic management for colleges. It allows administrators, teachers, and students to access essential academic information quickly and securely.   </p>
+              <ul>
+                <li><i class="bi bi-check-circle-fill"></i> <span>Centralized Access: All academic data—attendance, marks, assignments, and profiles—are stored in one unified platform.</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span>Role-Based Dashboards: Separate, easy-to-use dashboards for Admins, Teachers, and Students for smoother workflow.</span></li>
+                <li><i class="bi bi-check-circle-fill"></i> <span>Real-Time Updates: Instant notifications for attendance updates, assignment uploads, exam schedules, and published results.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section><!-- /About Section -->
+
+
+    <!-- Mission & Vision Section -->
+<!-- Mission & Vision Section -->
+<section class="container-fluid my-5" style="background: linear-gradient(135deg, #eef2ff, #ffffff);">
+    <div class="row justify-content-center">
+
+        <!-- Mission -->
+        <div class="col-md-8 mb-4 text-center">
+            <h3 class="fw-bold" style="font-size:40px;">Our Mission</h3>
+            <p class="text-muted" style="font-size:20px;">
+                Our mission is to build a smart and user-friendly academic platform that reduces
+                manual workload, eliminates paperwork, and provides seamless access to academic data
+                for students, teachers, and administrators.
+            </p>
+        </div>
+
+        <!-- Vision -->
+        <div class="col-md-8 mb-4 text-center" style="margin-top:40px;">
+            <h3 class="fw-bold" style="font-size:40px;">Our Vision</h3>
+            <p class="text-muted" style="font-size:20px;">
+                Our vision is to create a fully digital and connected campus environment where
+                learning, teaching, and management happen effortlessly through a unified portal,
+                enabling better communication, transparency, and academic excellence.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+      <!-- Features Overview Section -->
+<!-- Features Overview Section -->
+<section class="container my-5">
+    <h2 class="text-center fw-bold mb-4" style="font-size:45px;">What the Portal Does</h2>
+    <p class="text-center text-muted mb-5">
+        The portal provides role-based features for Administrators, Teachers, and Students
+        to ensure smooth and efficient academic management.
+    </p>
+
+    <div class="row g-4 justify-content-center">
+
+        <!-- Admin Features Card -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+                <div class="card-body text-center">
+                    <h4 class="fw-bold mb-3">Admin Features</h4>
+                    <hr>
+                    <ul class="list-unstyled text-muted text-start mx-auto" style="max-width: 220px;">
+                        <li>• Manage student records</li>
+                        <li>• Add/update teachers</li>
+                        <li>• Create subjects & timetables</li>
+                        <li>• Upload results</li>
+                        <li>• Manage attendance</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Features Card -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+                <div class="card-body text-center">
+                    <h4 class="fw-bold mb-3">Teacher Features</h4>
+                    <hr>
+                    <ul class="list-unstyled text-muted text-start mx-auto" style="max-width: 220px;">
+                        <li>• Mark attendance</li>
+                        <li>• Upload marks</li>
+                        <li>• Give assignments</li>
+                        <li>• View student reports</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Features Card -->
+        <div class="col-md-4">
+            <div class="card shadow-lg border-0 h-100">
+                <div class="card-body text-center">
+                    <h4 class="fw-bold mb-3">Student Features</h4>
+                    <hr>
+                    <ul class="list-unstyled text-muted text-start mx-auto" style="max-width: 220px;">
+                        <li>• View attendance</li>
+                        <li>• Check marks & results</li>
+                        <li>• Download/upload assignments</li>
+                        <li>• Receive notifications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+
+
+
+
+
+
+  </main>
+
+<footer id="footer" class="footer light-background">
+
+  <div class="footer-top">
+    <div class="container">
+      <div class="row gy-4">
+
+        <!-- About Section -->
+        <div class="col-lg-5 col-md-12 footer-about">
+          <a href="{% url 'home_page' %}" class="logo d-flex align-items-center">
+            <span class="sitename">CampusConnect</span>
+          </a>
+          <p>
+            CampusConnect is a smart Student Management and Result Portal that helps
+            administrators, teachers, and students to handle academics efficiently.
+            From attendance to results, everything is managed in one secure platform.
+          </p>
+
+          <div class="social-links d-flex mt-4">
+            <a href="#"><i class="bi bi-twitter-x"></i></a>
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+
+        <!-- Useful Links -->
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="{% url 'home_page' %}">Home</a></li>
+            <li><a href="{% url 'about_page' %}">About Us</a></li>
+            <li><a href="#services">Our Services</a></li>
+            <li><a href="{% url 'contact_page' %}">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Our Services -->
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Campus Services</h4>
+          <ul>
+            <li><a href="#">Student Management</a></li>
+            <li><a href="#">Teacher Management</a></li>
+            <li><a href="#">Attendance Tracking</a></li>
+            <li><a href="#">Result Processing</a></li>
+            <li><a href="#">Assignments Module</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+          <h4>Contact Us</h4>
+          <p>CampusConnect Support Desk</p>
+          <p>Kerala, India</p>
+          <p class="mt-4"><strong>Phone:</strong> <span>+91 98765 43210</span></p>
+          <p><strong>Email:</strong> <span>support@campusconnect.com</span></p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="container copyright text-center">
+    <p>© <span>Copyright</span> <strong class="px-1 sitename">CampusConnect</strong>
+      <span>All Rights Reserved</span></p>
+  </div>
+
+</footer>
+
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="{% static 'landing/assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'landing/assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'landing/assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'landing/assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'landing/assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'landing/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'landing/assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+
+  <!-- Main JS File -->
+  <script src="{% static 'landing/assets/js/main.js' %}"></script>
+
+</body>
+
+</html>

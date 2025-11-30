@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<div class="container d-flex justify-content-center mt-5" style="margin-bottom: 380px;">
+    <div class="card shadow-lg w-100" style="max-width: 600px;">
+
+        <div class="card-body p-4">
+
+            <h4 class="text-center fw-bold mb-4">Teacher Assignments</h4>
+
+            <form>
+
+                <div class="form-group mb-3">
+                    <label>Teacher</label>
+                    <select class="form-control">
+                        <option>{{ assigned.teacher.name }}</option>
+                    {% for i in teachers %}
+                        <option>{{ i.name }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Subject</label>
+                    <select class="form-control">
+                        <option>{{ assigned_subject.subject_name }}</option>
+                    {% for i in subjects %}
+                        <option>{{ i.subject_name }}</option>
+                    {% endfor %}
+                    </select>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary px-4">View Assignments</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

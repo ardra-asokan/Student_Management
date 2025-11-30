@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+{% extends 'teacher_index.html' %}
+{% block content %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Assigned Subjects</title>
+
+    <style>
+        body {
+            background-color: #f4f6fa;
+            font-family: 'Segoe UI', sans-serif;
+
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .table-container {
+            width: 65%;
+            margin: 40px auto;
+            background-color: #f8f9fb;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+            margin-bottom:570px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: #2f4050;
+            color: #fff;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            font-size: 14px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #eef1f5; }
+
+        .btn {
+            padding: 4px 10px;
+            font-size: 13px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            margin-right: 4px;
+            transition: 0.3s ease;
+        }
+
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn-danger:hover { background-color: #bb2d3b; }
+
+        a { color: white; text-decoration: none; }
+    </style>
+</head>
+
+<body>
+
+
+<div class="content-body">
+    <div class="container-fluid mt-3">
+        <h3>Search My Subjects</h3>
+
+        <form method="get" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search by name or code">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+
+                    <button class="btn btn-success" type="submit">Reset<a href="{% url 'search_subjects' %}" style="color:white;"></a>
+</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Subject Code</th>
+                    <th>Subject Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in data %}
+                <tr>
+                    <td>{{ i.subject.code }}</td>
+                    <td>{{ i.subject.name }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">No subjects found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

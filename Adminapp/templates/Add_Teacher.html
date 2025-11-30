@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Teacher</title>
+
+    <style>
+        .center-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f5f7;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        button.btn-primary {
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="d-flex justify-content-center align-items-start" style="min-height: 90vh; padding-top: 60px;">
+  <div class="card shadow-lg" style="width: 100%; max-width: 550px; border-radius: 15px;">
+    <div class="card-body">
+
+      <h4 class="card-title text-center mb-4 fw-bold">Add Teacher</h4>
+
+      <form class="forms-sample" method="post" action="{% url 'save_teacher' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- First Name -->
+        <div class="form-group mb-3">
+          <label>Name</label>
+          <input type="text" class="form-control" name="name" placeholder="Enter full name">
+        </div>
+
+
+        <!-- Employee ID -->
+        <div class="form-group mb-3">
+          <label>Employee ID</label>
+          <input type="text" class="form-control" name="employee_id" placeholder="Enter employee ID">
+        </div>
+
+        <!-- DOB -->
+        <div class="form-group mb-3">
+          <label>Date of Birth</label>
+          <input type="date" class="form-control" name="dob">
+        </div>
+
+        <!-- Gender -->
+        <div class="form-group mb-3">
+          <label>Gender</label>
+          <select class="form-control" name="gender">
+              <option selected>Select Gender</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+          </select>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group mb-3">
+          <label>Email</label>
+          <input type="email" class="form-control" name="email" placeholder="Enter email">
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group mb-3">
+          <label>Phone Number</label>
+          <input type="text" class="form-control" name="phone" placeholder="Enter phone number">
+        </div>
+
+        <!-- Department -->
+        <div class="form-group mb-3">
+          <label>Department</label>
+          <select class="form-control" name="department">
+              <option selected>Select Department</option>
+              <option>CSE</option>
+              <option>ECE</option>
+              <option>EEE</option>
+              <option>MECH</option>
+              <option>CIVIL</option>
+          </select>
+        </div>
+
+        <!-- Qualification -->
+        <div class="form-group mb-3">
+          <label>Qualification</label>
+          <input type="text" class="form-control" name="qualification" placeholder="Ex: M.Tech, PhD">
+        </div>
+
+        <!-- Experience -->
+        <div class="form-group mb-3">
+          <label>Years of Experience</label>
+          <input type="number" class="form-control" name="experience" placeholder="Enter experience in years">
+        </div>
+
+        <!-- Username -->
+        <div class="form-group mb-3">
+          <label>Username</label>
+          <input type="text" class="form-control" name="username" placeholder="Enter username">
+        </div>
+
+        <!-- Password -->
+        <div class="form-group mb-3">
+          <label>Password</label>
+          <input type="password" class="form-control" name="password" placeholder="Enter password">
+        </div>
+
+        <!-- Address -->
+        <div class="form-group mb-3">
+          <label>Address</label>
+          <textarea class="form-control" name="address" rows="3" placeholder="Enter address"></textarea>
+        </div>
+
+        <!-- Profile Photo -->
+        <div class="form-group mb-3">
+          <label>Profile Photo</label>
+          <input type="file" class="form-control" name="profile_photo">
+        </div>
+
+        <!-- Buttons -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary me-2">Submit</button>
+          <button type="reset" class="btn btn-light">Cancel</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

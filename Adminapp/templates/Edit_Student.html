@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Student</title>
+    <style>
+        .center-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            background-color: #f4f5f7;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 550px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            background: #fff;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        button.btn-primary {
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="center-card">
+  <div class="card shadow-lg">
+    <div class="card-body">
+
+      <h4 class="card-title text-center mb-4 fw-bold">Edit Student</h4>
+
+      <form method="post" action="{% url 'update_student' s_id=student.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group mb-3">
+          <label>Name</label>
+          <input type="text" class="form-control" name="name" value="{{ student.name }}" placeholder="Enter name">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Roll Number / Admission Number</label>
+          <input type="text" class="form-control" name="roll_no" value="{{ student.roll_no }}" placeholder="Enter roll number">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Date of Birth</label>
+          <input type="date" class="form-control" name="dob" value="{{ student.dob|date:'Y-m-d' }}">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Gender</label>
+          <select class="form-control" name="gender">
+              <option selected>{{ student.gender }}</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Email</label>
+          <input type="email" class="form-control" name="email" value="{{ student.email }}" placeholder="Enter email">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Phone Number</label>
+          <input type="text" class="form-control" name="phone" value="{{ student.phone }}" placeholder="Enter phone number">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Department</label>
+          <select class="form-control" name="department">
+              <option selected>{{ student.department }}</option>
+              <option>CSE</option>
+              <option>ECE</option>
+              <option>EEE</option>
+              <option>MECH</option>
+              <option>CIVIL</option>
+          </select>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Semester</label>
+          <select class="form-control" name="semester">
+              <option selected>{{ student.semester }}</option>
+              <option>S1</option>
+              <option>S2</option>
+              <option>S3</option>
+              <option>S4</option>
+              <option>S5</option>
+              <option>S6</option>
+              <option>S7</option>
+              <option>S8</option>
+          </select>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Batch</label>
+          <input type="text" class="form-control" name="batch" value="{{ student.batch }}" placeholder="Example: 2022–2026">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Username</label>
+          <input type="text" class="form-control" name="username" value="{{ student.username }}" placeholder="Enter username">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Password</label>
+          <input type="password" class="form-control" name="password" value="{{ student.password }}" placeholder="Enter password">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Address</label>
+          <textarea class="form-control" name="address" rows="3" placeholder="Enter address">{{ student.address }}</textarea>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Profile Photo</label><br>
+            <img src="{{ student.profile_photo.url }}" width="80px" height="80px" style="border-radius:8px;">
+          <input type="file" class="form-control mt-2" name="profile_photo">
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary me-2">Update</button>
+          <button type="reset" class="btn btn-light">Cancel</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

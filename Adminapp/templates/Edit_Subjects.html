@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Subject</title>
+
+    <style>
+        .form-card {
+            width: 100%;
+            max-width: 550px;
+            margin: 60px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        button.btn-primary {
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container d-flex justify-content-center">
+    <div class="form-card">
+        <h4 class="text-center mb-4 fw-bold">Edit Subject</h4>
+
+        <form method="post" action="{% url 'admin_update_subject' s_id=subject.id %}">
+            {% csrf_token %}
+
+            <div class="form-group mb-3">
+                <label>Subject Name</label>
+                <input type="text" class="form-control" name="name"
+                       value="{{ subject.subject_name }}" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Subject Code</label>
+                <input type="text" class="form-control" name="code"
+                       value="{{ subject.subject_code }}" required>
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Assigned Teacher</label>
+                <select class="form-control" name="teacher">
+                    <option>{{ subject.teacher }}</option>
+                    {% for i in teachers %}
+                        <option>{{ i.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Semester</label>
+                <select class="form-control" name="semester">
+                    <option>{{ subject.semester }}</option>
+                    <option>1</option><option>2</option><option>3</option>
+                    <option>4</option><option>5</option><option>6</option>
+                </select>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary px-4">Update</button>
+                <button type="reset" class="btn btn-light px-4">Cancel</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

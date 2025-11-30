@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assign Teacher</title>
+
+    <style>
+        .card {
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            background: #fff;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        button.btn-primary {
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="d-flex justify-content-center align-items-start" style="min-height: 90vh; padding-top: 60px;">
+  <div class="card shadow-lg">
+    <div class="card-body">
+      <h4 class="card-title text-center mb-4 fw-bold">Assign Teacher</h4>
+
+      <form class="forms-sample" method="post" action="{% url 'save_assigned_subject' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- Select Teacher -->
+        <div class="form-group mb-3">
+          <label>Select Teacher</label>
+          <select class="form-control" name="teacher">
+              <option>{{ assigned.teacher.name }}</option>
+                    {% for i in teachers %}
+                        <option>{{ i.name }}</option>
+                    {% endfor %}
+          </select>
+        </div>
+
+        <!-- Select Subject -->
+        <div class="form-group mb-3">
+          <label>Select Subject</label>
+          <select class="form-control" name="subject">
+              <option>{{ assigned_subject.subject_name }}</option>
+                    {% for i in subjects %}
+                        <option>{{ i.subject_name }}</option>
+                    {% endfor %}
+          </select>
+        </div>
+
+        <!-- Department -->
+        <div class="form-group mb-3">
+          <label>Department</label>
+          <select class="form-control" name="department">
+              <option selected>Select Department</option>
+              <option>CSE</option>
+              <option>ECE</option>
+              <option>EEE</option>
+              <option>MECH</option>
+              <option>CIVIL</option>
+          </select>
+        </div>
+
+        <!-- Semester -->
+        <div class="form-group mb-3">
+          <label>Semester</label>
+          <select class="form-control" name="semester">
+              <option selected>Select Semester</option>
+              <option>S1</option>
+              <option>S2</option>
+              <option>S3</option>
+              <option>S4</option>
+              <option>S5</option>
+              <option>S6</option>
+              <option>S7</option>
+              <option>S8</option>
+          </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary me-2">Assign</button>
+          <button type="reset" class="btn btn-light">Cancel</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

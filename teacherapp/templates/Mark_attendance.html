@@ -1,0 +1,138 @@
+<!--<!DOCTYPE html>-->
+<!--{% extends 'teacher_index.html' %}-->
+<!--{% block content %}-->
+<!--<html lang="en">-->
+
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Assigned Subjects</title>-->
+
+<!--    <style>-->
+<!--        body {-->
+<!--            background-color: #f4f6fa;-->
+<!--            font-family: 'Segoe UI', sans-serif;-->
+
+<!--        }-->
+
+<!--        h2 {-->
+<!--            text-align: center;-->
+<!--            margin-top: 30px;-->
+<!--            font-weight: 700;-->
+<!--            color: #2c3e50;-->
+<!--        }-->
+
+<!--        .table-container {-->
+<!--            width: 65%;-->
+<!--            margin: 40px auto;-->
+<!--            background-color: #f8f9fb;-->
+<!--            border-radius: 10px;-->
+<!--            padding: 20px;-->
+<!--            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);-->
+<!--            overflow-x: auto;-->
+<!--            margin-bottom:570px;-->
+<!--        }-->
+
+<!--        table {-->
+<!--            width: 100%;-->
+<!--            border-collapse: collapse;-->
+<!--            background: #fff;-->
+<!--            border-radius: 10px;-->
+<!--            overflow: hidden;-->
+<!--        }-->
+
+<!--        thead {-->
+<!--            background-color: #2f4050;-->
+<!--            color: #fff;-->
+<!--        }-->
+
+<!--        th, td {-->
+<!--            padding: 12px 15px;-->
+<!--            font-size: 14px;-->
+<!--            border-bottom: 1px solid #e0e0e0;-->
+<!--        }-->
+
+<!--        tr:nth-child(even) { background-color: #f9f9f9; }-->
+<!--        tr:hover { background-color: #eef1f5; }-->
+
+<!--        .btn {-->
+<!--            padding: 4px 10px;-->
+<!--            font-size: 13px;-->
+<!--            border-radius: 4px;-->
+<!--            border: none;-->
+<!--            cursor: pointer;-->
+<!--            margin-right: 4px;-->
+<!--            transition: 0.3s ease;-->
+<!--        }-->
+
+<!--        .btn-danger { background-color: #dc3545; color: white; }-->
+<!--        .btn-danger:hover { background-color: #bb2d3b; }-->
+
+<!--        a { color: white; text-decoration: none; }-->
+<!--    </style>-->
+<!--</head>-->
+
+<!--<body>-->
+
+<!--<div class="content-body">-->
+<!--    <div class="container-fluid mt-3">-->
+<!--        <h3>Mark Attendance</h3>-->
+
+<!--        &lt;!&ndash; Subject Selection &ndash;&gt;-->
+<!--        <form method="get" class="mb-3">-->
+<!--            <div class="input-group">-->
+<!--                <select name="subject" class="form-control" onchange="this.form.submit()">-->
+<!--                    <option value="">Select Subject</option>-->
+<!--                    {% for i in subjects %}-->
+<!--                        <option value="{{ i.subject.id }}" {% if i.subject.id|stringformat:"s" == selected_subject_id %}selected{% endif %}>-->
+<!--                            {{ i.subject.name }}-->
+<!--                        </option>-->
+<!--                    {% endfor %}-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </form>-->
+
+<!--        {% if students %}-->
+<!--        &lt;!&ndash; Attendance Form &ndash;&gt;-->
+<!--        <form method="post">-->
+<!--            {% csrf_token %}-->
+<!--            <table class="table table-bordered">-->
+<!--                <thead class="thead-light">-->
+<!--                    <tr>-->
+<!--                        <th>Roll No</th>-->
+<!--                        <th>Student Name</th>-->
+<!--                        <th>Status</th>-->
+<!--                    </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                    {% for i in students %}-->
+<!--                    <tr>-->
+<!--                        <td>{{ i.roll_number }}</td>-->
+<!--                        <td>{{ i.user.get_full_name }}</td>-->
+<!--                        <td>-->
+<!--                            <select name="student_{{ student.id }}" class="form-control">-->
+<!--                                <option value="Present">Present</option>-->
+<!--                                <option value="Absent">Absent</option>-->
+<!--                            </select>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    {% endfor %}-->
+<!--                </tbody>-->
+<!--            </table>-->
+
+<!--            <div class="mt-3">-->
+<!--                <button type="submit" class="btn btn-success">Submit Attendance</button>-->
+<!--                <a href="{% url 'mark_attendance' %}" class="btn btn-secondary">Reset</a>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--        {% else %}-->
+<!--            <p class="text-muted">Select a subject to mark attendance.</p>-->
+<!--        {% endif %}-->
+
+<!--    </div>-->
+<!--</div>-->
+
+
+
+<!--</body>-->
+<!--</html>-->
+<!--{% endblock %}-->

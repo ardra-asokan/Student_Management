@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Teacher</title>
+    <style>
+        .center-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            background-color: #f4f5f7;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 550px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            background: #fff;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        button.btn-primary {
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+<div class="center-card">
+  <div class="card shadow-lg">
+    <div class="card-body">
+
+      <h4 class="card-title text-center mb-4 fw-bold">Edit Teacher</h4>
+
+      <form method="post" action="{% url 'update_teacher' t_id=teacher.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-group mb-3">
+          <label>Name</label>
+          <input type="text" class="form-control" name="name" value="{{ teacher.name }}" placeholder="Enter full name">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Employee ID</label>
+          <input type="text" class="form-control" name="employee_id" value="{{ teacher.employee_id }}" placeholder="Enter employee ID">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Date of Birth</label>
+          <input type="date" class="form-control" name="dob" value="{{ teacher.dob|date:'Y-m-d' }}">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Gender</label>
+          <select class="form-control" name="gender">
+              <option selected>{{ teacher.gender }}</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Email</label>
+          <input type="email" class="form-control" name="email" value="{{ teacher.email }}" placeholder="Enter email">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Phone Number</label>
+          <input type="text" class="form-control" name="phone" value="{{ teacher.phone }}" placeholder="Enter phone number">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Department</label>
+          <select class="form-control" name="department">
+              <option selected>{{ teacher.department }}</option>
+              <option>CSE</option>
+              <option>ECE</option>
+              <option>EEE</option>
+              <option>MECH</option>
+              <option>CIVIL</option>
+          </select>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Qualification</label>
+          <input type="text" class="form-control" name="qualification" value="{{ teacher.qualification }}" placeholder="Ex: M.Tech, PhD">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Years of Experience</label>
+          <input type="number" class="form-control" name="experience" value="{{ teacher.experience }}" placeholder="Enter experience in years">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Username</label>
+          <input type="text" class="form-control" name="username" value="{{ teacher.username }}" placeholder="Enter username">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Password</label>
+          <input type="password" class="form-control" name="password" value="{{ teacher.password }}" placeholder="Enter password">
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Address</label>
+          <textarea class="form-control" name="address" rows="3" placeholder="Enter address">{{ teacher.address }}</textarea>
+        </div>
+
+        <div class="form-group mb-3">
+          <label>Profile Photo</label><br>
+          <img src="{{ teacher.profile_photo.url }}" width="80px" height="80px" style="border-radius:8px; margin-bottom:5px;">
+          <input type="file" class="form-control mt-2" name="profile_photo">
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary me-2">Update</button>
+          <button type="reset" class="btn btn-light">Cancel</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

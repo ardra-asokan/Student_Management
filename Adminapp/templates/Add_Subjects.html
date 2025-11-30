@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Subject</title>
+
+    <style>
+        .center-card {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 90vh;
+            background-color: #f4f5f7;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            background: #fff;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        button.btn-primary {
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="d-flex justify-content-center align-items-start" style="min-height: 90vh; padding-top: 60px;">
+  <div class="card shadow-lg" style="width: 100%; max-width: 550px;">
+    <div class="card-body">
+      <h4 class="card-title text-center mb-4 fw-bold">Add Subject</h4>
+
+      <form class="forms-sample"  method="POST" action="{% url 'admin_save_subject' %}">
+        {% csrf_token %}
+
+        <!-- Subject Name -->
+        <div class="form-group mb-3">
+          <label>Subject Name</label>
+          <input type="text" class="form-control" name="subject_name" placeholder="Enter subject name">
+        </div>
+
+        <!-- Subject Code -->
+        <div class="form-group mb-3">
+          <label>Subject Code</label>
+          <input type="text" class="form-control" name="subject_code" placeholder="Example: CS301">
+        </div>
+
+        <!-- Department -->
+        <div class="form-group mb-3">
+          <label>Department</label>
+          <select class="form-control" name="department">
+              <option selected>Select Department</option>
+              <option>CSE</option>
+              <option>ECE</option>
+              <option>EEE</option>
+              <option>MECH</option>
+              <option>CIVIL</option>
+          </select>
+        </div>
+
+        <!-- Semester -->
+        <div class="form-group mb-3">
+          <label>Semester</label>
+          <select class="form-control" name="semester">
+              <option selected>Select Semester</option>
+              <option>S1</option>
+              <option>S2</option>
+              <option>S3</option>
+              <option>S4</option>
+              <option>S5</option>
+              <option>S6</option>
+              <option>S7</option>
+              <option>S8</option>
+          </select>
+        </div>
+
+        <!-- Staff Assigned -->
+        <div class="form-group mb-3">
+          <label>Select Teacher</label>
+              <select class="form-control" name="teacher">
+              <option>Select Teacher</option>
+                    {% for i in teachers %}
+                        <option value="{{ i.id }}">{{ i.name }}</option>
+                    {% endfor %}
+          </select>
+           </div>
+
+        <!-- Buttons -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary me-2">Submit</button>
+          <button type="reset" class="btn btn-light">Cancel</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+{% endblock %}
