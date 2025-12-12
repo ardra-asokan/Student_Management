@@ -1,0 +1,137 @@
+{% extends 'teacher_index.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+.container-card {
+    width: 95%;
+    margin: 30px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.table-container {
+    width: 100%;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+thead {
+    background: #2f4050;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+tr:hover {
+    background-color: #f8f9fc;
+}
+
+.btn-submit {
+    margin-top: 20px;
+    padding: 10px 18px;
+    font-size: 15px;
+}
+
+.label-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+</style>
+
+<div class="content-body">
+    <div class="container-fluid mt-3">
+
+        <h3 class="text-center mb-4">Upload Marks</h3>
+
+        <form method="GET">
+            <div class="container-card">
+
+                <!-- SUBJECT SELECT -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="label-title">Select Subject</label>
+                        <select name="subject" class="form-control" required>
+                            <option value="">-- Select --</option>
+                            {% for s in assigned_subjects %}
+                                <option value="{{ s.id }}" {% if selected_subject == s.id|stringformat:'s' %}selected{% endif %}>
+                                    {{ s.subject.subject_name }} ({{ s.class_name }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- EXAM TYPE -->
+                    <div class="col-md-6">
+                        <label class="label-title">Select Exam</label>
+                        <select name="exam" class="form-control" required>
+                            <option value="">-- Select --</option>
+                            <option value="Internal 1" {% if selected_exam == 'Internal 1' %}selected{% endif %}>Internal 1</option>
+                            <option value="Internal 2" {% if selected_exam == 'Internal 2' %}selected{% endif %}>Internal 2</option>
+                            <option value="Assignment" {% if selected_exam == 'Assignment' %}selected{% endif %}>Assignment</option>
+                            <option value="Final Exam" {% if selected_exam == 'Final Exam' %}selected{% endif %}>Final Exam</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- LOAD STUDENTS BUTTON -->
+                <button class="btn btn-primary">Load Students</button>
+            </div>
+        </form>
+
+
+        {% if students %}
+        <!-- MARK ENTRY FORM -->
+        <form method="POST" action="{% url 'save_marks' %}">
+            {% csrf_token %}
+
+            <input type="hidden" name="subject_id" value="{{ selected_subject }}">
+            <input type="hidden" name="exam_type" value="{{ selected_exam }}">
+
+            <div class="container-card table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Roll No</th>
+                            <th>Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for st in students %}
+                        <tr>
+                            <td>{{ st.name }}</td>
+                            <td>{{ st.roll_no }}</td>
+                            <td>
+                                <input type="number"
+                                       class="form-control"
+                                       name="marks_{{ st.id }}"
+                                       min="0"
+                                       max="100"
+                                       placeholder="Enter Marks"
+                                       required>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <button type="submit" class="btn btn-success btn-submit">Save Marks</button>
+            </div>
+        </form>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

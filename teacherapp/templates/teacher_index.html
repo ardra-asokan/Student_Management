@@ -301,8 +301,8 @@ body {
                     <i class="icon-book-open menu-icon"></i><span class="nav-text">My Subjects</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{% url 'view_subjects' %}">View Subjects</a></li>
-                    <li><a href="{% url 'search_subjects' %}">Search Subjects</a></li>
+                    <li><a href="{% url 'teacherapp:teacher_view_subjects' %}">View Subjects</a></li>
+                    <li><a href="{% url 'teacherapp:search_subjects' %}">Search Subjects</a></li>
                 </ul>
             </li>
 
@@ -322,8 +322,8 @@ body {
                     <i class="icon-graph menu-icon"></i><span class="nav-text">Attendance</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">Mark Attendance</a></li>
-                    <li><a href="#">Attendance Report</a></li>
+                    <li><a href="{% url 'teacherapp:mark_attendance' %}">Mark Attendance</a></li>
+                    <li><a href="{% url 'teacherapp:teacher_attendance_report' %}">Attendance Report</a></li>
                 </ul>
             </li>
 
@@ -332,9 +332,9 @@ body {
                     <i class="icon-chart menu-icon"></i><span class="nav-text">Marks / Results</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">Upload Marks</a></li>
-                    <li><a href="#">Edit Marks</a></li>
-                    <li><a href="#">Class Marksheet</a></li>
+                    <li><a href="{% url 'teacherapp:upload_marks' %}">Upload Marks</a></li>
+                    <li><a href="{% url 'teacherapp:teacher_view_marks' %}">Edit Marks</a></li>
+                    <li><a href="">Class Marksheet</a></li>
                     <li><a href="#">Performance Report</a></li>
                 </ul>
             </li>
@@ -344,9 +344,9 @@ body {
                     <i class="icon-note menu-icon"></i><span class="nav-text">Assignments</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">Upload Assignment</a></li>
-                    <li><a href="#">Student Submissions</a></li>
-                    <li><a href="#">Grade Assignments</a></li>
+                    <li><a href="{% url 'teacherapp:upload_assignments' %}">Upload Assignment</a></li>
+                    <li><a href="{% url 'teacherapp:student_submissions' %}">Student Submissions</a></li>
+                    <li><a href="{% url 'teacherapp:grade_assignments' %}">Grade Assignments</a></li>
                 </ul>
             </li>
 

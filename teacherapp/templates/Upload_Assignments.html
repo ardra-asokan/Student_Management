@@ -1,0 +1,144 @@
+{% extends 'teacher_index.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+.container-card {
+    width: 95%;
+    margin: 30px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.table-container {
+    width: 100%;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+}
+
+thead {
+    background: #2f4050;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+tr:hover {
+    background-color: #f8f9fc;
+}
+
+.btn-submit {
+    margin-top: 20px;
+    padding: 10px 18px;
+    font-size: 15px;
+}
+
+.label-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+</style>
+
+<div class="content-body">
+    <div class="container-fluid mt-3">
+
+        <h3 class="text-center mb-4">Upload Assignments</h3>
+
+        <!-- ASSIGNMENT UPLOAD FORM -->
+        <form method="POST" enctype="multipart/form-data" action="{% url 'teacherapp:save_assignment' %}">
+            {% csrf_token %}
+
+            <div class="container-card">
+
+                <!-- SUBJECT SELECT -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="label-title">Select Subject</label>
+                        <select name="subject" class="form-control" required>
+                            <option value="">-- Select --</option>
+                            {% for s in assigned_subjects %}
+                                <option value="{{ s.id }}">
+                                    {{ s.subject.subject_name }} ({{ s.class_name }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- DEADLINE SELECT -->
+                    <div class="col-md-6">
+                        <label class="label-title">Submission Deadline</label>
+                        <input type="date" name="deadline" class="form-control" required>
+                    </div>
+                </div>
+
+                <!-- ASSIGNMENT TITLE -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="label-title">Assignment Title</label>
+                        <input type="text" name="title" class="form-control" placeholder="Enter Assignment Title" required>
+                    </div>
+                </div>
+
+                <!-- FILE UPLOAD -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="label-title">Upload File</label>
+                        <input type="file" name="assignment_file" class="form-control" accept=".pdf,.doc,.docx,.jpg,.png" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-submit">Upload Assignment</button>
+
+            </div>
+        </form>
+
+
+        <!-- SHOW ASSIGNMENT LIST -->
+        {% if assignments %}
+        <div class="container-card table-container">
+            <h4 class="mb-3">Uploaded Assignments</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Subject</th>
+                        <th>Deadline</th>
+                        <th>File</th>
+                        <th>Date Uploaded</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for a in assignments %}
+                    <tr>
+                        <td>{{ a.title }}</td>
+                        <td>{{ a.subject.subject_name }}</td>
+                        <td>{{ a.deadline }}</td>
+                        <td>
+                            <a href="{{ a.assignment_file.url }}" target="_blank" class="btn btn-primary btn-sm">
+                                View
+                            </a>
+                        </td>
+                        <td>{{ a.created_at }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

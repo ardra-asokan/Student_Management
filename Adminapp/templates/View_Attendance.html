@@ -69,9 +69,9 @@
     <div class="form-group mb-3">
         <label>Select Subject</label>
         <select class="form-control" name="subject">
-            <option>{{ assigned_subject.subject_name }}</option>
+            <option>Select Subject</option>
                     {% for i in subjects %}
-                        <option>{{ i.subject_name }}</option>
+                        <option value="{{ i.id }}">{{ i.subject_name }}</option>
                     {% endfor %}
         </select>
     </div>

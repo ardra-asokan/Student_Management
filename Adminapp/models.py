@@ -43,7 +43,7 @@ class SubjectDb(models.Model):
 
 class AssignedSubjectDb(models.Model):
     teacher = models.CharField(max_length=100,null=True,blank=True)
-    subject = models.ForeignKey(SubjectDb, on_delete=models.CASCADE)
+    subject = models.ForeignKey(SubjectDb, on_delete=models.CASCADE, null=True, blank=True)
     class_name = models.CharField(max_length=100,null=True,blank=True)
     semester = models.CharField(max_length=100,null=True,blank=True)
 

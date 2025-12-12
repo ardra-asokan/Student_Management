@@ -1,0 +1,86 @@
+{% extends 'teacher_index.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="content-body">
+    <div class="container-fluid mt-4">
+
+        <h3 class="mb-4">View / Edit Marks</h3>
+
+        <!-- Filter Form -->
+        <form method="GET" class="mb-4 p-3 shadow-sm rounded bg-white">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <label>Subject</label>
+                    <select name="subject" class="form-control">
+                        <option value="">-- Select --</option>
+                        {% for s in assigned_subjects %}
+                            <option value="{{ s.id }}" {% if selected_subject == s.id|stringformat:'s' %}selected{% endif %}>
+                                {{ s.subject.subject_name }} ({{ s.class_name }})
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label>Class</label>
+                    <select name="class" class="form-control">
+                        <option value="">-- Select --</option>
+                        {% for s in assigned_subjects %}
+                            <option value="{{ s.class_name }}" {% if selected_class == s.class_name %}selected{% endif %}>
+                                {{ s.class_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Load Marks</button>
+                </div>
+
+            </div>
+        </form>
+
+        {% if marks %}
+        <!-- Marks Table -->
+        <div class="table-responsive bg-white shadow-sm rounded p-3">
+            <table class="table table-bordered">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Roll No</th>
+                        <th>Subject</th>
+                        <th>Marks</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for m in marks %}
+                    <tr>
+                        <td>{{ m.student.Name }}</td>
+                        <td>{{ m.student.RollNo }}</td>
+                        <td>{{ m.subject.subject_name }}</td>
+                        <td>{{ m.marks }}</td>
+
+                        <td>
+                            <a href="{% url 'edit_marks' m.id %}" class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        {% else %}
+            <p class="text-center mt-4 text-muted">No marks found. Please select subject & class.</p>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

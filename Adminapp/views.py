@@ -235,15 +235,18 @@ def delete_assigned_subject(request, as_id):
 
 
 def view_attendance(request):
-    return render(request,"View_Attendance.html")
+    subjects = SubjectDb.objects.all()
+    return render(request,"View_Attendance.html", {"subjects": subjects})
 def attendance_report(request):
-    return render(request,"Attendance_Report.html")
+    return render(request,"Teacher_Attendance_Report.html")
 def view_marks(request):
     return render(request,"View_Marks.html")
 def generate_result(request):
     return render(request,"Generate_Result.html")
 def view_assignment(request):
-    return render(request,"View_TeacherAssignment.html")
+    teachers = TeacherDb.objects.all()
+    subjects = SubjectDb.objects.all()
+    return render(request,"View_TeacherAssignment.html", {"teachers": teachers, "subjects":subjects} )
 def student_submission(request):
     return render(request,"Student_Submission.html")
 def send_notification(request):

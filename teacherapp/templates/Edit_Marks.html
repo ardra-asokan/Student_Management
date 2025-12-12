@@ -1,0 +1,81 @@
+{% extends 'teacher_index.html' %}
+{% load static %}
+{% block content %}
+
+
+<style>
+.container-card {
+    width: 90%;
+    margin: 30px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.label-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.btn-save {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 15px;
+}
+</style>
+
+<div class="content-body">
+    <div class="container-fluid mt-3">
+
+        <h3 class="text-center mb-4">Edit Marks</h3>
+
+        <div class="container-card">
+
+            <form method="POST" action="{% url 'update_marks' mark.id %}">
+                {% csrf_token %}
+
+                <!-- Student Name -->
+                <div class="mb-3">
+                    <label class="label-title">Student Name</label>
+                    <input type="text" class="form-control" value="{{ mark.student.name }}" readonly>
+                </div>
+
+                <!-- Roll Number -->
+                <div class="mb-3">
+                    <label class="label-title">Roll Number</label>
+                    <input type="text" class="form-control" value="{{ mark.student.roll_no }}" readonly>
+                </div>
+
+                <!-- Subject -->
+                <div class="mb-3">
+                    <label class="label-title">Subject</label>
+                    <input type="text" class="form-control" value="{{ mark.subject.subject_name }}" readonly>
+                </div>
+
+                <!-- Exam Type -->
+                <div class="mb-3">
+                    <label class="label-title">Exam Type</label>
+                    <select name="exam_type" class="form-control" required>
+                        <option value="Internal 1" {% if mark.exam_type == "Internal 1" %}selected{% endif %}>Internal 1</option>
+                        <option value="Internal 2" {% if mark.exam_type == "Internal 2" %}selected{% endif %}>Internal 2</option>
+                        <option value="Assignment" {% if mark.exam_type == "Assignment" %}selected{% endif %}>Assignment</option>
+                        <option value="Final Exam" {% if mark.exam_type == "Final Exam" %}selected{% endif %}>Final Exam</option>
+                    </select>
+                </div>
+
+                <!-- Marks -->
+                <div class="mb-3">
+                    <label class="label-title">Marks</label>
+                    <input type="number" name="marks" value="{{ mark.marks }}" class="form-control" min="0" max="100" required>
+                </div>
+
+                <button type="submit" class="btn btn-success btn-save">Update Marks</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'teacher_index.html' %}
+{% block content %}
+
+<style>
+.table-container {
+    width: 95%;
+    margin: 30px auto;
+    background-color: #ffffff;
+    padding: 18px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: #2f4050;
+    color: #fff;
+    font-weight: bold;
+}
+
+th, td {
+    padding: 14px;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+    background-color: #f7f9fc;
+}
+
+.no-data {
+    padding: 15px;
+    color: #555;
+}
+</style>
+
+
+<div class="content-body">
+    <div class="container-fluid mt-3">
+
+        <h3 class="text-center mb-4">Attendance Report</h3>
+
+        <!-- FILTER FORM -->
+        <form method="GET" class="row g-3 mb-4">
+
+            <div class="col-md-4">
+                <label>Select Subject</label>
+                <select name="subject" class="form-control">
+                    <option value="">Select Subject</option>
+                    {% for s in assigned_subjects %}
+                    <option value="{{ s.id }}" {% if selected_subject == s.id|stringformat:'s' %}selected{% endif %}>
+                        {{ s.subject.subject_name }} ({{ s.class_name }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label>Select Class</label>
+                <select name="class" class="form-control">
+                    <option value="">Select Class</option>
+                    {% for s in assigned_subjects %}
+                    <option value="{{ s.class_name }}" {% if selected_class == s.class_name %}selected{% endif %}>
+                        {{ s.class_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label>Select Date</label>
+                <input type="date" name="date" value="{{ selected_date }}" class="form-control">
+            </div>
+
+            <div class="col-md-1 d-flex align-items-end">
+                <button class="btn btn-primary w-100">Search</button>
+            </div>
+
+        </form>
+
+
+        <!-- TABLE WRAPPED LIKE YOUR ASSIGNED SUBJECTS STYLE -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student Name</th>
+                        <th>Roll No</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% if attendance %}
+                        {% for att in attendance %}
+                        <tr>
+                            <td>{{ att.date }}</td>
+                            <td>{{ att.student.name }}</td>
+                            <td>{{ att.student.roll_no }}</td>
+                            <td>
+                                {% if att.status == "Present" %}
+                                <span style="color:green; font-weight:bold;">Present</span>
+                                {% else %}
+                                <span style="color:red; font-weight:bold;">Absent</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="no-data">No attendance records found.</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

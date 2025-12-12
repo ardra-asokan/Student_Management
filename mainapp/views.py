@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from mainapp.models import SignupDb,TeacherSignUpDb,StudentSignUpDb
+from Adminapp.models import TeacherDb
 
 
 # Create your views here.
@@ -86,7 +87,14 @@ def teacher_login(request):
         if TeacherSignUpDb.objects.filter(Name=un,Password=pswd).exists():
             request.session['Name']=un
             request.session['Password'] = pswd
-            return redirect('teacher_dashboard')
+            if TeacherSignUpDb.objects.filter(Name=un, Password=pswd).exists():
+                teacher = TeacherSignUpDb.objects.get(Name=un, Password=pswd)
+
+
+                request.session['teacher_name'] = teacher.Name
+
+
+            return redirect('teacherapp:teacher_dashboard')
         else:
             return redirect(teacher_log_in)
     else:
