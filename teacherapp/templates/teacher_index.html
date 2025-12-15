@@ -311,9 +311,10 @@ body {
                     <i class="icon-people menu-icon"></i><span class="nav-text">Students</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">View Students</a></li>
-                    <li><a href="#">Search Students</a></li>
-                    <li><a href="#">Student Profile</a></li>
+                    <li><a href="{% url 'teacherapp:view_students' %}">View Students</a></li>
+                    <li><a href="{% url 'teacherapp:search_students' %}">Search Students</a></li>
+                    <li><a href="javascript:void(0)">Student Profile</a></li>
+
                 </ul>
             </li>
 

@@ -3,6 +3,7 @@ from Adminapp.models import SubjectDb,AssignedSubjectDb,StudentDb,TeacherDb
 from teacherapp.models import AttendanceDb,MarksDb,AssignmentDb,AssignmentSubmissionDb
 from datetime import date
 from django.contrib import messages
+from django.db.models import Q
 
 from django.utils import timezone
 
@@ -272,3 +273,82 @@ def save_assignment_grades(request):
         messages.success(request, "Grades saved successfully!")
         return redirect("teacherapp:grade_assignments")
 
+
+def view_students(request):
+    teacher_id = request.session.get("teacher_id")
+
+    # Get subjects assigned to this teacher
+    assigned_subjects = SubjectDb.objects.filter(teacher=teacher_id)
+
+    # Extract department and semester from assigned subjects
+    departments = assigned_subjects.values_list("department", flat=True).distinct()
+    semesters = assigned_subjects.values_list("semester", flat=True).distinct()
+
+    # Fetch students matching department & semester
+    students = StudentDb.objects.filter(
+        department__in=departments,
+        semester__in=semesters
+    )
+
+    return render(request, "View_Students.html", {
+        "students": students,
+    })
+
+
+def search_students(request):
+    teacher_id = request.session.get("teacher_id")
+
+    # Classes handled by teacher
+    assigned_subjects = AssignedSubjectDb.objects.filter(teacher=teacher_id)
+    classes = assigned_subjects.values_list("class_name", flat=True).distinct()
+
+    students = StudentDb.objects.all()
+
+    # Filters
+    name = request.GET.get("name")
+    roll = request.GET.get("roll")
+    class_name = request.GET.get("class_name")
+    semester = request.GET.get("semester")
+
+    if name:
+        students = students.filter(name__icontains=name)
+
+    if roll:
+        students = students.filter(roll_no__icontains=roll)
+
+    if class_name:
+        students = students.filter(class_name=class_name)
+
+    if semester:
+        students = students.filter(semester=semester)
+
+    return render(request, "Search_Students.html", {
+        "students": students,
+        "classes": classes,
+    })
+
+def student_profile(request, student_id):
+    student = StudentDb.objects.get(id=student_id)
+
+    # Attendance Summary
+    total = AttendanceDb.objects.filter(student=student).count()
+    present = AttendanceDb.objects.filter(student=student, status="Present").count()
+    percent = round((present / total * 100), 2) if total > 0 else 0
+
+    # Assignment Summary
+    submissions = AssignmentSubmissionDb.objects.filter(student=student)
+    submitted = submissions.count()
+    average = submissions.aggregate(avg=Avg('marks'))['avg'] or 0
+
+    return render(request, "student_profile.html", {
+        "student": student,
+        "attendance": {
+            "total": total,
+            "present": present,
+            "percent": percent
+        },
+        "assignment": {
+            "submitted": submitted,
+            "average": round(average, 2)
+        }
+    })

@@ -21,6 +21,10 @@ urlpatterns = [
     path('student_submissions/', teacher_views.student_submissions, name="student_submissions"),
     path('grade_assignments/', teacher_views.grade_assignments, name="grade_assignments"),
     path('save_assignment_grades/', teacher_views.save_assignment_grades, name="save_assignment_grades"),
+    path('view_students/', teacher_views.view_students, name="view_students"),
+    path('search_students/', teacher_views.search_students, name="search_students"),
+    path('student_profile/<int:student_id>/', teacher_views.student_profile, name="student_profile"),
+
 
 
 ]

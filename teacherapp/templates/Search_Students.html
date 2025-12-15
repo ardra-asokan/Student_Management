@@ -1,0 +1,175 @@
+{% extends 'teacher_index.html' %}
+{% block content %}
+
+<style>
+.container-card {
+    width: 95%;
+    margin: 30px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.table-container {
+    width: 100%;
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+thead {
+    background: #2f4050;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+tr:hover {
+    background-color: #f8f9fc;
+}
+
+.student-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.label-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.btn-view {
+    padding: 5px 10px;
+    font-size: 13px;
+}
+</style>
+
+<div class="content-body">
+    <div class="container-fluid mt-3">
+
+        <h3 class="text-center mb-4">Search Students</h3>
+
+        <!-- SEARCH FORM -->
+        <form method="GET">
+            <div class="container-card">
+
+                <div class="row">
+
+                    <div class="col-md-4 mb-3">
+                        <label class="label-title">Name</label>
+                        <input type="text" name="name" class="form-control"
+                               placeholder="Enter student name"
+                               value="{{ request.GET.name }}">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="label-title">Roll Number</label>
+                        <input type="text" name="roll" class="form-control"
+                               placeholder="Enter roll no"
+                               value="{{ request.GET.roll }}">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="label-title">Class</label>
+                        <select name="class_name" class="form-control">
+                            <option value="">-- Select --</option>
+                            {% for c in classes %}
+                                <option value="{{ c }}"
+                                    {% if request.GET.class_name == c %}selected{% endif %}>
+                                    {{ c }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="label-title">Semester</label>
+                        <select name="semester" class="form-control">
+                            <option value="">-- Select --</option>
+                                 {% for s in "123456" %}
+                <option value="{{ s }}"
+                    {% if request.GET.semester == s %}selected{% endif %}>
+                    Semester {{ s }}
+                </option>
+            {% endfor %}
+
+
+
+                        </select>
+                    </div>
+
+                </div>
+
+                <button class="btn btn-primary mt-2">Search</button>
+
+            </div>
+        </form>
+
+
+        <!-- SEARCH RESULTS TABLE -->
+        {% if students %}
+        <div class="container-card table-container">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Name</th>
+                        <th>Roll No</th>
+                        <th>Email</th>
+                        <th>Class</th>
+                        <th>Semester</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for st in students %}
+                    <tr>
+                        <td>
+                            {% if st.photo %}
+    <img src="{{ st.photo.url }}" class="student-img">
+{% else %}
+    <img src="#" class="student-img">
+{% endif %}
+
+                        </td>
+
+                        <td>{{ st.name }}</td>
+                        <td>{{ st.roll_no }}</td>
+                        <td>{{ st.email }}</td>
+                        <td>{{ st.class_name }}</td>
+                        <td>{{ st.semester }}</td>
+
+                        <td>
+                            <a href="{% url 'teacherapp:student_profile' st.id %}"
+                               class="btn btn-primary btn-sm btn-view">
+                                View Profile
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+        {% endif %}
+
+        {% if not students and request.GET %}
+        <p class="text-center text-danger mt-4"><b>No students found.</b></p>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
