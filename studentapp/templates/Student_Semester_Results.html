@@ -1,0 +1,32 @@
+{% extends 'student_index.html' %}
+{% block content %}
+
+<h4>Semester Results</h4>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Subject</th>
+        <th>Mark</th>
+        <th>Status</th>
+    </tr>
+
+    {% for r in results %}
+    <tr>
+        <td>{{ r.subject }}</td>
+        <td>{{ r.mark }}</td>
+        <td>
+            {% if r.mark >= 40 %}
+                <span class="text-success">Pass</span>
+            {% else %}
+                <span class="text-danger">Fail</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">Result not published</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

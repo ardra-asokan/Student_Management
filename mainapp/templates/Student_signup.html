@@ -1,112 +1,109 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
-<head>
-	<title>Teacher SignUp</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->
-	<link rel="icon" type="image/png" href="{% static 'login/images/icons/favicon.ico' %}"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/bootstrap/css/bootstrap.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'login/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'login/fonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/animate/animate.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/css-hamburgers/hamburgers.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/select2/select2.min.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/daterangepicker/daterangepicker.css' %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static 'login/css/util.css' %}">
-	<link rel="stylesheet" type="text/css" href="{% static 'login/css/main.css' %}">
-<!--===============================================================================================-->
+<!--<!DOCTYPE html>-->
+<!--{% load static %}-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--	<title>Teacher SignUp</title>-->
+<!--	<meta charset="UTF-8">-->
+<!--	<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="icon" type="image/png" href="{% static 'login/images/icons/favicon.ico' %}"/>-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/bootstrap/css/bootstrap.min.css' %}">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="stylesheet" type="text/css" href="{% static 'login/fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="stylesheet" type="text/css" href="{% static 'login/fonts/Linearicons-Free-v1.0.0/icon-font.min.css' %}">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/animate/animate.css' %}">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/css-hamburgers/hamburgers.min.css' %}">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css' %}">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/select2/select2.min.css' %}">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="stylesheet" type="text/css" href="{% static 'login/vendor/daterangepicker/daterangepicker.css' %}">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<link rel="stylesheet" type="text/css" href="{% static 'login/css/util.css' %}">-->
+<!--	<link rel="stylesheet" type="text/css" href="{% static 'login/css/main.css' %}">-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
 
 
-</head>
-<body style="background-color: #ffffff;">
-
-
-
-<div class="container" style="margin-top:120px;">
-    <div class="row justify-content-center" style="min-height: 600px; gap: 80px;">
-
-        <!-- LEFT SIDE IMAGE & CONTENT -->
-        <div class="col-md-6 d-none d-md-flex flex-column align-items-center justify-content-center"
-             style="
-                background: #ffffff;
-                border-radius: 10px;
-                min-height: 500px;
-                max-width: 450px;
-                padding: 40px;
-                margin-right: 15px; /* added space to right */
-             ">
-
-            <img src="{% static 'login/images/student.jpg' %}"
-                 style="width: 200px; height: 200px; border-radius: 50%; margin-bottom: 20px;">
-
-
-            <h3 style="font-weight: bold; color: #043565; margin-bottom: 20px;">Student Features</h3>
-
-
-            <ul style="list-style: none; padding-left: 0; line-height: 30px; font-size: 16px;">
-              <li>✔ View personal profile & update details</li>
-              <li>✔ View attendance percentage</li>
-              <li>✔ Download and submit assignments</li>
-              <li>✔ View internal marks & exam results</li>
-              <li>✔ Access class timetable</li>
-              <li>✔ Receive notices & announcements</li>
-              <li>✔ Track academic performance</li>
-            </ul>
-        </div>
-
-        <!-- LOGIN CARD -->
-        <div class="col-md-6 d-flex justify-content-center align-items-center"
-             style="max-width: 450px; margin-left: 15px;">
-            <div style="
-                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-                border-radius: 10px;
-                padding: 50px;
-                background: white;
-                min-height: 500px;
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            ">
-                <h3 class="text-center" style="color:#043565; font-weight:bold;"> Sign Up</h3>
-                <br>
-                <form  method="post" action="{% url 'save_student_signup_data' %}">
-								{% csrf_token %}
-
-                    <input type="text" name="name" placeholder="Name"
-                           class="form-control" style="height:45px; margin-bottom: 20px;">
-                    <input type="email" name="email" placeholder="Email"
-                           class="form-control" style="height:45px; margin-bottom: 20px;">
-                    <input type="password" name="password" placeholder="Password"
-                           class="form-control" style="height:45px; margin-bottom: 20px;">
-                    <input type="password" name="cpassword" placeholder="Confirm Password"
-                           class="form-control" style="height:45px; margin-bottom: 20px;">
-                    <button type="submit" class="btn btn-primary btn-block"
-                            style="width: 100%; height: 45px; background:#043565;">Signup</button>
-<!--                    <div class="text-center" style="margin-top: 15px;">-->
-<!--                        <a href="#" style="color:#043565;">Forgot Password?</a>-->
-<!--                    </div>-->
-                </form>
-            </div>
-        </div>
-
-    </div>
-</div>
+<!--</head>-->
+<!--<body style="background-color: #ffffff;">-->
 
 
 
+<!--<div class="container" style="margin-top:120px;">-->
+<!--    <div class="row justify-content-center" style="min-height: 600px; gap: 80px;">-->
+
+<!--        &lt;!&ndash; LEFT SIDE IMAGE & CONTENT &ndash;&gt;-->
+<!--        <div class="col-md-6 d-none d-md-flex flex-column align-items-center justify-content-center"-->
+<!--             style="-->
+<!--                background: #ffffff;-->
+<!--                border-radius: 10px;-->
+<!--                min-height: 500px;-->
+<!--                max-width: 450px;-->
+<!--                padding: 40px;-->
+<!--                margin-right: 15px; /* added space to right */-->
+<!--             ">-->
+
+<!--            <img src="{% static 'login/images/student.jpg' %}"-->
+<!--                 style="width: 200px; height: 200px; border-radius: 50%; margin-bottom: 20px;">-->
+
+
+<!--            <h3 style="font-weight: bold; color: #043565; margin-bottom: 20px;">Student Features</h3>-->
+
+
+<!--            <ul style="list-style: none; padding-left: 0; line-height: 30px; font-size: 16px;">-->
+<!--              <li>✔ View personal profile & update details</li>-->
+<!--              <li>✔ View attendance percentage</li>-->
+<!--              <li>✔ Download and submit assignments</li>-->
+<!--              <li>✔ View internal marks & exam results</li>-->
+<!--              <li>✔ Access class timetable</li>-->
+<!--              <li>✔ Receive notices & announcements</li>-->
+<!--              <li>✔ Track academic performance</li>-->
+<!--            </ul>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; LOGIN CARD &ndash;&gt;-->
+<!--        <div class="col-md-6 d-flex justify-content-center align-items-center"-->
+<!--             style="max-width: 450px; margin-left: 15px;">-->
+<!--            <div style="-->
+<!--                box-shadow: 0 4px 20px rgba(0,0,0,0.1);-->
+<!--                border-radius: 10px;-->
+<!--                padding: 50px;-->
+<!--                background: white;-->
+<!--                min-height: 500px;-->
+<!--                width: 100%;-->
+<!--                display: flex;-->
+<!--                flex-direction: column;-->
+<!--                justify-content: center;-->
+<!--            ">-->
+<!--                <h3 class="text-center" style="color:#043565; font-weight:bold;"> Sign Up</h3>-->
+<!--                <br>-->
+<!--                <form  method="post" action="{% url 'save_student_signup_data' %}">-->
+<!--								{% csrf_token %}-->
+
+<!--                    <input type="text" name="name" placeholder="Name"-->
+<!--                           class="form-control" style="height:45px; margin-bottom: 20px;">-->
+<!--                    <input type="email" name="email" placeholder="Email"-->
+<!--                           class="form-control" style="height:45px; margin-bottom: 20px;">-->
+<!--                    <input type="password" name="password" placeholder="Password"-->
+<!--                           class="form-control" style="height:45px; margin-bottom: 20px;">-->
+<!--                    <input type="password" name="cpassword" placeholder="Confirm Password"-->
+<!--                           class="form-control" style="height:45px; margin-bottom: 20px;">-->
+<!--                    <button type="submit" class="btn btn-primary btn-block"-->
+<!--                            style="width: 100%; height: 45px; background:#043565;">Signup</button>-->
+<!--&lt;!&ndash;                    <div class="text-center" style="margin-top: 15px;">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <a href="#" style="color:#043565;">Forgot Password?</a>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--    </div>-->
+<!--</div>-->
 
 
 
@@ -116,22 +113,25 @@
 
 
 
-<!--===============================================================================================-->
-	<script src="{% static 'login/vendor/jquery/jquery-3.2.1.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'login/vendor/animsition/js/animsition.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'login/vendor/bootstrap/js/popper.js' %}"></script>
-	<script src="{% static 'login/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'login/vendor/select2/select2.min.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'login/vendor/daterangepicker/moment.min.js' %}"></script>
-	<script src="{% static 'login/vendor/daterangepicker/daterangepicker.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'login/vendor/countdowntime/countdowntime.js' %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static 'login/js/main.js' %}"></script>
 
-</body>
-</html>
+
+
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<script src="{% static 'login/vendor/jquery/jquery-3.2.1.min.js' %}"></script>-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<script src="{% static 'login/vendor/animsition/js/animsition.min.js' %}"></script>-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<script src="{% static 'login/vendor/bootstrap/js/popper.js' %}"></script>-->
+<!--	<script src="{% static 'login/vendor/bootstrap/js/bootstrap.min.js' %}"></script>-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<script src="{% static 'login/vendor/select2/select2.min.js' %}"></script>-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<script src="{% static 'login/vendor/daterangepicker/moment.min.js' %}"></script>-->
+<!--	<script src="{% static 'login/vendor/daterangepicker/daterangepicker.js' %}"></script>-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<script src="{% static 'login/vendor/countdowntime/countdowntime.js' %}"></script>-->
+<!--&lt;!&ndash;===============================================================================================&ndash;&gt;-->
+<!--	<script src="{% static 'login/js/main.js' %}"></script>-->
+
+<!--</body>-->
+<!--</html>-->

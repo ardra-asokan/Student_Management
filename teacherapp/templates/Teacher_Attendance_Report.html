@@ -49,14 +49,15 @@ tr:hover {
 
             <div class="col-md-4">
                 <label>Select Subject</label>
-                <select name="subject" class="form-control">
-                    <option value="">Select Subject</option>
-                    {% for s in assigned_subjects %}
-                    <option value="{{ s.id }}" {% if selected_subject == s.id|stringformat:'s' %}selected{% endif %}>
-                        {{ s.subject.subject_name }} ({{ s.class_name }})
-                    </option>
-                    {% endfor %}
-                </select>
+                <select name="subject" class="form-control" required>
+    <option value="{{ s.subject.id }}"
+    {% if selected_subject == s.subject.id|stringformat:"s" %}selected{% endif %}>
+    {{ s.subject.subject_name }} ({{ s.class_name }})
+</option>
+
+    {% endfor %}
+</select>
+
             </div>
 
             <div class="col-md-4">
@@ -96,27 +97,28 @@ tr:hover {
                 </thead>
 
                 <tbody>
-                    {% if attendance %}
-                        {% for att in attendance %}
-                        <tr>
-                            <td>{{ att.date }}</td>
-                            <td>{{ att.student.name }}</td>
-                            <td>{{ att.student.roll_no }}</td>
-                            <td>
-                                {% if att.status == "Present" %}
-                                <span style="color:green; font-weight:bold;">Present</span>
-                                {% else %}
-                                <span style="color:red; font-weight:bold;">Absent</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    {% else %}
-                    <tr>
-                        <td colspan="4" class="no-data">No attendance records found.</td>
-                    </tr>
-                    {% endif %}
-                </tbody>
+{% if records %}
+    {% for att in records %}
+    <tr>
+        <td>{{ att.date }}</td>
+        <td>{{ att.student.name }}</td>
+        <td>{{ att.student.roll_no }}</td>
+        <td>
+            {% if att.status == "Present" %}
+            <span style="color:green; font-weight:bold;">Present</span>
+            {% else %}
+            <span style="color:red; font-weight:bold;">Absent</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+{% else %}
+<tr>
+    <td colspan="4" class="no-data">No attendance records found.</td>
+</tr>
+{% endif %}
+</tbody>
+
             </table>
         </div>
 

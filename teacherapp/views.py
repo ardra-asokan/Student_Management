@@ -3,7 +3,9 @@ from Adminapp.models import SubjectDb,AssignedSubjectDb,StudentDb,TeacherDb
 from teacherapp.models import AttendanceDb,MarksDb,AssignmentDb,AssignmentSubmissionDb
 from datetime import date
 from django.contrib import messages
+
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 from django.utils import timezone
 
@@ -11,98 +13,146 @@ from django.utils import timezone
 # Create your views here.
 def teacher_page(request):
     return render(request, "teacher_index.html")
+
 def teacher_assigned_subjects(request):
-    teacher_name = request.session.get("teacher_name")
-    data = AssignedSubjectDb.objects.filter(teacher=teacher_name)
+    teacher_id = request.session.get("teacher_id")
+
+    if not teacher_id:
+        return redirect("teacher_log_in")
+
+    data = AssignedSubjectDb.objects.filter(teacher_id=teacher_id)
+
     return render(request, 'teacher_assigned_subjects.html', {'data': data})
+
 def view_subjects(request):
     teacher_name = request.session.get('teacher_name')
-    print("Teacher session:", teacher_name)
 
-    # Filter the assigned subjects
-    data = AssignedSubjectDb.objects.filter(teacher=teacher_name).select_related('subject')
+    if not teacher_name:
+        return redirect('teacher_log_in')
+
+    data = AssignedSubjectDb.objects.filter(
+        teacher=teacher_name
+    ).select_related('subject')
 
     return render(request, "View_subjects.html", {"data": data})
-    # data = SubjectDb.objects.all()
-    # return render(request, "View_Subjects.html", {"data": data})
+
+
 def search_subjects(request):
-    teacher = request.session.get("teacher_name")
+    teacher_name = request.session.get('teacher_name')
 
-    # Only show subjects assigned to THIS teacher
-    qs = AssignedSubjectDb.objects.filter(teacher=teacher).select_related('subject')
+    qs = AssignedSubjectDb.objects.filter(
+        teacher=teacher_name
+    )
 
-    query = request.GET.get("q")
-
-    if query:
-        qs = qs.filter(
-            Q(subject__subject_name__icontains=query) |
-            Q(subject__subject_code__icontains=query)
-        )
-
-    return render(request, "search_subjects.html", {
-        "data": qs,
-        "query": query
+    return render(request, "Search_Subjects.html", {
+        'subjects': qs
     })
 
 
+
+
+
 def teacher_dashboard(request):
-    if 'Name' in request.session:
-        return render(request, 'teacher_index.html')
-    else:
+    teacher_name = request.session.get('teacher_name')
+
+    if not teacher_name:
         return redirect('teacher_log_in')
 
-def mark_attendance(request):
-    teacher_name = request.session.get('Name')
-    assigned_subjects = AssignedSubjectDb.objects.filter(teacher=teacher_name)
-    class_name = request.GET.get("class")
-    subject_id = request.GET.get("subject")
-    students = None
+    return render(request, 'teacher_index.html', {
+        'teacher_name': teacher_name
+    })
 
-    if class_name and subject_id:
-        students = StudentDb.objects.filter(student_class=class_name)
+
+
+
+
+
+def mark_attendance(request):
+    teacher_name = request.session.get('teacher_name')
+
+    if not teacher_name:
+        return redirect('teacher_log_in')
+
+    assigned_subjects = AssignedSubjectDb.objects.filter(
+        teacher=teacher_name
+    )
+
+    selected_subject = request.GET.get('subject')
+    department = request.GET.get('department')
+    semester = request.GET.get('semester')
+
+    students = StudentDb.objects.none()  # ✅ IMPORTANT
+
+    if selected_subject and department and semester:
+        students = StudentDb.objects.filter(
+            department=department,
+            semester=semester
+        )
 
     return render(request, "Mark_attendance.html", {
         "assigned_subjects": assigned_subjects,
         "students": students,
-        "selected_class": class_name,
-        "selected_subject": subject_id,
+        "selected_subject": selected_subject,
+        "department": department,
+        "semester": semester,
         "today": date.today(),
     })
 
+
+
+
+
 def save_attendance(request):
     if request.method == "POST":
-        subject_id = request.POST.get("subject_id")
-        class_name = request.POST.get("class_name")
-        curr_date = request.POST.get("date")
 
-        assigned_subject = AssignedSubjectDb.objects.get(id=subject_id)
+        assigned_subject_id = request.POST.get("subject_id")
+
+        assigned_subject = AssignedSubjectDb.objects.get(
+            id=assigned_subject_id
+        )
+
+        subject = assigned_subject.subject   # ✅ real SubjectDb
+        att_date = date.today()
 
         for key, value in request.POST.items():
             if key.startswith("student_"):
                 student_id = key.split("_")[1]
-                status = value
-                AttendanceDb.objects.create(
-                    student_id=student_id,
-                    assigned_subject=assigned_subject,
-                    date=curr_date,
-                    status=status
+
+                if not student_id:
+                    continue
+
+                student = StudentDb.objects.get(id=student_id)
+
+                AttendanceDb.objects.update_or_create(
+                    student=student,
+                    subject=subject,
+                    date=att_date,
+                    defaults={"status": value}
                 )
 
-        return redirect("mark_attendance")
+        return redirect("teacherapp:teacher_view_attendance")
 
-def view_attendance(request):
+
+
+
+
+
+
+def teacher_view_attendance(request):
     selected_date = request.GET.get("date")
     selected_subject = request.GET.get("subject")
-    selected_class = request.GET.get("class")
+    department = request.GET.get("department")
+    semester = request.GET.get("semester")
 
     subjects = SubjectDb.objects.all()
     records = None
 
-    if selected_date and selected_subject and selected_class:
+    if selected_date and selected_subject and department and semester:
         records = AttendanceDb.objects.filter(
             date=selected_date,
             subject_id=selected_subject,
-            class_name=selected_class
+            student__department=department,
+            student__semester=semester
         )
 
     return render(request, "View_attendance.html", {
@@ -110,71 +160,74 @@ def view_attendance(request):
         "records": records,
         "selected_date": selected_date,
         "selected_subject": selected_subject,
-        "selected_class": selected_class,
+        "department": department,
+        "semester": semester,
     })
 
+
+
 def teacher_attendance_report(request):
-    teacher_name = request.session.get('Name')
+    teacher_name = request.session.get('teacher_name')
 
-    # Load only subjects assigned to the logged-in teacher
-    assigned_subjects = AssignedSubjectDb.objects.filter(teacher=teacher_name)
+    assigned_subjects = AssignedSubjectDb.objects.filter(
+        teacher=teacher_name
+    )
 
-    selected_subject = request.GET.get('subject')
-    selected_class = request.GET.get('class')
-    selected_date = request.GET.get('date')
+    selected_subject = request.GET.get("subject")
+    selected_date = request.GET.get("date")
 
-    attendance_data = None
+    records = AttendanceDb.objects.none()
 
-    # Load attendance only when filters are selected
-    if selected_subject and selected_class and selected_date:
-        attendance_data = AttendanceDb.objects.filter(
+    if selected_subject and selected_date:
+        records = AttendanceDb.objects.filter(
             subject_id=selected_subject,
-            class_name=selected_class,
             date=selected_date
-        )
+        ).select_related("student", "subject")
 
     return render(request, "Teacher_Attendance_Report.html", {
         "assigned_subjects": assigned_subjects,
+        "records": records,
         "selected_subject": selected_subject,
-        "selected_class": selected_class,
         "selected_date": selected_date,
-        "attendance_data": attendance_data,
     })
+
+
+
+
+
+
+
 
 def upload_marks(request):
-    teacher_name = request.session.get("teacher_name")
-    assigned_subjects = AssignedSubjectDb.objects.filter(teacher=teacher_name)
-    selected_subject = request.GET.get("subject")
-    selected_exam = request.GET.get("exam")
-    students = None
+    teacher_name = request.session.get("Name")
 
-    if selected_subject and selected_exam:
-        subject_obj = AssignedSubjectDb.objects.get(id=selected_subject)
-        class_name = subject_obj.class_name
-
-        # Load students of that class
-        students = StudentDb.objects.filter(Class=class_name)
+    assigned_subjects = AssignedSubjectDb.objects.filter(
+        teacher=teacher_name
+    )
 
     return render(request, "Upload_marks.html", {
-        "assigned_subjects": assigned_subjects,
-        "selected_subject": selected_subject,
-        "selected_exam": selected_exam,
-        "students": students,
+        "assigned_subjects": assigned_subjects
     })
 
+
+
+
 def view_marks(request):
-    teacher_name = request.session.get("teacher_name")
+    teacher_id = request.session.get("teacher_id")
 
-    # Fetch subjects assigned to this teacher
-    assigned_subjects = AssignedSubjectDb.objects.filter(teacher=teacher_name)
+    assigned_subjects = AssignedSubjectDb.objects.filter(
+        teacher_id=teacher_id
+    )
 
-    # Get marks only for subjects of this teacher
-    marks = MarksDb.objects.filter(subject__in=[s.subject for s in assigned_subjects])
+    marks = MarksDb.objects.filter(
+        subject__in=assigned_subjects.values_list('subject', flat=True)
+    )
 
     return render(request, "view_marks.html", {
         "marks": marks,
         "assigned_subjects": assigned_subjects,
     })
+
 
 
 def edit_marks(request, id):
@@ -275,24 +328,20 @@ def save_assignment_grades(request):
 
 
 def view_students(request):
-    teacher_id = request.session.get("teacher_id")
+    teacher_name = request.session.get('Name')
 
-    # Get subjects assigned to this teacher
-    assigned_subjects = SubjectDb.objects.filter(teacher=teacher_id)
-
-    # Extract department and semester from assigned subjects
-    departments = assigned_subjects.values_list("department", flat=True).distinct()
-    semesters = assigned_subjects.values_list("semester", flat=True).distinct()
-
-    # Fetch students matching department & semester
-    students = StudentDb.objects.filter(
-        department__in=departments,
-        semester__in=semesters
+    assigned_subjects = AssignedSubjectDb.objects.filter(
+        teacher=teacher_name
     )
 
+    # use assigned_subjects to fetch students
     return render(request, "View_Students.html", {
-        "students": students,
+        'assigned_subjects': assigned_subjects
     })
+
+
+
+
 
 
 def search_students(request):
@@ -351,4 +400,20 @@ def student_profile(request, student_id):
             "submitted": submitted,
             "average": round(average, 2)
         }
+    })
+def student_semester_results(request):
+    student_name = request.session.get('student_name')
+
+    if not student_name:
+        return redirect('student_log_in')
+
+    student = StudentDb.objects.get(name=student_name)
+
+    results = MarksDb.objects.filter(
+        student=student.name,
+        semester=student.semester
+    )
+
+    return render(request, 'student_semester_results.html', {
+        'results': results
     })

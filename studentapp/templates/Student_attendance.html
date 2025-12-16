@@ -1,10 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'student_index.html' %}
+{% block content %}
 
-</body>
-</html>
+<div class="content-body">
+    <div class="container-fluid mt-3">
+
+        <h4 class="mb-3">Attendance</h4>
+
+        <div class="card">
+            <div class="card-body">
+
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Total Classes</th>
+                            <th>Present</th>
+                            <th>Attendance %</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for a in attendance %}
+                        <tr>
+                            <td>{{ a.subject__subject_name }}</td>
+                            <td>{{ a.total }}</td>
+                            <td>{{ a.present }}</td>
+                            <td>{{ a.percent }}%</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4">No attendance available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

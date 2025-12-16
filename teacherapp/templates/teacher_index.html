@@ -247,8 +247,8 @@ body {
                             <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-body">
                                     <div class="text-center p-2">
-                                        {% if request.session.Name %}
-                                            <strong style="color:black;">Welcome, {{ request.session.Name }}</strong>
+                                        {% if request.session.teacher_name %}
+                                            <strong style="color:black;">{{ request.session.teacher_name }}</strong>
                                         {% endif %}
                                     </div>
                                     <ul>
@@ -270,9 +270,10 @@ body {
                                     </ul>
                                 </div>
                             </div>
-                            {% if request.session.Name %}
-                                 <strong>Welcome, {{ request.session.Name }}</strong>
+                            {% if request.session.teacher_name %}
+                                <strong>Welcome, {{ request.session.teacher_name }}</strong>
                             {% endif %}
+
                         </li>
                     </ul>
                 </div>
@@ -291,7 +292,7 @@ body {
             <li class="nav-label">Teacher Dashboard</li>
 
             <li>
-                <a href="javascript:void()" aria-expanded="false">
+                <a href="{% url 'teacherapp:teacher_page' %}" aria-expanded="false">
                     <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                 </a>
             </li>
@@ -324,42 +325,48 @@ body {
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="{% url 'teacherapp:mark_attendance' %}">Mark Attendance</a></li>
+                    <li><a href="{% url 'teacherapp:teacher_view_attendance' %}">View Attendance</a></li>
                     <li><a href="{% url 'teacherapp:teacher_attendance_report' %}">Attendance Report</a></li>
                 </ul>
             </li>
 
-            <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon-chart menu-icon"></i><span class="nav-text">Marks / Results</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="{% url 'teacherapp:upload_marks' %}">Upload Marks</a></li>
-                    <li><a href="{% url 'teacherapp:teacher_view_marks' %}">Edit Marks</a></li>
-                    <li><a href="">Class Marksheet</a></li>
-                    <li><a href="#">Performance Report</a></li>
-                </ul>
-            </li>
+    <li class="has-arrow" id="marks-menu">
+    <a href="javascript:void(0)">
+        <i class="icon-chart menu-icon"></i>
+        <span class="nav-text">Marks / Results</span>
+    </a>
+    <ul>
+        <li><a href="{% url 'teacherapp:upload_marks' %}">Upload Marks</a></li>
+        <li><a href="{% url 'teacherapp:teacher_view_marks' %}">Edit Marks</a></li>
+        <li><a href="#">Class Marksheet</a></li>
+        <li><a href="#">Performance Report</a></li>
+    </ul>
+</li>
 
-            <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon-note menu-icon"></i><span class="nav-text">Assignments</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="{% url 'teacherapp:upload_assignments' %}">Upload Assignment</a></li>
-                    <li><a href="{% url 'teacherapp:student_submissions' %}">Student Submissions</a></li>
-                    <li><a href="{% url 'teacherapp:grade_assignments' %}">Grade Assignments</a></li>
-                </ul>
-            </li>
 
-            <li>
-                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                    <i class="icon-clock menu-icon"></i><span class="nav-text">Timetable</span>
-                </a>
-                <ul aria-expanded="false">
-                    <li><a href="#">View Timetable</a></li>
-                    <li><a href="#">Download Timetable</a></li>
-                </ul>
-            </li>
+
+            <li id="assignments-menu">
+    <a class="has-arrow" href="javascript:void()">
+        <i class="icon-note menu-icon"></i>
+        <span class="nav-text">Assignments</span>
+    </a>
+    <ul aria-expanded="false">
+        <li><a href="{% url 'teacherapp:upload_assignments' %}">Upload Assignment</a></li>
+        <li><a href="{% url 'teacherapp:student_submissions' %}">Student Submissions</a></li>
+        <li><a href="{% url 'teacherapp:grade_assignments' %}">Grade Assignments</a></li>
+    </ul>
+</li>
+
+
+<!--            <li>-->
+<!--                <a class="has-arrow" href="javascript:void()" aria-expanded="false">-->
+<!--                    <i class="icon-clock menu-icon"></i><span class="nav-text">Timetable</span>-->
+<!--                </a>-->
+<!--                <ul aria-expanded="false">-->
+<!--                    <li><a href="#">View Timetable</a></li>-->
+<!--                    <li><a href="#">Download Timetable</a></li>-->
+<!--                </ul>-->
+<!--            </li>-->
 
             <li>
                 <a class="has-arrow" href="javascript:void()" aria-expanded="false">

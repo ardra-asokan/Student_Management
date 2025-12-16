@@ -1,0 +1,49 @@
+{% extends 'student_index.html' %}
+{% block content %}
+
+<div class="content-body">
+    <div class="container-fluid mt-3">
+
+        <h4 class="mb-4">My Subjects</h4>
+
+        <div class="card">
+            <div class="card-body">
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Subject Code</th>
+                            <th>Subject Name</th>
+                            <th>Semester</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for subject in subjects %}
+                        <tr>
+                            <td>{{ subject.subject_code }}</td>
+                            <td>{{ subject.subject_name }}</td>
+                            <td>{{ subject.semester }}</td>
+                            <td>
+                                <a href="{% url 'subject_details' subject.id %}" class="btn btn-sm btn-primary">
+                                    View Details
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">
+                                No subjects assigned
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

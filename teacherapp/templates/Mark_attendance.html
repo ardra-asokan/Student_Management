@@ -89,7 +89,7 @@
 
         <!-- FILTER CARD -->
         <div class="card-box" style="margin-top: 15px;">
-            <form method="GET" class="row g-3">
+            <form method="GET" class="row g-3" >
 
                 <div class="col-md-6">
                     <label>Select Subject</label>
@@ -103,17 +103,27 @@
                     </select>
                 </div>
 
-                <div class="col-md-6">
-                    <label>Select Class</label>
-                    <select name="class" class="form-control" required>
-                        <option value="">-- Select --</option>
-                        {% for s in assigned_subjects %}
-                        <option value="{{ s.class_name }}" {% if selected_class == s.class_name %}selected{% endif %}>
-                            {{ s.class_name }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
+               <select name="department" class="form-control" required>
+    <option value="">-- Select Department --</option>
+    <option>CSE</option>
+    <option>ECE</option>
+    <option>EEE</option>
+    <option>MECH</option>
+    <option>CIVIL</option>
+</select>
+
+<select name="semester" class="form-control" required>
+    <option value="">-- Select Semester --</option>
+    <option>S1</option>
+    <option>S2</option>
+    <option>S3</option>
+    <option>S4</option>
+    <option>S5</option>
+    <option>S6</option>
+    <option>S7</option>
+    <option>S8</option>
+</select>
+
 
                 <div class="col-12 mt-3">
                     <button type="submit" class="btn-submit">Load Students</button>
@@ -126,12 +136,13 @@
         {% if students %}
         <div class="card-box">
 
-            <form method="POST" action="{% url 'save_attendance' %}">
-                {% csrf_token %}
+           <form method="POST" action="{% url 'teacherapp:save_attendance' %}">
+    {% csrf_token %}
 
-                <input type="hidden" name="subject_id" value="{{ selected_subject }}">
-                <input type="hidden" name="class_name" value="{{ selected_class }}">
-                <input type="hidden" name="date" value="{{ today }}">
+
+               <input type="hidden" name="subject_id" value="{{ selected_subject }}">
+<!--    <input type="hidden" name="date" value="{{ today|date:'Y-m-d' }}">-->
+
 
                 <table class="attendance-table">
                     <tr>
@@ -140,23 +151,17 @@
                         <th>Status</th>
                     </tr>
 
-                    {% for st in students %}
-                    <tr>
-                        <td>{{ st.name }}</td>
-                        <td>{{ st.roll_no }}</td>
-                        <td>
-                            <label class="radio-label">
-                                <input type="radio" name="student_{{ st.id }}" value="Present" checked>
-                                Present
-                            </label>
+            {% for st in students %}
+<tr>
+  <td>{{ st.name }}</td>
+  <td>{{ st.roll_no }}</td>
+  <td>
+    <input type="radio" name="student_{{ st.id }}" value="Present" checked> Present
+    <input type="radio" name="student_{{ st.id }}" value="Absent"> Absent
+  </td>
+</tr>
+{% endfor %}
 
-                            <label class="radio-label">
-                                <input type="radio" name="student_{{ st.id }}" value="Absent">
-                                Absent
-                            </label>
-                        </td>
-                    </tr>
-                    {% endfor %}
                 </table>
 
                 <div class="text-center mt-4">

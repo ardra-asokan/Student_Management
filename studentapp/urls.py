@@ -4,10 +4,14 @@ from studentapp import views
 urlpatterns = [
     path('student_page/', views.student_page, name='student_page'),
     path('student_profile/', views.student_profile, name='student_profile'),
-    path('student_subjects/', views.student_subjects, name='student_subjects'),
+    path('edit_profile/', views.edit_profile, name='edit_profile'),
+    path('view_student_subjects/', views.view_student_subjects, name='view_student_subjects'),
+    path('subject_details/<int:subject_id>/', views.subject_details, name='subject_details'),
     path('student_attendance/', views.student_attendance, name='student_attendance'),
     path('student_timetable/', views.student_timetable, name='student_timetable'),
-    path('student_results/', views.student_results, name='student_results'),
+    path('student_internal_marks/', views.student_internal_marks, name='student_internal_marks'),
+    path('student_semester_results/', views.student_semester_results, name='student_semester_results'),
+
     path('student_assignments/', views.student_assignments, name='student_assignments'),
     path('student_notifications/', views.student_notifications, name='student_notifications'),
     path('student_dashboard/', views.student_dashboard, name='student_dashboard'),

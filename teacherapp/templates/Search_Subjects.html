@@ -84,8 +84,10 @@
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="submit">Search</button>
 
-                        <button class="btn btn-success" type="submit">Reset<a href="{% url 'search_subjects' %}" style="color:white;"></a>
-    </button>
+                        <a href="{% url 'teacherapp:search_subjects' %}" class="btn btn-success">
+    Reset
+</a>
+
                     </div>
                 </div>
             </form>

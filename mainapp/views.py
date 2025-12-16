@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
-from mainapp.models import SignupDb,TeacherSignUpDb,StudentSignUpDb
-from Adminapp.models import TeacherDb
+from mainapp.models import SignupDb
+from Adminapp.models import TeacherDb,StudentDb
 
 
 # Create your views here.
@@ -60,91 +60,64 @@ def admin_logout(request):
 # TEACHER LOGIN
 def teacher_log_in(request):
     return render(request, "Teacher_Login.html")
-def teacher_sign_up(request):
-    return render(request, "Teacher_signup.html")
 
-def save_teacher_signup_data(request):
-    if request.method == "POST":
-        nm = request.POST.get('name')
-        em = request.POST.get('email')
-        ps = request.POST.get('password')
-        cps = request.POST.get('cpassword')
-        obj = TeacherSignUpDb(Name=nm, Email=em, Password=ps, Confirm_Password=cps)
-        if TeacherSignUpDb.objects.filter(Name=nm).exists():
-            # Alert-Username already exists..!
-            return redirect(teacher_sign_up)
-        elif TeacherSignUpDb.objects.filter(Email=em).exists():
-            # Alert-Email already exists..!
-            return redirect(teacher_sign_up)
-        else:
-            obj.save()
-            return redirect(teacher_log_in)
+
 
 def teacher_login(request):
     if request.method == "POST":
-        un = request.POST.get('username')
-        pswd = request.POST.get('password')
-        if TeacherSignUpDb.objects.filter(Name=un,Password=pswd).exists():
-            request.session['Name']=un
-            request.session['Password'] = pswd
-            if TeacherSignUpDb.objects.filter(Name=un, Password=pswd).exists():
-                teacher = TeacherSignUpDb.objects.get(Name=un, Password=pswd)
+        username = request.POST.get("username")
+        password = request.POST.get("password")
 
+        try:
+            teacher = TeacherDb.objects.get(
+                username=username,
+                password=password
+            )
 
-                request.session['teacher_name'] = teacher.Name
-
+            request.session['teacher_id'] = teacher.id
+            request.session['teacher_name'] = teacher.name
 
             return redirect('teacherapp:teacher_dashboard')
-        else:
-            return redirect(teacher_log_in)
-    else:
-        return redirect(teacher_log_in)
+
+        except TeacherDb.DoesNotExist:
+            return redirect('teacher_log_in')
+
+    return redirect('teacher_log_in')
+
 
 def teacher_logout(request):
-    del request.session['Name']
-    del request.session['Password']
-    return redirect(teacher_login)
+    request.session.flush()
+    return redirect('teacher_log_in')
 
 
 # STUDENT LOGIN
 
 def student_log_in(request):
     return render(request, "Student_Login.html")
-def student_sign_up(request):
-    return render(request, "Student_signup.html")
-
-def save_student_signup_data(request):
-    if request.method == "POST":
-        nm = request.POST.get('name')
-        em = request.POST.get('email')
-        ps = request.POST.get('password')
-        cps = request.POST.get('cpassword')
-        obj = StudentSignUpDb(Name=nm, Email=em, Password=ps, Confirm_Password=cps)
-        if StudentSignUpDb.objects.filter(Name=nm).exists():
-            # Alert-Username already exists..!
-            return redirect(teacher_sign_up)
-        elif StudentSignUpDb.objects.filter(Email=em).exists():
-            # Alert-Email already exists..!
-            return redirect(student_sign_up)
-        else:
-            obj.save()
-            return redirect(student_log_in)
 
 def student_login(request):
     if request.method == "POST":
-        un = request.POST.get('username')
-        pswd = request.POST.get('password')
-        if StudentSignUpDb.objects.filter(Name=un,Password=pswd).exists():
-            request.session['Name']=un
-            request.session['Password'] = pswd
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        try:
+            student = StudentDb.objects.get(
+                username=username,
+                password=password
+            )
+
+            request.session['student_id'] = student.id
+            request.session['student_name'] = student.name
+
             return redirect('student_dashboard')
-        else:
-            return redirect(student_log_in)
-    else:
-        return redirect(student_log_in)
+
+        except StudentDb.DoesNotExist:
+            return redirect('student_log_in')
+
+    return redirect('student_log_in')
+
 
 def student_logout(request):
-    del request.session['Name']
-    del request.session['Password']
-    return redirect(student_login)
+    request.session.flush()
+    return redirect(student_log_in)
 

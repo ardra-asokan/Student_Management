@@ -13,14 +13,14 @@ urlpatterns = [
     path('login_page/',views.login_page,name="login_page"),
 
     path('teacher_log_in/',views.teacher_log_in,name="teacher_log_in"),
-    path('teacher_sign_up/',views.teacher_sign_up,name="teacher_sign_up"),
-    path('save_teacher_signup_data/',views.save_teacher_signup_data,name="save_teacher_signup_data"),
+    # path('teacher_sign_up/',views.teacher_sign_up,name="teacher_sign_up"),
+    # path('save_teacher_signup_data/',views.save_teacher_signup_data,name="save_teacher_signup_data"),
     path('teacher_login/',views.teacher_login,name="teacher_login"),
     path('teacher_logout/',views.teacher_logout,name="teacher_logout"),
 
     path('student_log_in/',views.student_log_in,name="student_log_in"),
-    path('student_sign_up/',views.student_sign_up,name="student_sign_up"),
-    path('save_student_signup_data/',views.save_student_signup_data,name="save_student_signup_data"),
+    # path('student_sign_up/',views.student_sign_up,name="student_sign_up"),
+    # path('save_student_signup_data/',views.save_student_signup_data,name="save_student_signup_data"),
     path('student_login/',views.student_login,name="student_login"),
     path('student_logout/',views.student_logout,name="student_logout"),
 

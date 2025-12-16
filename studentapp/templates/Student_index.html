@@ -218,8 +218,8 @@
                             <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-body">
                                     <div class="text-center p-2">
-                                        {% if request.session.Name %}
-                                            <strong>Welcome, {{ request.session.Name }}</strong>
+                                        {% if request.session.student_name %}
+                                            <strong>{{ request.session.student_name }}</strong>
                                         {% endif %}
                                     </div>
                                     <ul>
@@ -241,9 +241,9 @@
                                     </ul>
                                 </div>
                             </div>
-                            {% if request.session.Name %}
-                                 <strong>Welcome, {{ request.session.Name }}</strong>
-                            {% endif %}
+                             {% if request.session.student_name %}
+                                            <strong>Welcome, {{ request.session.student_name }}</strong>
+                             {% endif %}
                         </li>
                     </ul>
                 </div>
@@ -275,9 +275,8 @@
                     <i class="icon-user menu-icon"></i><span class="nav-text">My Profile</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">View Profile</a></li>
-                    <li><a href="#">Edit Profile</a></li>
-                    <li><a href="#">Change Password</a></li>
+                    <li><a href="{% url 'student_profile' %}">View Profile</a></li>
+                    <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
                 </ul>
             </li>
 
@@ -287,14 +286,14 @@
                     <i class="icon-book-open menu-icon"></i><span class="nav-text">My Subjects</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">View Subjects</a></li>
-                    <li><a href="#">Subject Details</a></li>
+                    <li><a href="{% url 'view_student_subjects' %}">View Subjects</a></li>
+
                 </ul>
             </li>
 
             <!-- Attendance -->
             <li>
-                <a href="#" aria-expanded="false">
+                <a href="{% url 'student_attendance' %}" aria-expanded="false">
                     <i class="icon-check menu-icon"></i><span class="nav-text">Attendance</span>
                 </a>
             </li>
@@ -305,8 +304,8 @@
                     <i class="icon-chart menu-icon"></i><span class="nav-text">Marks / Results</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">Internal Marks</a></li>
-                    <li><a href="#">Semester Results</a></li>
+                    <li><a href="{% url 'student_internal_marks' %}">Internal Marks</a></li>
+                    <li><a href="{% url 'student_semester_results' %}">Semester Results</a></li>
                     <li><a href="#">Download Marksheet</a></li>
                 </ul>
             </li>

@@ -1,0 +1,45 @@
+{% extends 'student_index.html' %}
+{% block content %}
+
+<div class="content-body">
+    <div class="container-fluid mt-3">
+
+        <h4 class="mb-4">Subject Details</h4>
+
+        <div class="card">
+            <div class="card-body">
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Subject Code</th>
+                        <td>{{ subject.subject_code }}</td>
+                    </tr>
+                    <tr>
+                        <th>Subject Name</th>
+                        <td>{{ subject.subject_name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Semester</th>
+                        <td>{{ subject.semester }}</td>
+                    </tr>
+                    <tr>
+                        <th>Credits</th>
+                        <td>{{ subject.credits }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ subject.description }}</td>
+                    </tr>
+                </table>
+
+                <a href="{% url 'view_student_subjects' %}" class="btn btn-secondary mt-3">
+                    Back to Subjects
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'student_index.html' %}
+{% block content %}
 
-</body>
-</html>
+<h4>Assignments</h4>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Subject</th>
+        <th>Title</th>
+        <th>Due Date</th>
+    </tr>
+
+    {% for a in assignments %}
+    <tr>
+        <td>{{ a.subject }}</td>
+        <td>{{ a.title }}</td>
+        <td>{{ a.due_date }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">No assignments available</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
