@@ -47,4 +47,17 @@ class AssignedSubjectDb(models.Model):
     class_name = models.CharField(max_length=100,null=True,blank=True)
     semester = models.CharField(max_length=100,null=True,blank=True)
 
+class AnnouncementDb(models.Model):
+    SENDER_CHOICES = (
+        ('Admin', 'Admin'),
+        ('Teacher', 'Teacher'),
+    )
 
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    sender_type = models.CharField(max_length=20, choices=SENDER_CHOICES)
+    sender_name = models.CharField(max_length=100)   # Admin name / Teacher name
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.sender_type})"

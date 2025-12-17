@@ -1,12 +1,12 @@
 from django.shortcuts import render,redirect
 from Adminapp.models import SubjectDb,StudentDb
-from teacherapp.models import AttendanceDb,MarksDb,AssignmentSubmissionDb
+from teacherapp.models import AttendanceDb,MarksDb,AssignmentSubmissionDb,AssignmentDb
 from django.db.models import Count, Q
 
 # Create your views here.
 def student_page(request):
     return render(request, "Student_index.html")
-def student_profile(request):
+def student_profile(request,student_id):
     student_id = request.session.get('student_id')
 
     if not student_id:
@@ -119,16 +119,21 @@ def student_assignments(request):
         'assignments': assignments
     })
 def student_internal_marks(request):
-    student_name = request.session.get('student_name')
+    student_id = request.session.get('student_id')
 
-    if not student_name:
+    if not student_id:
         return redirect('student_log_in')
 
-    marks = MarksDb.objects.filter(student=student_name)
+    marks = MarksDb.objects.filter(student_id=student_id)
 
-    return render(request, 'Student_Internal_Marks.html', {
+    print("MARKS:", marks)  # DEBUG – check terminal
+
+    return render(request, 'student_internal_marks.html', {
         'marks': marks
     })
+
+
+
 
 
 def student_notifications(request):

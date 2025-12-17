@@ -1,0 +1,98 @@
+{% extends 'teacher_index.html' %}
+{% block content %}
+
+<style>
+    .card-box {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+    }
+
+    /* ✅ ADDED: ensures page has enough height */
+    .attendance-wrapper {
+        min-height: 80vh;
+    }
+
+    label { font-weight: 600; }
+    select, input[type="date"] {
+        height: 45px; border-radius: 7px;
+    }
+    table {
+        width: 100%; border-collapse: collapse;
+        margin-top: 20px;
+        background: white; border-radius: 10px;
+        overflow: hidden;
+    }
+    th {
+        background: #2f4050; color: white;
+        padding: 10px;
+    }
+    td {
+        padding: 10px; border-bottom: 1px solid #eee;
+    }
+    tr:nth-child(even) {
+        background: #f8f9fb;
+    }
+</style>
+
+<!-- ✅ ADDED wrapper class ONLY -->
+<div class="container attendance-wrapper" style="margin-top:40px;">
+
+    <div class="card-box">
+        <h3 class="mb-3" style="text-align:center;">View Attendance</h3>
+
+        <form method="GET" class="row g-3">
+
+            <div class="col-md-4">
+                <label>Select Date</label>
+                <input type="date" class="form-control" name="date"
+                       value="{{ selected_date }}">
+            </div>
+
+            <div class="col-md-4">
+                <label>Select Subject</label>
+                <select name="subject" class="form-control">
+    <option value="">-- Select --</option>
+
+    {% for s in assigned_subjects %}
+        <option value="{{ s.subject.subject_name }}">
+            {{ s.subject.subject_name }}
+        </option>
+    {% endfor %}
+</select>
+            </div>
+
+            <div class="col-12 mt-3">
+                <button class="btn btn-primary">View</button>
+            </div>
+
+        </form>
+    </div>
+
+    {% if records %}
+    <div class="card-box">
+        <h4>Attendance for {{ selected_date }}</h4>
+
+        <table>
+            <tr>
+                <th>Student Name</th>
+                <th>Roll No</th>
+                <th>Status</th>
+            </tr>
+
+            {% for r in records %}
+            <tr>
+                <td>{{ r.student.name }}</td>
+                <td>{{ r.student.roll_no }}</td>
+                <td>{{ r.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

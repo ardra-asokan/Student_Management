@@ -1,6 +1,8 @@
 from django.urls import path, include
 from Adminapp import views as admin_views
 
+
+app_name = "Adminapp"
 urlpatterns = [
 
     # ADMIN URLS
@@ -35,7 +37,7 @@ urlpatterns = [
     path('update_assigned_subject/<int:a_id>/', admin_views.update_assigned_subject, name='update_assigned_subject'),
     path('delete_assigned_subject/<int:as_id>/', admin_views.delete_assigned_subject, name='delete_assigned_subject'),
 
-    path('view_attendance/', admin_views.view_attendance, name="view_attendance"),
+    path('view_attendance/', admin_views.admin_view_attendance, name="view_attendance"),
     path('attendance_report/', admin_views.attendance_report, name="attendance_report"),
     path('view_marks/', admin_views.view_marks, name="view_marks"),
     path('generate_result/', admin_views.generate_result, name="generate_result"),

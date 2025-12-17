@@ -234,7 +234,7 @@ def delete_assigned_subject(request, as_id):
     return redirect('view_assigned_subjects')
 
 
-def view_attendance(request):
+def admin_view_attendance(request):
     subjects = SubjectDb.objects.all()
     return render(request,"View_Attendance.html", {"subjects": subjects})
 def attendance_report(request):

@@ -1,144 +1,153 @@
 {% extends 'teacher_index.html' %}
+{% load static %}
 {% block content %}
 
 <style>
-.profile-card {
-    width: 90%;
+.profile-wrapper {
+    max-width: 900px;
     margin: 30px auto;
-    background: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+}
+
+.profile-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.06);
 }
 
 .profile-header {
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .profile-img {
-    width: 110px;
-    height: 110px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
+    border: 4px solid #f1f1f1;
+}
+
+.profile-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 15px;
+}
+
+.profile-sub {
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.section-card {
+    background: #f9fafc;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
 .section-title {
     font-weight: 700;
-    font-size: 18px;
-    margin: 20px 0 10px 0;
+    font-size: 17px;
+    margin-bottom: 15px;
     color: #2f4050;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 8px;
 }
 
-.info-table td {
-    padding: 8px 5px;
-    font-size: 15px;
+.info-row {
+    display: flex;
+    margin-bottom: 10px;
 }
 
 .info-label {
+    width: 150px;
     font-weight: 600;
-    color: #333;
+    color: #374151;
 }
 
-.badge-status {
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 13px;
+.info-value {
+    color: #4b5563;
+}
+
+.edit-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 </style>
 
 <div class="content-body">
-    <div class="container-fluid mt-3">
+    <div class="container-fluid">
 
-        <div class="profile-card">
+        <div class="profile-wrapper">
+            <div class="profile-card">
 
-            <!-- PROFILE HEADER -->
-            <div class="profile-header">
-                {% if student.photo %}
-                    <img src="{{ student.photo.url }}" class="profile-img">
-                {% else %}
-                    <img src="{% static 'images/default-profile.png' %}" class="profile-img">
-                {% endif %}
+                <!-- PROFILE HEADER -->
+                <div class="profile-header">
+                    {% if student.profile_photo %}
+                        <img src="{{ student.profile_photo.url }}" class="profile-img">
+                    {% else %}
+                        <img src="{% static 'images/default-profile.png' %}" class="profile-img">
+                    {% endif %}
 
-                <h3 class="mt-3">{{ student.name }}</h3>
-                <p class="text-muted">Roll No: {{ student.roll_no }}</p>
+                    <div class="profile-name">{{ student.name }}</div>
+                    <div class="profile-sub">Roll No: {{ student.roll_no }}</div>
+                </div>
+
+                <!-- STUDENT DETAILS -->
+                <div class="section-card">
+                    <div class="section-title">Student Details</div>
+
+                    <div class="info-row">
+                        <div class="info-label">Department</div>
+                        <div class="info-value">{{ student.department }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Semester</div>
+                        <div class="info-value">{{ student.semester }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">{{ student.email }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value">{{ student.phone }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Address</div>
+                        <div class="info-value">{{ student.address }}</div>
+                    </div>
+                </div>
+
+                <!-- PARENT DETAILS -->
+                <div class="section-card">
+                    <div class="section-title">Parent Details</div>
+
+                    <div class="info-row">
+                        <div class="info-label">Parent Name</div>
+                        <div class="info-value">{{ student.parent_name }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Parent Phone</div>
+                        <div class="info-value">{{ student.parent_phone }}</div>
+                    </div>
+                </div>
+
+                <!-- EDIT BUTTON -->
+                <div class="edit-btn">
+                    <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+                        Edit Profile
+                    </a>
+                </div>
+
             </div>
-
-            <!-- BASIC DETAILS -->
-            <div class="section-title">Student Details</div>
-            <table class="info-table">
-                <tr>
-                    <td class="info-label">Class:</td>
-                    <td>{{ student.class_name }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Semester:</td>
-                    <td>{{ student.semester }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Email:</td>
-                    <td>{{ student.email }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Phone:</td>
-                    <td>{{ student.phone }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Address:</td>
-                    <td>{{ student.address }}</td>
-                </tr>
-            </table>
-
-            <!-- PARENT DETAILS -->
-            <div class="section-title">Parent Details</div>
-            <table class="info-table">
-                <tr>
-                    <td class="info-label">Parent Name:</td>
-                    <td>{{ student.parent_name }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Parent Phone:</td>
-                    <td>{{ student.parent_phone }}</td>
-                </tr>
-            </table>
-
-            <!-- ATTENDANCE SUMMARY -->
-            <div class="section-title">Attendance Summary</div>
-            <table class="info-table">
-                <tr>
-                    <td class="info-label">Total Classes:</td>
-                    <td>{{ attendance.total }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Present:</td>
-                    <td>{{ attendance.present }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Attendance %:</td>
-                    <td>
-                        {{ attendance.percent }}%
-                        {% if attendance.percent >= 75 %}
-                            <span class="badge-status bg-success text-white">Good</span>
-                        {% else %}
-                            <span class="badge-status bg-danger text-white">Low</span>
-                        {% endif %}
-                    </td>
-                </tr>
-            </table>
-
-            <!-- ASSIGNMENT PERFORMANCE -->
-            <div class="section-title">Assignment Performance</div>
-            <table class="info-table">
-                <tr>
-                    <td class="info-label">Assignments Submitted:</td>
-                    <td>{{ assignment.submitted }}</td>
-                </tr>
-                <tr>
-                    <td class="info-label">Average Marks:</td>
-                    <td>{{ assignment.average }}%</td>
-                </tr>
-            </table>
-
         </div>
 
     </div>

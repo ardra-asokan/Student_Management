@@ -60,19 +60,21 @@ tr:hover {
                 <!-- SUBJECT SELECT -->
                 <div class="row mb-3">
                     <div class="col-md-6">
-                       <select name="subject" class="form-control" required>
+                        <label class="label-title">Select Subject</label>
+                       <select name="subject" class="form-control">
     <option value="">-- Select --</option>
 
-    {% for a in assigned_subjects %}
-        <option value="{{ a.id }}"
-            {% if selected_subject == a.id|stringformat:"s" %}selected{% endif %}>
-            {{ a.subject.subject_name }}
-            ({{ a.class_name }} - {{ a.semester }})
+    {% for s in assigned_subjects %}
+        <option value="{{ s.subject_id }}">
+            {{ s.subject.subject_name }}
         </option>
     {% empty %}
-        <option value="">No subjects assigned</option>
+        <option>No subjects assigned</option>
     {% endfor %}
 </select>
+
+
+
 
 
                     </div>

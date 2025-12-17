@@ -1,0 +1,90 @@
+{% extends 'teacher_index.html' %}
+{% block content %}
+
+<style>
+    .page-wrapper {
+        min-height: calc(100vh - 120px);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .card-box {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        max-width: 700px;
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    label {
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="page-wrapper">
+    <div class="card-box">
+
+        <h3 class="text-center mb-4">Upload Study Material</h3>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Subject -->
+            <div class="mb-3">
+                <label>Select Subject</label>
+                <select name="subject" class="form-control" required>
+                    <option value="">-- Select --</option>
+                    {% for s in assigned_subjects %}
+                        <option value="{{ s.subject.id }}">
+                            {{ s.subject.subject_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Title -->
+            <div class="mb-3">
+                <label>Material Title</label>
+                <input type="text"
+                       name="title"
+                       class="form-control"
+                       placeholder="Eg: Unit 1 Notes"
+                       required>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label>Description</label>
+                <textarea name="description"
+                          class="form-control"
+                          rows="4"
+                          placeholder="Short description "></textarea>
+            </div>
+
+            <!-- File Upload -->
+            <div class="mb-4">
+                <label>Upload File</label>
+                <input type="file"
+                       name="material_file"
+                       class="form-control"
+                       accept=".pdf,.ppt,.pptx,.doc,.docx"
+                       required>
+            </div>
+
+            <!-- Submit -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary px-5">
+                    Upload Material
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -274,8 +274,8 @@
                             <i class="icon-globe-alt menu-icon"></i><span class="nav-text">Teachers</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{% url 'add_teacher' %}">Add Teachers</a></li>
-                            <li><a href="{% url 'view_teachers' %}">View details</a></li>
+                            <li><a href="{% url 'Adminapp:add_teacher' %}">Add Teachers</a></li>
+                            <li><a href="{% url 'Adminapp:view_teachers' %}">View details</a></li>
                         </ul>
                     </li>
 <!--                    <li class="nav-label">Apps</li>-->
@@ -284,8 +284,8 @@
                             <i class="icon-envelope menu-icon"></i> <span class="nav-text">Students</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{% url 'add_student' %}">Add Students</a></li>
-                            <li><a href="{% url 'view_students' %}">View details</a></li>
+                            <li><a href="{% url 'Adminapp:add_student' %}">Add Students</a></li>
+                            <li><a href="{% url 'Adminapp:view_students' %}">View details</a></li>
                         </ul>
                     </li>
                     <li>
@@ -293,8 +293,8 @@
                             <i class="icon-screen-tablet menu-icon"></i><span class="nav-text">Subjects</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href= "{% url 'add_subject' %}">Add new subjects</a></li>
-                            <li><a href="{% url 'admin_view_subjects' %}">View details</a></li>
+                            <li><a href= "{% url 'Adminapp:add_subject' %}">Add new subjects</a></li>
+                            <li><a href="{% url 'Adminapp:admin_view_subjects' %}">View details</a></li>
                         </ul>
                     </li>
 
@@ -303,8 +303,8 @@
                             <i class="icon-screen-tablet menu-icon"></i><span class="nav-text">Assign Teachers</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{% url 'assign_teacher' %}">Assign Subject to Teacher</a></li>
-                            <li><a href="{% url 'view_assigned_subjects' %}">View details</a></li>
+                            <li><a href="{% url 'Adminapp:assign_teacher' %}">Assign Subject to Teacher</a></li>
+                            <li><a href="{% url 'Adminapp:view_assigned_subjects' %}">View details</a></li>
                         </ul>
                     </li>
                     <li>
@@ -312,8 +312,8 @@
                             <i class="icon-graph menu-icon"></i> <span class="nav-text">Attendance</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{% url 'view_attendance' %}">View attendance</a></li>
-                            <li><a href="{% url 'attendance_report' %}">Attendance Reports</a></li>
+                            <li><a href="{% url 'Adminapp:view_attendance' %}">View attendance</a></li>
+                            <li><a href="{% url 'Adminapp:attendance_report' %}">Attendance Reports</a></li>
                         </ul>
                     </li>
 <!--                    <li class="nav-label">UI Components</li>-->
@@ -322,8 +322,8 @@
                             <i class="icon-grid menu-icon"></i><span class="nav-text">Marks</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{% url 'view_marks' %}">View marks</a></li>
-                            <li><a href="{% url 'generate_result' %}">Generate Result PDF</a></li>
+                            <li><a href="{% url 'Adminapp:view_marks' %}">View marks</a></li>
+                            <li><a href="{% url 'Adminapp:generate_result' %}">Generate Result PDF</a></li>
 
                         <!-- </ul>
                     </li>
@@ -341,8 +341,8 @@
                             <i class="icon-note menu-icon"></i><span class="nav-text">Assignments</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{% url 'view_assignment' %}">View Teacher Assignments</a></li>
-                            <li><a href="{% url 'student_submission' %}">View Student Submissions</a></li>
+                            <li><a href="{% url 'Adminapp:view_assignment' %}">View Teacher Assignments</a></li>
+                            <li><a href="{% url 'Adminapp:student_submission' %}">View Student Submissions</a></li>
                         </ul>
                     </li>
 
@@ -351,7 +351,7 @@
                             <i class="icon-menu menu-icon"></i><span class="nav-text">Notifications</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{% url 'send_notification' %}" aria-expanded="false">Send Email Notification</a></li>
+                            <li><a href="{% url 'Adminapp:send_notification' %}" aria-expanded="false">Send Email Notification</a></li>
 <!--                            <li><a href="./table-datatable.html" aria-expanded="false">Data Table</a></li>-->
                         </ul>
                     </li>
@@ -361,9 +361,9 @@
                             <i class="icon-menu menu-icon"></i><span class="nav-text">Reports & Analytics</span>
                         </a>
                         <ul aria-expanded="false">
-                            <li><a href="{% url 'student_report' %}" aria-expanded="false">Student Report</a></li>
-                            <li><a href="{% url 'attendance_analytics' %}" aria-expanded="false">Attendance Analytics</a></li>
-                             <li><a href="{% url 'marks_analytics' %}" aria-expanded="false">Marks Analytics</a></li>
+                            <li><a href="{% url 'Adminapp:student_report' %}" aria-expanded="false">Student Report</a></li>
+                            <li><a href="{% url 'Adminapp:attendance_analytics' %}" aria-expanded="false">Attendance Analytics</a></li>
+                             <li><a href="{% url 'Adminapp:marks_analytics' %}" aria-expanded="false">Marks Analytics</a></li>
                         </ul>
                     </li>
 

@@ -314,7 +314,7 @@ body {
                 <ul aria-expanded="false">
                     <li><a href="{% url 'teacherapp:view_students' %}">View Students</a></li>
                     <li><a href="{% url 'teacherapp:search_students' %}">Search Students</a></li>
-                    <li><a href="javascript:void(0)">Student Profile</a></li>
+                    <li><a href="{% url 'teacherapp:student_profile'  %}">Student Profile</a></li>
 
                 </ul>
             </li>
@@ -338,7 +338,7 @@ body {
     <ul>
         <li><a href="{% url 'teacherapp:upload_marks' %}">Upload Marks</a></li>
         <li><a href="{% url 'teacherapp:teacher_view_marks' %}">Edit Marks</a></li>
-        <li><a href="#">Class Marksheet</a></li>
+<!--        <li><a href="#">Class Marksheet</a></li>-->
         <li><a href="#">Performance Report</a></li>
     </ul>
 </li>
@@ -373,7 +373,8 @@ body {
                     <i class="icon-speech menu-icon"></i><span class="nav-text">Announcements</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">View Announcements</a></li>
+                    <li><a href="{% url 'teacherapp:teacher_send_announcements' %}">Send Announcements</a></li>
+                    <li><a href="{% url 'teacherapp:teacher_view_announcements' %}">View Announcements</a></li>
                 </ul>
             </li>
 
@@ -388,10 +389,21 @@ body {
             </li>
 
             <li>
-                <a href="javascript:void()">
-                    <i class="icon-graduation menu-icon"></i><span class="nav-text">Study Materials</span>
-                </a>
-            </li>
+    <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+        <i class="icon-graduation menu-icon"></i>
+        <span class="nav-text">Study Materials</span>
+    </a>
+    <ul aria-expanded="false">
+        <li>
+            <a href="{% url 'teacherapp:upload_study_material' %}">Upload Study Material
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'teacherapp:teacher_view_study_material' %}"> View Study Materials
+            </a>
+        </li>
+    </ul>
+</li>
 
             <li>
                 <a href="{% url 'teacher_logout' %}">

@@ -44,3 +44,14 @@ class AssignmentSubmissionDb(models.Model):
     file = models.FileField(upload_to="submitted_assignments/")
     submitted_at = models.DateTimeField(auto_now_add=True)
     marks = models.IntegerField(null=True, blank=True)
+
+class StudyMaterialDb(models.Model):
+    teacher = models.ForeignKey(TeacherDb, on_delete=models.CASCADE)
+    subject = models.ForeignKey(SubjectDb, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    material_file = models.FileField(upload_to='study_materials/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

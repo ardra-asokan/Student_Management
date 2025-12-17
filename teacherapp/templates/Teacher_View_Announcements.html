@@ -1,0 +1,65 @@
+{% extends 'teacher_index.html' %}
+{% block content %}
+
+<style>
+    /* Push footer to bottom */
+    .page-wrapper {
+        min-height: calc(100vh - 120px); /* adjust if needed */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .card-box {
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        margin-bottom: 25px;
+        width: 100%;
+        max-width: 900px;
+    }
+
+    .announcement {
+        border-left: 5px solid #4e73df;
+        padding: 15px 20px;
+        margin-bottom: 15px;
+        background: #f8f9fc;
+        border-radius: 8px;
+    }
+
+    .announcement h5 {
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .announcement small {
+        color: #6c757d;
+    }
+</style>
+
+<div class="page-wrapper mt-4">
+    <div class="card-box">
+
+        <h3 class="text-center mb-4">Announcements</h3>
+
+        {% if announcements %}
+            {% for a in announcements %}
+                <div class="announcement">
+                    <h5>{{ a.title }}</h5>
+                    <p>{{ a.message }}</p>
+                    <small>
+                        Posted on {{ a.created_at|date:"d M Y, h:i A" }}
+                    </small>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted text-center">
+                No announcements available
+            </p>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
