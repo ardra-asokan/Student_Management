@@ -5,7 +5,7 @@
 <style>
 .profile-wrapper {
     max-width: 900px;
-    margin: 30px auto;
+    margin: 30px auto 60px;
 }
 
 .profile-card {
@@ -57,23 +57,18 @@
 
 .info-row {
     display: flex;
+    flex-wrap: wrap;
     margin-bottom: 10px;
 }
 
 .info-label {
-    width: 150px;
+    width: 180px;
     font-weight: 600;
     color: #374151;
 }
 
 .info-value {
     color: #4b5563;
-}
-
-.edit-btn {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
 }
 </style>
 
@@ -110,6 +105,26 @@
                     </div>
 
                     <div class="info-row">
+                        <div class="info-label">Batch</div>
+                        <div class="info-value">{{ student.batch }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Gender</div>
+                        <div class="info-value">{{ student.gender }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Date of Birth</div>
+                        <div class="info-value">{{ student.dob }}</div>
+                    </div>
+                </div>
+
+                <!-- CONTACT DETAILS -->
+                <div class="section-card">
+                    <div class="section-title">Contact Information</div>
+
+                    <div class="info-row">
                         <div class="info-label">Email</div>
                         <div class="info-value">{{ student.email }}</div>
                     </div>
@@ -123,28 +138,6 @@
                         <div class="info-label">Address</div>
                         <div class="info-value">{{ student.address }}</div>
                     </div>
-                </div>
-
-                <!-- PARENT DETAILS -->
-                <div class="section-card">
-                    <div class="section-title">Parent Details</div>
-
-                    <div class="info-row">
-                        <div class="info-label">Parent Name</div>
-                        <div class="info-value">{{ student.parent_name }}</div>
-                    </div>
-
-                    <div class="info-row">
-                        <div class="info-label">Parent Phone</div>
-                        <div class="info-value">{{ student.parent_phone }}</div>
-                    </div>
-                </div>
-
-                <!-- EDIT BUTTON -->
-                <div class="edit-btn">
-                    <a href="{% url 'edit_profile' %}" class="btn btn-primary">
-                        Edit Profile
-                    </a>
                 </div>
 
             </div>

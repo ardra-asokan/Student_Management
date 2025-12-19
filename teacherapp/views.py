@@ -39,20 +39,6 @@ def view_subjects(request):
     return render(request, "View_subjects.html", {"data": data})
 
 
-def search_subjects(request):
-    teacher_name = request.session.get('teacher_name')
-
-    qs = AssignedSubjectDb.objects.filter(
-        teacher=teacher_name
-    )
-
-    return render(request, "Search_Subjects.html", {
-        'subjects': qs
-    })
-
-
-
-
 
 def teacher_dashboard(request):
     teacher_name = request.session.get('teacher_name')
@@ -134,69 +120,29 @@ def save_attendance(request):
 
         return redirect("teacherapp:teacher_view_attendance")
 
-
-
-
-
-
 def teacher_view_attendance(request):
     teacher_name = request.session.get("teacher_name")
 
-    if not teacher_name:
-        return redirect("teacher_log_in")
-
-    selected_date = request.GET.get("date")
-    selected_subject = request.GET.get("subject")
-
     assigned_subjects = AssignedSubjectDb.objects.filter(
         teacher=teacher_name
-    ).select_related("subject")  # ✅ This is OK here
+    ).select_related("subject")
+
+    selected_date = request.GET.get("date")
+    selected_subject_id = request.GET.get("subject")
 
     records = None
-
-    if selected_date and selected_subject:
+    if selected_date and selected_subject_id:
         records = AttendanceDb.objects.filter(
             date=selected_date,
-            subject=selected_subject   # ✅ CharField filter
-        )
+            subject_id=selected_subject_id
+        ).select_related("student", "subject")
 
     return render(request, "Teacher_view_attendance.html", {
         "assigned_subjects": assigned_subjects,
         "records": records,
         "selected_date": selected_date,
-        "selected_subject": selected_subject,
+        "selected_subject": selected_subject_id,
     })
-
-
-
-
-
-def teacher_attendance_report(request):
-    teacher_name = request.session.get('teacher_name')
-
-    assigned_subjects = AssignedSubjectDb.objects.filter(
-        teacher=teacher_name
-    )
-
-    selected_subject = request.GET.get("subject")
-    selected_date = request.GET.get("date")
-
-    records = AttendanceDb.objects.none()
-
-    if selected_subject and selected_date:
-        records = AttendanceDb.objects.filter(
-            subject_id=selected_subject,
-            date=selected_date
-        ).select_related("student", "subject")
-
-    return render(request, "Teacher_Attendance_Report.html", {
-        "assigned_subjects": assigned_subjects,
-        "records": records,
-        "selected_subject": selected_subject,
-        "selected_date": selected_date,
-    })
-
-
 
 
 
@@ -209,50 +155,109 @@ def upload_marks(request):
         return redirect('teacher_log_in')
 
     assigned_subjects = AssignedSubjectDb.objects.filter(
-        teacher=teacher_name
+        teacher__iexact=teacher_name.strip()
     ).select_related('subject')
 
+    students = []
+    selected_assigned_id = request.GET.get("subject")
+    selected_exam = request.GET.get("exam")
+
+    if selected_assigned_id and selected_exam:
+        assigned = AssignedSubjectDb.objects.filter(
+            id=selected_assigned_id,
+            teacher__iexact=teacher_name.strip()
+        ).first()
+
+        if assigned:
+            department = assigned.class_name.split()[0].strip()
+
+            students = StudentDb.objects.filter(
+                department__iexact=department
+            )
+
     return render(request, "Upload_marks.html", {
-        "assigned_subjects": assigned_subjects
+        "assigned_subjects": assigned_subjects,
+        "students": students,
+        "selected_subject": selected_assigned_id,
+        "selected_exam": selected_exam,
     })
 
 
+def save_marks(request):
+    if request.method == "POST":
 
+        exam_type = request.POST.get("exam_type")
+        assigned_id = request.POST.get("assigned_id")
+
+        # Get assigned subject row
+        assigned = AssignedSubjectDb.objects.get(id=assigned_id)
+        subject = assigned.subject
+
+        # Loop through submitted marks
+        for key, value in request.POST.items():
+            if key.startswith("marks_"):
+                student_id = key.split("_")[1]
+                marks = value
+
+                # Save marks
+                MarksDb.objects.create(
+                    student_id=student_id,
+                    subject=subject,
+                    exam_type=exam_type,
+                    marks=marks,
+                    date=date.today()
+                )
+
+        messages.success(request, "Marks saved successfully ✅")
+        return redirect("teacherapp:upload_marks")
 def teacher_view_marks(request):
     teacher_name = request.session.get("teacher_name")
 
     assigned_subjects = AssignedSubjectDb.objects.filter(
         teacher=teacher_name
-    )
+    ).select_related('subject')
 
     marks = None
     selected_subject = request.GET.get("subject")
+    selected_exam = request.GET.get("exam")
 
-    if selected_subject:
+    if selected_subject and selected_exam:
         marks = MarksDb.objects.filter(
-            subject_id=selected_subject
-        )
+            subject_id=selected_subject,
+            exam_type=selected_exam
+        ).select_related('student')
 
     return render(request, "Teacher_view_marks.html", {
         "assigned_subjects": assigned_subjects,
         "marks": marks,
-        "selected_subject": selected_subject
+        "selected_subject": selected_subject,
+        "selected_exam": selected_exam,
     })
 
 
 
+def edit_marks(request, mark_id):
+    mark = MarksDb.objects.select_related(
+        "student", "subject"
+    ).get(id=mark_id)
 
-def teacher_edit_marks(request, id):
-    mark = MarksDb.objects.get(id=id)
-    return render(request, "Teacher_Edit_Marks.html", {"mark": mark})
+    return render(request, "Teacher_Edit_Marks.html", {
+        "mark": mark
+    })
 
-def update_marks(request, id):
-    mark = MarksDb.objects.get(id=id)
+def update_marks(request, mark_id):
     if request.method == "POST":
-        mark.exam_type = request.POST.get("exam_type")
-        mark.marks = request.POST.get("marks")
-        mark.save()
-        return redirect("teacherapp:view_marks")
+        new_marks = request.POST.get("marks")
+
+        MarksDb.objects.filter(id=mark_id).update(
+            marks=new_marks,
+            date=date.today()
+        )
+
+        return redirect("teacherapp:teacher_view_marks")
+
+
+
 
 def upload_assignments(request):
     teacher_id = request.session.get("teacher_id")
@@ -356,35 +361,38 @@ def save_assignment_grades(request):
 
 
 def view_students(request):
-    teacher_name = request.session.get('Name')
+    teacher_name = request.session.get('teacher_name')
 
-    assigned_subjects = AssignedSubjectDb.objects.filter(
-        teacher=teacher_name
-    )
+    assigned_subjects = AssignedSubjectDb.objects.filter(teacher=teacher_name)
 
-    # use assigned_subjects to fetch students
+    students = StudentDb.objects.none()
+
+    if assigned_subjects.exists():
+        departments = []
+
+        for a in assigned_subjects:
+            if a.class_name:
+                departments.append(a.class_name.split()[0].strip())
+
+        students = StudentDb.objects.filter(
+            department__in=departments
+        )
+
+    print("FINAL STUDENTS COUNT:", students.count())
+
     return render(request, "View_Students.html", {
-        'assigned_subjects': assigned_subjects
+        "students": students
     })
 
 
 
 
-
-
 def search_students(request):
-    teacher_id = request.session.get("teacher_id")
-
-    # Classes handled by teacher
-    assigned_subjects = AssignedSubjectDb.objects.filter(teacher=teacher_id)
-    classes = assigned_subjects.values_list("class_name", flat=True).distinct()
-
     students = StudentDb.objects.all()
 
-    # Filters
     name = request.GET.get("name")
     roll = request.GET.get("roll")
-    class_name = request.GET.get("class_name")
+    department = request.GET.get("department")
     semester = request.GET.get("semester")
 
     if name:
@@ -393,18 +401,19 @@ def search_students(request):
     if roll:
         students = students.filter(roll_no__icontains=roll)
 
-    if class_name:
-        students = students.filter(class_name=class_name)
+    if department:
+        students = students.filter(department__iexact=department)
 
     if semester:
-        students = students.filter(semester=semester)
+        students = students.filter(semester__iexact=semester)
 
     return render(request, "Search_Students.html", {
         "students": students,
-        "classes": classes,
     })
 
-def student_profile(request):
+
+
+def teacher_student_profile(request,student_id):
     student = StudentDb.objects.get(id=student_id)
 
     # Attendance Summary
@@ -417,7 +426,7 @@ def student_profile(request):
     submitted = submissions.count()
     average = submissions.aggregate(avg=Avg('marks'))['avg'] or 0
 
-    return render(request, "student_profile.html", {
+    return render(request, "Student_Profile.html", {
         "student": student,
         "attendance": {
             "total": total,

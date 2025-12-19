@@ -1,4 +1,5 @@
 {% extends 'teacher_index.html' %}
+{% load static %}
 {% block content %}
 
 <style>
@@ -62,7 +63,6 @@ tr:hover {
         <!-- SEARCH FORM -->
         <form method="GET">
             <div class="container-card">
-
                 <div class="row">
 
                     <div class="col-md-4 mb-3">
@@ -80,15 +80,13 @@ tr:hover {
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <label class="label-title">Class</label>
-                        <select name="class_name" class="form-control">
-                            <option value="">-- Select --</option>
-                            {% for c in classes %}
-                                <option value="{{ c }}"
-                                    {% if request.GET.class_name == c %}selected{% endif %}>
-                                    {{ c }}
-                                </option>
-                            {% endfor %}
+                        <label class="label-title">Department</label>
+                        <select name="department" class="form-control">
+                            <option value="">-- Select Department --</option>
+                            <option value="CSE" {% if request.GET.department == "CSE" %}selected{% endif %}>CSE</option>
+                            <option value="ECE" {% if request.GET.department == "ECE" %}selected{% endif %}>ECE</option>
+                            <option value="EEE" {% if request.GET.department == "EEE" %}selected{% endif %}>EEE</option>
+                            <option value="MECH" {% if request.GET.department == "MECH" %}selected{% endif %}>MECH</option>
                         </select>
                     </div>
 
@@ -96,30 +94,24 @@ tr:hover {
                         <label class="label-title">Semester</label>
                         <select name="semester" class="form-control">
                             <option value="">-- Select --</option>
-                                 {% for s in "123456" %}
-                <option value="{{ s }}"
-                    {% if request.GET.semester == s %}selected{% endif %}>
-                    Semester {{ s }}
-                </option>
-            {% endfor %}
-
-
-
+                            {% for s in "12345678" %}
+                            <option value="S{{ s }}"
+                                {% if request.GET.semester == "S"|add:s %}selected{% endif %}>
+                                Semester {{ s }}
+                            </option>
+                            {% endfor %}
                         </select>
                     </div>
 
                 </div>
 
                 <button class="btn btn-primary mt-2">Search</button>
-
             </div>
         </form>
 
-
-        <!-- SEARCH RESULTS TABLE -->
+        <!-- SEARCH RESULTS -->
         {% if students %}
         <div class="container-card table-container">
-
             <table>
                 <thead>
                     <tr>
@@ -127,7 +119,7 @@ tr:hover {
                         <th>Name</th>
                         <th>Roll No</th>
                         <th>Email</th>
-                        <th>Class</th>
+                        <th>Department</th>
                         <th>Semester</th>
                         <th>Action</th>
                     </tr>
@@ -137,22 +129,21 @@ tr:hover {
                     {% for st in students %}
                     <tr>
                         <td>
-                            {% if st.photo %}
-    <img src="{{ st.photo.url }}" class="student-img">
-{% else %}
-    <img src="#" class="student-img">
-{% endif %}
-
+                            {% if st.profile_photo %}
+                                <img src="{{ st.profile_photo.url }}" class="student-img">
+                            {% else %}
+                                <img src="{% static 'images/default-user.png' %}" class="student-img">
+                            {% endif %}
                         </td>
 
                         <td>{{ st.name }}</td>
                         <td>{{ st.roll_no }}</td>
                         <td>{{ st.email }}</td>
-                        <td>{{ st.class_name }}</td>
+                        <td>{{ st.department }}</td>
                         <td>{{ st.semester }}</td>
 
                         <td>
-                            <a href="{% url 'teacherapp:student_profile' st.id %}"
+                            <a href="{% url 'teacherapp:teacher_student_profile' st.id %}"
                                class="btn btn-primary btn-sm btn-view">
                                 View Profile
                             </a>
@@ -160,7 +151,6 @@ tr:hover {
                     </tr>
                     {% endfor %}
                 </tbody>
-
             </table>
         </div>
         {% endif %}

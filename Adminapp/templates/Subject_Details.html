@@ -128,8 +128,8 @@
                  </td>
 
                 <td>
-                    <button class="btn btn-success"><a href="{% url 'edit_subject' subject_id=i.id %}">Edit</a></button>
-                    <button class="btn btn-danger"><a href="{% url 'delete_subject' sub_id=i.id %}">Delete</a></button>
+                    <button class="btn btn-success"><a href="{% url 'Adminapp:edit_subject' subject_id=i.id %}">Edit</a></button>
+                    <button class="btn btn-danger"><a href="{% url 'Adminapp:delete_subject' sub_id=i.id %}">Delete</a></button>
                 </td>
             </tr>
             {% endfor %}

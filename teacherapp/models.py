@@ -2,13 +2,13 @@ from django.db import models
 from Adminapp.models import StudentDb, AssignedSubjectDb,SubjectDb,TeacherDb
 
 class AttendanceDb(models.Model):
-    student = models.CharField(max_length=100, blank=True, null=True)
-    subject = models.CharField(max_length=100,blank=True,null=True)
-    date = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=10, choices=(('Present', 'Present'), ('Absent', 'Absent')))
+    student = models.ForeignKey(StudentDb, on_delete=models.CASCADE)
+    subject = models.ForeignKey(SubjectDb, on_delete=models.CASCADE)
+    date = models.DateField()
+    status = models.CharField(max_length=10,choices=[('Present', 'Present'), ('Absent', 'Absent')])
 
     def __str__(self):
-        return f"{self.student.name} – {self.status}"
+        return f"{self.student.name} – {self.subject.subject_name} – {self.status}"
 
 class MarksDb(models.Model):
     student = models.ForeignKey(

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html>
+<head>
+    <title>Teacher Announcements</title>
+</head>
+
+<body>
+
+<div class="container mt-5" style="margin-bottom: 620px;">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <h4 class="fw-bold text-center mb-4">
+                Teacher Announcements
+            </h4>
+
+            {% if announcements %}
+                {% for a in announcements %}
+                    {% if a.sender_type == "Teacher" %}
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-body">
+
+                                <h6 class="fw-bold mb-1">
+                                    {{ a.title }}
+                                </h6>
+
+                                <p class="mb-2">
+                                    {{ a.message }}
+                                </p>
+
+                                <div class="text-muted small">
+                                    Sent by: {{ a.sender_name }} |
+                                    {{ a.created_at|date:"d M Y, h:i A" }}
+                                </div>
+
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning text-center">
+                    No announcements available
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

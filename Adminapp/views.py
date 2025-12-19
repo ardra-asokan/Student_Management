@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect
 from django.core.files.storage import FileSystemStorage
 from django.utils.datastructures import MultiValueDictKeyError
-from Adminapp.models import StudentDb,TeacherDb,SubjectDb,AssignedSubjectDb
+from Adminapp.models import StudentDb,TeacherDb,SubjectDb,AssignedSubjectDb,AnnouncementDb
+from django.contrib import messages
 
 
 # Create your views here.
@@ -31,7 +32,7 @@ def save_student(request):
         img = request.FILES['profile_photo']
         obj = StudentDb(name=name,roll_no=roll_no,dob=dob,gender=gender,email=email,phone=phone,department=department,semester=semester,batch=batch,username=username,password=password,address=address,profile_photo=img)
         obj.save()
-        return redirect('add_student')
+        return redirect('Adminapp:add_student')
 def edit_student(request, student_id):
     student = StudentDb.objects.get(id=student_id)
     return render(request, "Edit_Student.html", {'student': student})
@@ -57,12 +58,12 @@ def update_student(request, s_id):
         except MultiValueDictKeyError:
             file = StudentDb.objects.get(id=s_id).profile_photo
         StudentDb.objects.filter(id=s_id).update(name=name,roll_no=roll_no,dob=dob,gender=gender,email=email,phone=phone,department=department,semester=semester,batch=batch,username=username,password=password,address=address,profile_photo=file)
-        return redirect('view_students')
+        return redirect('Adminapp:view_students')
 
 def delete_student(request, st_id):
     data = StudentDb.objects.filter(id=st_id)
     data.delete()
-    return redirect('view_students')
+    return redirect('Adminapp:view_students')
 
 
     # TEACHER
@@ -89,7 +90,7 @@ def save_teacher(request):
 
         obj = TeacherDb(name=name,employee_id=employee_id,dob=dob,gender=gender,email=email,phone=phone,department=department,qualification=qualification,experience=experience,username=username,password=password,address=address,profile_photo=img)
         obj.save()
-        return redirect('add_teacher')
+        return redirect('Adminapp:add_teacher')
 def edit_teacher(request, teacher_id):
     teacher = TeacherDb.objects.get(id=teacher_id)
     return render(request, "Edit_Teacher.html", {'teacher': teacher})
@@ -116,11 +117,11 @@ def update_teacher(request, t_id):
         except MultiValueDictKeyError:
             file = TeacherDb.objects.get(id=t_id).profile_photo
         TeacherDb.objects.filter(id=t_id).update(name=name,employee_id=employee_id,dob=dob,gender=gender,email=email,phone=phone,department=department,qualification=qualification,experience=experience,username=username,password=password,address=address,profile_photo=file)
-        return redirect('view_teachers')
+        return redirect('Adminapp:view_teachers')
 def delete_teacher(request, tr_id):
     data = TeacherDb.objects.filter(id=tr_id)
     data.delete()
-    return redirect('view_teachers')
+    return redirect('Adminapp:view_teachers')
 
 
 
@@ -142,7 +143,7 @@ def save_subject(request):
         teacher = TeacherDb.objects.get(id=teacher_id)
         obj = SubjectDb(subject_name=subject_name,subject_code=subject_code,department=department,semester=semester,teacher=teacher)
         obj.save()
-        return redirect('admin_view_subjects')
+        return redirect('Adminapp:admin_view_subjects')
 def edit_subject(request, subject_id):
     subject = SubjectDb.objects.get(id=subject_id)
     teachers = TeacherDb.objects.all()
@@ -155,10 +156,10 @@ def update_subject(request, s_id):
         teacher_id = request.POST.get('teacher')
         teacher = TeacherDb.objects.get(id=teacher_id)
         SubjectDb.objects.filter(id=s_id).update(subject_name=name,subject_code=code,teacher=teacher,semester=semester)
-        return redirect('admin_view_subjects')
+        return redirect('Adminapp:admin_view_subjects')
 def delete_subject(request, sub_id):
     SubjectDb.objects.filter(id=sub_id).delete()
-    return redirect('admin_view_subjects')
+    return redirect('Adminapp:admin_view_subjects')
 
 
 # # Add Assigned Subject Page
@@ -197,7 +198,7 @@ def save_assigned_subject(request):
 
         obj = AssignedSubjectDb(teacher=teacher,subject=subject,class_name=class_name,semester=semester)
         obj.save()
-        return redirect('view_assigned_subjects')
+        return redirect('Adminapp:view_assigned_subjects')
 
 
 
@@ -226,19 +227,19 @@ def update_assigned_subject(request, a_id):
             semester=semester
         )
 
-        return redirect('view_assigned_subjects')
+        return redirect('Adminapp:view_assigned_subjects')
 
 
 def delete_assigned_subject(request, as_id):
     AssignedSubjectDb.objects.filter(id=as_id).delete()
-    return redirect('view_assigned_subjects')
+    return redirect('Adminapp:view_assigned_subjects')
 
 
 def admin_view_attendance(request):
     subjects = SubjectDb.objects.all()
     return render(request,"View_Attendance.html", {"subjects": subjects})
 def attendance_report(request):
-    return render(request,"Teacher_Attendance_Report.html")
+    return render(request,"Attendance_Report.html")
 def view_marks(request):
     return render(request,"View_Marks.html")
 def generate_result(request):
@@ -249,8 +250,35 @@ def view_assignment(request):
     return render(request,"View_TeacherAssignment.html", {"teachers": teachers, "subjects":subjects} )
 def student_submission(request):
     return render(request,"Student_Submission.html")
-def send_notification(request):
-    return render(request,"Notification.html")
+def send_announcement(request):
+    admin_name = request.session.get("admin_name")  # adjust if your session key differs
+
+    if request.method == "POST":
+        title = request.POST.get("title")
+        message = request.POST.get("message")
+
+        AnnouncementDb.objects.create(
+            title=title,
+            message=message,
+            sender_type="Admin",
+            sender_name=admin_name if admin_name else "Admin"
+        )
+
+        messages.success(request, "Announcement sent successfully")
+        return redirect("Adminapp:send_announcement")
+
+
+
+def view_teacher_announcements(request):
+    announcements = AnnouncementDb.objects.filter(
+        sender_type="Teacher"
+    ).order_by('-created_at')
+
+    return render(request, "View_Announcements.html", {
+        "announcements": announcements
+    })
+
+
 def student_report(request):
     return render(request, "Student_Report.html")
 def attendance_analytics(request):

@@ -32,7 +32,7 @@
     <div class="form-card">
         <h4 class="text-center mb-4 fw-bold">Edit Subject</h4>
 
-        <form method="post" action="{% url 'admin_update_subject' s_id=subject.id %}">
+        <form method="post" action="{% url 'Adminapp:admin_update_subject' s_id=subject.id %}">
             {% csrf_token %}
 
             <div class="form-group mb-3">

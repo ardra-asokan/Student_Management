@@ -264,7 +264,7 @@
 
             <!-- Dashboard -->
             <li>
-                <a href="{% url 'student_page' %}" aria-expanded="false">
+                <a href="{% url 'studentapp:student_page' %}" aria-expanded="false">
                     <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                 </a>
             </li>
@@ -275,8 +275,8 @@
                     <i class="icon-user menu-icon"></i><span class="nav-text">My Profile</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{% url 'student_profile' %}">View Profile</a></li>
-                    <li><a href="{% url 'edit_profile' %}">Edit Profile</a></li>
+                    <li><a href="{% url 'studentapp:student_profile' %}">View Profile</a></li>
+                    <li><a href="{% url 'studentapp:edit_profile' %}">Edit Profile</a></li>
                 </ul>
             </li>
 
@@ -286,14 +286,14 @@
                     <i class="icon-book-open menu-icon"></i><span class="nav-text">My Subjects</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{% url 'view_student_subjects' %}">View Subjects</a></li>
+                    <li><a href="{% url 'studentapp:view_student_subjects' %}">View Subjects</a></li>
 
                 </ul>
-            </li>
+            </li>*
 
             <!-- Attendance -->
-            <li>
-                <a href="{% url 'student_attendance' %}" aria-expanded="false">
+            <li>*
+                <a href="{% url 'studentapp:student_attendance' %}" aria-expanded="false">
                     <i class="icon-check menu-icon"></i><span class="nav-text">Attendance</span>
                 </a>
             </li>
@@ -304,13 +304,13 @@
                     <i class="icon-chart menu-icon"></i><span class="nav-text">Marks / Results</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="{% url 'student_internal_marks' %}">Internal Marks</a></li>
-                    <li><a href="{% url 'student_semester_results' %}">Semester Results</a></li>
+                    <li><a href="{% url 'studentapp:student_internal_marks' %}">Internal Marks</a></li>
+                    <li><a href="{% url 'studentapp:student_semester_results' %}">Semester Results</a></li>
                     <li><a href="#">Download Marksheet</a></li>
                 </ul>
             </li>
 
-            <!-- Assignments -->
+            <!-- Assignments -->*
             <li>
                 <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
                     <i class="icon-note menu-icon"></i><span class="nav-text">Assignments</span>
@@ -339,7 +339,7 @@
                     <i class="icon-bell menu-icon"></i><span class="nav-text">Announcements</span>
                 </a>
             </li>
-
+*
             <!-- Study Materials -->
             <li>
                 <a href="#" aria-expanded="false">

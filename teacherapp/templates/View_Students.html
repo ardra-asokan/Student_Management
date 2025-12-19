@@ -11,43 +11,18 @@
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0,0,0,.05);
 }
-
-.table-container {
-    width: 100%;
-    margin-top: 20px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-}
-
-thead {
-    background: #2f4050;
-    color: white;
-}
-
-th, td {
-    padding: 12px;
-    border-bottom: 1px solid #e6e6e6;
-}
-
-tr:hover {
-    background-color: #f8f9fc;
-}
-
+.table-container { width: 100%; margin-top: 20px; }
+table { width: 100%; border-collapse: collapse; background: white; }
+thead { background: #2f4050; color: white; }
+th, td { padding: 12px; border-bottom: 1px solid #e6e6e6; }
+tr:hover { background-color: #f8f9fc; }
 .student-img {
     width: 45px;
     height: 45px;
     border-radius: 50%;
     object-fit: cover;
 }
-
-.btn-view {
-    padding: 5px 10px;
-    font-size: 13px;
-}
+.btn-view { padding: 5px 10px; font-size: 13px; }
 </style>
 
 <div class="content-body">
@@ -63,38 +38,38 @@ tr:hover {
                         <th>Name</th>
                         <th>Roll No</th>
                         <th>Email</th>
-                        <th>Class</th>
+                        <th>Department</th>
                         <th>Semester</th>
                         <th>Action</th>
                     </tr>
                 </thead>
+<tbody>
+{% for st in students %}
+<tr>
+    <td>
+        {% if st.profile_photo %}
+            <img src="{{ st.profile_photo.url }}" class="student-img">
+        {% else %}
+            <img src="{% static 'images/default-profile.png' %}" class="student-img">
+        {% endif %}
+    </td>
 
-                <tbody>
-                    {% for st in students %}
-                    <tr>
-                        <td>
-                            {% if st.photo %}
-                                <img src="{{ st.photo.url }}" class="student-img">
-                            {% else %}
-                                <img src="{% static 'images/default-profile.png' %}" class="student-img">
-                            {% endif %}
-                        </td>
+    <td>{{ st.name }}</td>
+    <td>{{ st.roll_no }}</td>
+    <td>{{ st.email }}</td>
+    <td>{{ st.department }}</td>
+    <td>{{ st.semester }}</td>
 
-                        <td>{{ st.name }}</td>
-                        <td>{{ st.roll_no }}</td>
-                        <td>{{ st.email }}</td>
-                        <td>{{ st.class_name }}</td>
-                        <td>{{ st.semester }}</td>
+    <td>
+        <a href="{% url 'teacherapp:teacher_student_profile' st.id %}"
+           class="btn btn-primary btn-sm btn-view">
+            View Profile
+        </a>
+    </td>
+</tr>
+{% endfor %}
+</tbody>
 
-                        <td>
-                            <a href="{% url 'teacherapp:student_profile' st.id %}" 
-                               class="btn btn-primary btn-sm btn-view">
-                                View Profile
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
 
             </table>
         </div>

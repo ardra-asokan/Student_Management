@@ -45,7 +45,7 @@
 
       <h4 class="card-title text-center mb-4 fw-bold">Add Teacher</h4>
 
-      <form class="forms-sample" method="post" action="{% url 'save_teacher' %}" enctype="multipart/form-data">
+      <form class="forms-sample" method="post" action="{% url 'Adminapp:save_teacher' %}" enctype="multipart/form-data">
         {% csrf_token %}
 
         <!-- First Name -->

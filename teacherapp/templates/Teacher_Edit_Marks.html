@@ -1,80 +1,72 @@
 {% extends 'teacher_index.html' %}
-{% load static %}
 {% block content %}
 
+<div class="container-fluid d-flex justify-content-center mt-5">
+    <div class="col-lg-6">
 
-<style>
-.container-card {
-    width: 90%;
-    margin: 30px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,.05);
-}
+        <div class="card shadow-sm">
+            <div class="card-body">
 
-.label-title {
-    font-weight: 600;
-    margin-bottom: 6px;
-}
+                <h4 class="text-center mb-4">Edit Marks</h4>
 
-.btn-save {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 15px;
-}
-</style>
+                <form method="POST"
+                      action="{% url 'teacherapp:update_marks' mark.id %}">
+                    {% csrf_token %}
 
-<div class="content-body">
-    <div class="container-fluid mt-3">
+                    <!-- STUDENT INFO -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Student</label>
+                        <input type="text"
+                               class="form-control"
+                               value="{{ mark.student.name }} ({{ mark.student.roll_no }})"
+                               disabled>
+                    </div>
 
-        <h3 class="text-center mb-4">Edit Marks</h3>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Subject</label>
+                        <input type="text"
+                               class="form-control"
+                               value="{{ mark.subject.subject_name }}"
+                               disabled>
+                    </div>
 
-        <div class="container-card">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Exam</label>
+                        <input type="text"
+                               class="form-control"
+                               value="{{ mark.exam_type }}"
+                               disabled>
+                    </div>
 
-            <form method="POST" action="{% url 'update_marks' mark.id %}">
-                {% csrf_token %}
+                    <!-- MARKS -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Marks</label>
+                        <input type="number"
+                               name="marks"
+                               class="form-control"
+                               min="0"
+                               max="100"
+                               value="{{ mark.marks }}"
+                               required>
+                    </div>
 
-                <!-- Student Name -->
-                <div class="mb-3">
-                    <label class="label-title">Student Name</label>
-                    <input type="text" class="form-control" value="{{ mark.student.name }}" readonly>
-                </div>
+                    <!-- BUTTONS -->
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'teacherapp:teacher_view_marks' %}"
+                           class="btn btn-secondary">
+                            Cancel
+                        </a>
 
-                <!-- Roll Number -->
-                <div class="mb-3">
-                    <label class="label-title">Roll Number</label>
-                    <input type="text" class="form-control" value="{{ mark.student.roll_no }}" readonly>
-                </div>
+                        <button class="btn btn-success px-4">
+                            Update Marks
+                        </button>
+                    </div>
 
-                <!-- Subject -->
-                <div class="mb-3">
-                    <label class="label-title">Subject</label>
-                    <input type="text" class="form-control" value="{{ mark.subject.subject_name }}" readonly>
-                </div>
+                </form>
 
-                <!-- Exam Type -->
-                <div class="mb-3">
-                    <label class="label-title">Exam Type</label>
-                    <select name="exam_type" class="form-control" required>
-                        <option value="Internal 1" {% if mark.exam_type == "Internal 1" %}selected{% endif %}>Internal 1</option>
-                        <option value="Internal 2" {% if mark.exam_type == "Internal 2" %}selected{% endif %}>Internal 2</option>
-                        <option value="Assignment" {% if mark.exam_type == "Assignment" %}selected{% endif %}>Assignment</option>
-                        <option value="Final Exam" {% if mark.exam_type == "Final Exam" %}selected{% endif %}>Final Exam</option>
-                    </select>
-                </div>
-
-                <!-- Marks -->
-                <div class="mb-3">
-                    <label class="label-title">Marks</label>
-                    <input type="number" name="marks" value="{{ mark.marks }}" class="form-control" min="0" max="100" required>
-                </div>
-
-                <button type="submit" class="btn btn-success btn-save">Update Marks</button>
-
-            </form>
-
+            </div>
         </div>
+
     </div>
 </div>
 

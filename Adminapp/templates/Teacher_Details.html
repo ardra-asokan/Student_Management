@@ -124,10 +124,10 @@
                 </td>
                 <td>
                     <button class="btn btn-success">
-                        <a href="{% url 'edit_teacher' teacher_id=i.id %}">Edit</a>
+                        <a href="{% url 'Adminapp:edit_teacher' teacher_id=i.id %}">Edit</a>
                     </button>
                     <button class="btn btn-danger">
-                        <a href="{% url 'delete_teacher' tr_id=i.id %}">Delete</a>
+                        <a href="{% url 'Adminapp:delete_teacher' tr_id=i.id %}">Delete</a>
                     </button>
                 </td>
             </tr>

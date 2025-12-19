@@ -75,8 +75,7 @@
                         <option value="">-- Select --</option>
                         <option value="Internal 1">Internal 1</option>
                         <option value="Internal 2">Internal 2</option>
-                        <option value="Model Exam">Model Exam</option>
-                        <option value="Semester Exam">Semester Exam</option>
+
                     </select>
                 </div>
 
@@ -103,25 +102,25 @@
                         </tr>
                     </thead>
 
-                    <tbody>
-                        {% for m in marks %}
-                        <tr>
-                            <td>{{ m.student.Name }}</td>
-                            <td>{{ m.student.RollNo }}</td>
-                            <td>
-                                <span class="badge bg-success px-3 py-2">
-                                    {{ m.marks }}
-                                </span>
-                            </td>
-                            <td>
-                                <a href="{% url 'edit_marks' m.id %}"
-                                   class="btn btn-warning btn-sm px-3">
-                                    Edit
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+                  <tbody>
+    {% for m in marks %}
+    <tr>
+        <td>{{ m.student.name }}</td>
+        <td>{{ m.student.roll_no }}</td>
+        <td>
+            <span class="badge bg-success px-3 py-2">
+                {{ m.marks }}
+            </span>
+        </td>
+        <td>
+            <a href="{% url 'teacherapp:edit_marks' m.id %}" class="btn btn-warning btn-sm px-3">
+                Edit
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+
                 </table>
             </div>
         </div>

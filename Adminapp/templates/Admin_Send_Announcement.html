@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% extends 'index.html' %}
+{% block content %}
+<html>
+<head>
+    <title>Send Announcement</title>
+</head>
+
+<body>
+
+<div class="container d-flex justify-content-center mt-5" style="margin-bottom: 240px;">
+    <div class="card shadow-lg w-100" style="max-width: 600px;">
+        <div class="card-body">
+
+            <h4 class="text-center fw-bold mb-4">
+                Send Announcement
+            </h4>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- Announcement Title -->
+                <div class="form-group mb-3">
+                    <label>Title</label>
+                    <input type="text"
+                           name="title"
+                           class="form-control"
+                           placeholder="Enter title"
+                           required>
+                </div>
+
+                <!-- Announcement Message -->
+                <div class="form-group mb-3">
+                    <label>Message</label>
+                    <textarea name="message"
+                              class="form-control"
+                              rows="4"
+                              placeholder="Enter message"
+                              required></textarea>
+                </div>
+
+                <!-- Info note -->
+
+
+                <!-- Submit -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success px-4">
+                        Send Announcement
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

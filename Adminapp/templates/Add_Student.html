@@ -42,7 +42,7 @@
     <div class="card-body">
       <h4 class="card-title text-center mb-4 fw-bold">Add Student</h4>
 
-      <form class="forms-sample" method="post" action="{% url 'save_student' %}" enctype="multipart/form-data">
+      <form class="forms-sample" method="post" action="{% url 'Adminapp:save_student' %}" enctype="multipart/form-data">
         {% csrf_token %}
 
 

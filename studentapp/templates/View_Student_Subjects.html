@@ -25,7 +25,7 @@
                             <td>{{ subject.subject_name }}</td>
                             <td>{{ subject.semester }}</td>
                             <td>
-                                <a href="{% url 'subject_details' subject.id %}" class="btn btn-sm btn-primary">
+                                <a href="{% url 'studentapp:student_subject_details' subject.id %}" class="btn btn-sm btn-primary">
                                     View Details
                                 </a>
                             </td>

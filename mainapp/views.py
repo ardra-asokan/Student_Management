@@ -44,7 +44,7 @@ def admin_login(request):
         if SignupDb.objects.filter(Name=un,Password=pswd).exists():
             request.session['Name']=un
             request.session['Password'] = pswd
-            return redirect('admin_dashboard')
+            return redirect('Adminapp:admin_dashboard')
         else:
             return redirect(login)
     else:

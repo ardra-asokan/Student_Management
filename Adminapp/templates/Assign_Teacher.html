@@ -37,7 +37,7 @@
     <div class="card-body">
       <h4 class="card-title text-center mb-4 fw-bold">Assign Teacher</h4>
 
-      <form class="forms-sample" method="post" action="{% url 'save_assigned_subject' %}" enctype="multipart/form-data">
+      <form class="forms-sample" method="post" action="{% url 'Adminapp:save_assigned_subject' %}" enctype="multipart/form-data">
         {% csrf_token %}
 
         <!-- Select Teacher -->

@@ -44,7 +44,7 @@
     <div class="card-body">
       <h4 class="card-title text-center mb-4 fw-bold">Add Subject</h4>
 
-      <form class="forms-sample"  method="POST" action="{% url 'admin_save_subject' %}">
+      <form class="forms-sample"  method="POST" action="{% url 'Adminapp:admin_save_subject' %}">
         {% csrf_token %}
 
         <!-- Subject Name -->

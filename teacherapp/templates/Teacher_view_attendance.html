@@ -10,87 +10,123 @@
         margin-bottom: 25px;
     }
 
-    /* ✅ ADDED: ensures page has enough height */
     .attendance-wrapper {
         min-height: 80vh;
+        margin-top: 40px;
     }
 
     label { font-weight: 600; }
+
     select, input[type="date"] {
-        height: 45px; border-radius: 7px;
+        height: 45px;
+        border-radius: 7px;
     }
+
     table {
-        width: 100%; border-collapse: collapse;
+        width: 100%;
+        border-collapse: collapse;
         margin-top: 20px;
-        background: white; border-radius: 10px;
+        background: white;
+        border-radius: 10px;
         overflow: hidden;
     }
+
     th {
-        background: #2f4050; color: white;
+        background: #2f4050;
+        color: white;
         padding: 10px;
     }
+
     td {
-        padding: 10px; border-bottom: 1px solid #eee;
+        padding: 10px;
+        border-bottom: 1px solid #eee;
     }
+
     tr:nth-child(even) {
         background: #f8f9fb;
     }
 </style>
 
-<!-- ✅ ADDED wrapper class ONLY -->
-<div class="container attendance-wrapper" style="margin-top:40px;">
+<div class="container attendance-wrapper">
 
+    <!-- FILTER CARD -->
     <div class="card-box">
-        <h3 class="mb-3" style="text-align:center;">View Attendance</h3>
+        <h3 class="mb-3 text-center">View Attendance</h3>
 
         <form method="GET" class="row g-3">
 
             <div class="col-md-4">
                 <label>Select Date</label>
-                <input type="date" class="form-control" name="date"
-                       value="{{ selected_date }}">
+                <input type="date"
+                       class="form-control"
+                       name="date"
+                       value="{{ selected_date }}"
+                       required>
             </div>
 
             <div class="col-md-4">
                 <label>Select Subject</label>
-                <select name="subject" class="form-control">
+              <select name="subject" class="form-control" required>
     <option value="">-- Select --</option>
 
     {% for s in assigned_subjects %}
-        <option value="{{ s.subject.subject_name }}">
-            {{ s.subject.subject_name }}
+        <option value="{{ s.subject.id }}"
+            {% if selected_subject == s.subject.id|stringformat:"s" %}selected{% endif %}>
+            {{ s.subject.subject_name }} ({{ s.class_name }})
         </option>
     {% endfor %}
 </select>
+
+
+
+
+
             </div>
 
-            <div class="col-12 mt-3">
-                <button class="btn btn-primary">View</button>
+            <div class="col-md-4 d-flex align-items-end">
+                <button class="btn btn-primary w-100">View</button>
             </div>
 
         </form>
     </div>
 
+    <!-- ATTENDANCE TABLE -->
     {% if records %}
     <div class="card-box">
-        <h4>Attendance for {{ selected_date }}</h4>
+        <table class="table table-bordered text-center">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Roll No</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+          <tbody>
+{% for r in records %}
+<tr>
+    <td>{{ r.student.name }}</td>
+    <td>{{ r.student.roll_no }}</td>
+    <td>
+        {% if r.status == "Present" %}
+            <span class="badge bg-success">Present</span>
+        {% else %}
+            <span class="badge bg-danger">Absent</span>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</tbody>
 
-        <table>
-            <tr>
-                <th>Student Name</th>
-                <th>Roll No</th>
-                <th>Status</th>
-            </tr>
 
-            {% for r in records %}
-            <tr>
-                <td>{{ r.student.name }}</td>
-                <td>{{ r.student.roll_no }}</td>
-                <td>{{ r.status }}</td>
-            </tr>
-            {% endfor %}
+
+
+
         </table>
     </div>
+    {% elif selected_date and selected_subject %}
+        <p class="text-center text-danger mt-4">
+            No attendance found
+        </p>
     {% endif %}
 
 </div>

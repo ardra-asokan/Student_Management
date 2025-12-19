@@ -32,7 +32,7 @@
     <div class="form-card">
         <h4 class="text-center mb-4 fw-bold">Edit Assigned Subject</h4>
 
-        <form method="post" action="{% url 'update_assigned_subject' a_id=assign.id %}">
+        <form method="post" action="{% url 'Adminapp:update_assigned_subject' a_id=assign.id %}">
             {% csrf_token %}
 
             <!-- Select Teacher -->

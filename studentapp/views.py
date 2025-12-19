@@ -1,22 +1,19 @@
-from django.shortcuts import render,redirect
-from Adminapp.models import SubjectDb,StudentDb
+from django.shortcuts import render,redirect, get_object_or_404
+from Adminapp.models import SubjectDb,StudentDb,AssignedSubjectDb
 from teacherapp.models import AttendanceDb,MarksDb,AssignmentSubmissionDb,AssignmentDb
 from django.db.models import Count, Q
 
 # Create your views here.
 def student_page(request):
     return render(request, "Student_index.html")
-def student_profile(request,student_id):
-    student_id = request.session.get('student_id')
+def student_profile(request):
+    student_id = request.session.get("student_id")
 
     if not student_id:
-        return redirect('student_log_in')
+        return redirect("student_login")
 
     student = StudentDb.objects.get(id=student_id)
-
-    return render(request, 'View_Student_Profile.html', {
-        'student': student
-    })
+    return render(request, "View_Student_Profile.html", {"student": student})
 
 
 def edit_profile(request):
@@ -41,6 +38,7 @@ def edit_profile(request):
     return render(request, 'Edit_Student_Profile.html', {
         'student': student
     })
+
 def view_student_subjects(request):
     student_id = request.session.get('student_id')
 
@@ -49,27 +47,27 @@ def view_student_subjects(request):
 
     student = StudentDb.objects.get(id=student_id)
 
-    # example: subjects assigned to student's class & semester
     subjects = SubjectDb.objects.filter(
-        department=student.department,
-        semester=student.semester
+        department__iexact=student.department.strip(),
+        semester__iexact=student.semester.strip()
     )
 
     return render(request, 'View_Student_Subjects.html', {
         'subjects': subjects
     })
-def subject_details(request, subject_id):
+
+
+def student_subject_details(request, subject_id):
     student_id = request.session.get('student_id')
 
     if not student_id:
         return redirect('student_log_in')
 
-    subject = SubjectDb.objects.get(id=subject_id)
+    subject = get_object_or_404(SubjectDb, id=subject_id)
 
     return render(request, 'Subject_Details.html', {
         'subject': subject
     })
-
 
 def student_attendance(request):
 
