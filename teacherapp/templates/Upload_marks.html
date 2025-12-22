@@ -2,124 +2,192 @@
 {% block content %}
 
 <style>
-/* Ensures footer stays at bottom */
+/* Page background */
 .page-wrapper {
-    min-height: calc(100vh - 120px); /* adjust if header height differs */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    min-height: calc(100vh - 120px);
+    background: #f4f6fa;
+    padding: 35px 0;
 }
 
-/* Prevent sidebar overlap */
+/* Center content */
 .content-center {
-    width: 100%;
-    max-width: 950px;
-    padding: 0 15px;
+    max-width: 980px;
+    margin: auto;
+    padding: 0 16px;
+}
+
+/* Header */
+.page-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+.page-header h4 {
+    font-weight: 600;
+    color: #2f4050;
+    margin-bottom: 4px;
+}
+.page-header p {
+    font-size: 14px;
+}
+
+/* Card */
+.card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.07);
+}
+
+/* Section title inside card */
+.section-title {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 15px;
+}
+
+/* Form */
+.form-label {
+    font-weight: 500;
+    font-size: 14px;
+}
+.form-control {
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Table */
+.table {
+    margin-bottom: 0;
+}
+.table thead {
+    background: #eef2f7;
+}
+.table thead th {
+    font-weight: 600;
+    color: #374151;
+}
+.table tbody tr:hover {
+    background: #f7f9ff;
+}
+
+/* Footer actions */
+.table-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+/* Empty alert */
+.alert {
+    border-radius: 10px;
 }
 </style>
 
 <div class="page-wrapper">
     <div class="content-center">
 
-        <div class="mt-5 mb-5">
+        <!-- PAGE HEADER -->
+        <div class="page-header">
+            <h2 style="font-weight:bold;">Upload Marks</h2>
+        </div>
 
-            <!-- PAGE TITLE -->
-            <div class="text-center mb-4">
-                <h3 class="fw-bold">Upload Marks</h3>
-                <p class="text-muted mb-0">Select subject and exam to load students</p>
+        <!-- FILTER SECTION -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="section-title">Select Subject & Exam</div>
+
+                <form method="GET" class="row g-3 align-items-end">
+
+                    <div class="col-md-5">
+                        <label class="form-label">Subject</label>
+                        <select name="subject" class="form-control" required>
+                            <option value="">-- Select Subject --</option>
+                            {% for s in assigned_subjects %}
+                                <option value="{{ s.id }}"
+                                    {% if selected_subject == s.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ s.subject.subject_name }} ({{ s.class_name }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Exam</label>
+                        <select name="exam" class="form-control" required>
+                            <option value="">-- Select Exam --</option>
+                            <option value="Internal 1" {% if selected_exam == "Internal 1" %}selected{% endif %}>Internal 1</option>
+                            <option value="Internal 2" {% if selected_exam == "Internal 2" %}selected{% endif %}>Internal 2</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3 d-grid">
+                        <button class="btn btn-primary">
+                            Load Students
+                        </button>
+                    </div>
+
+                </form>
             </div>
+        </div>
 
-            <!-- FILTER CARD -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-body px-4 py-3">
-                    <form method="GET" class="row g-3 align-items-end justify-content-center">
+        <!-- STUDENT TABLE -->
+        {% if students|length > 0 %}
+        <form method="POST" action="{% url 'teacherapp:save_marks' %}">
+            {% csrf_token %}
+            <input type="hidden" name="exam_type" value="{{ selected_exam }}">
+            <input type="hidden" name="assigned_id" value="{{ selected_subject }}">
 
-                        <div class="col-md-5">
-                            <label class="form-label fw-semibold">Subject</label>
-                            <select name="subject" class="form-control" required>
-                                <option value="">-- Select Subject --</option>
-                                {% for s in assigned_subjects %}
-                                    <option value="{{ s.id }}"
-                                        {% if selected_subject == s.id|stringformat:"s" %}selected{% endif %}>
-                                        {{ s.subject.subject_name }} ({{ s.class_name }})
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="section-title">Student List</div>
 
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Exam</label>
-                            <select name="exam" class="form-control" required>
-                                <option value="">-- Select Exam --</option>
-                                <option value="Internal 1" {% if selected_exam == "Internal 1" %}selected{% endif %}>Internal 1</option>
-                                <option value="Internal 2" {% if selected_exam == "Internal 2" %}selected{% endif %}>Internal 2</option>
-                            </select>
-                        </div>
+                    <table class="table table-bordered text-center align-middle">
+                        <thead>
+                            <tr>
+                                <th class="text-start">Student Name</th>
+                                <th>Roll No</th>
+                                <th width="160">Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for st in students %}
+                            <tr>
+                                <td class="text-start">{{ st.name }}</td>
+                                <td>{{ st.roll_no }}</td>
+                                <td>
+                                    <input type="number"
+                                           name="marks_{{ st.id }}"
+                                           class="form-control text-center"
+                                           min="0"
+                                           max="100"
+                                           required>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
 
-                        <div class="col-md-3 d-grid">
-                            <button class="btn btn-primary">
-                                Load Students
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-
-            <!-- STUDENT TABLE -->
-            {% if students|length > 0 %}
-            <form method="POST" action="{% url 'teacherapp:save_marks' %}">
-                {% csrf_token %}
-
-                <input type="hidden" name="exam_type" value="{{ selected_exam }}">
-                <input type="hidden" name="assigned_id" value="{{ selected_subject }}">
-
-                <div class="card shadow-sm">
-                    <div class="card-body px-4 py-3">
-                        <table class="table table-bordered text-center align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th class="text-start">Student Name</th>
-                                    <th>Roll No</th>
-                                    <th width="150">Marks</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for st in students %}
-                                <tr>
-                                    <td class="text-start">{{ st.name }}</td>
-                                    <td>{{ st.roll_no }}</td>
-                                    <td>
-                                        <input type="number"
-                                               name="marks_{{ st.id }}"
-                                               class="form-control text-center"
-                                               min="0"
-                                               max="100"
-                                               required>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-
-                        <!-- SAVE BUTTON -->
-                        <div class="text-end mt-3">
-                            <button class="btn btn-success px-4" style="text-align:center;">
-                                Save Marks
-                            </button>
-                        </div>
+                    <div class="table-footer" >
+                        <button class="btn btn-success px-4"  style="margin-right:380px;">
+                            Save Marks
+                        </button>
                     </div>
                 </div>
-            </form>
-            {% else %}
-                {% if selected_subject %}
-                <div class="alert alert-warning text-center">
-                    No students found
-                </div>
-                {% endif %}
+            </div>
+        </form>
+        {% else %}
+            {% if selected_subject %}
+            <div class="alert alert-warning text-center">
+                No students found for the selected subject
+            </div>
             {% endif %}
+        {% endif %}
 
-        </div>
     </div>
 </div>
 

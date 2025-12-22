@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from Adminapp.models import SubjectDb,AssignedSubjectDb,StudentDb,TeacherDb,AnnouncementDb
 from teacherapp.models import AttendanceDb,MarksDb,AssignmentDb,AssignmentSubmissionDb,StudyMaterialDb
-from datetime import date
+from datetime import date,datetime
 from django.contrib import messages
 import os
 from django.conf import settings
@@ -86,29 +86,26 @@ def mark_attendance(request):
         "today": date.today(),
     })
 
-
-
-
-
 def save_attendance(request):
     if request.method == "POST":
 
         assigned_subject_id = request.POST.get("subject_id")
-
-        assigned_subject = AssignedSubjectDb.objects.get(
-            id=assigned_subject_id
-        )
-
+        assigned_subject = AssignedSubjectDb.objects.get(id=assigned_subject_id)
         subject = assigned_subject.subject
-        att_date = date.today()
+
+        att_date_str = request.POST.get("att_date")
+
+        if att_date_str:
+            try:
+                att_date = datetime.strptime(att_date_str, "%Y-%m-%d").date()
+            except ValueError:
+                att_date = datetime.strptime(att_date_str, "%b. %d, %Y").date()
+        else:
+            att_date = date.today()
 
         for key, value in request.POST.items():
             if key.startswith("student_"):
                 student_id = key.split("_")[1]
-
-                if not student_id:
-                    continue
-
                 student = StudentDb.objects.get(id=student_id)
 
                 AttendanceDb.objects.update_or_create(
@@ -119,6 +116,7 @@ def save_attendance(request):
                 )
 
         return redirect("teacherapp:teacher_view_attendance")
+
 
 def teacher_view_attendance(request):
     teacher_name = request.session.get("teacher_name")
@@ -131,11 +129,18 @@ def teacher_view_attendance(request):
     selected_subject_id = request.GET.get("subject")
 
     records = None
+
     if selected_date and selected_subject_id:
-        records = AttendanceDb.objects.filter(
-            date=selected_date,
-            subject_id=selected_subject_id
-        ).select_related("student", "subject")
+        try:
+            selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
+        except ValueError:
+            selected_date = None
+
+        if selected_date:
+            records = AttendanceDb.objects.filter(
+                date=selected_date,
+                subject_id=selected_subject_id
+            ).select_related("student", "subject")
 
     return render(request, "Teacher_view_attendance.html", {
         "assigned_subjects": assigned_subjects,
@@ -143,8 +148,6 @@ def teacher_view_attendance(request):
         "selected_date": selected_date,
         "selected_subject": selected_subject_id,
     })
-
-
 
 
 
@@ -166,13 +169,16 @@ def upload_marks(request):
         assigned = AssignedSubjectDb.objects.filter(
             id=selected_assigned_id,
             teacher__iexact=teacher_name.strip()
-        ).first()
+        ).select_related('subject').first()
 
-        if assigned:
-            department = assigned.class_name.split()[0].strip()
+        if assigned and assigned.subject:
+            # ✅ TAKE FROM SUBJECT (NOT class_name)
+            department = assigned.subject.department
+            semester = assigned.subject.semester
 
             students = StudentDb.objects.filter(
-                department__iexact=department
+                department__iexact=department.strip(),
+                semester__iexact=semester.strip()
             )
 
     return render(request, "Upload_marks.html", {
@@ -181,6 +187,7 @@ def upload_marks(request):
         "selected_subject": selected_assigned_id,
         "selected_exam": selected_exam,
     })
+
 
 
 def save_marks(request):
@@ -257,6 +264,10 @@ def update_marks(request, mark_id):
         return redirect("teacherapp:teacher_view_marks")
 
 
+def delete_mark(request, mark_id):
+    mark = MarksDb.objects.get(id=mark_id)
+    mark.delete()
+    return redirect('teacherapp:teacher_view_marks')
 
 
 def upload_assignments(request):
@@ -493,7 +504,7 @@ def teacher_send_announcements(request):
             sender_type="Teacher",
             sender_name=teacher_name
         )
-        return redirect("teacher_view_announcements")
+        return redirect("teacherapp:teacher_view_announcements")
 
     return render(request, "Teacher_Send_Announcements.html")
 
@@ -547,3 +558,4 @@ def delete_study_material(request, material_id):
     material = get_object_or_404(StudyMaterialDb, id=material_id)
     material.delete()
     return redirect('teacherapp:teacher_view_study_material')
+

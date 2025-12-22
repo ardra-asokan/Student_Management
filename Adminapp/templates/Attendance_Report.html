@@ -1,87 +1,78 @@
 <!DOCTYPE html>
 {% extends 'index.html' %}
 {% block content %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Attendance Reports</title>
 
-    <style>
-        .card {
-            width: 100%;
-            max-width: 550px;
-            margin: 0 auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            border-radius: 15px;
-            background: #fff;
-        }
-        .card-body { padding: 30px; }
-        .form-control { border-radius: 8px; }
-    </style>
-</head>
+<div class="d-flex justify-content-center align-items-start"
+     style="min-height: 90vh; padding-top: 60px;">
 
-<body>
-
-<div class="d-flex justify-content-center align-items-start" style="min-height: 90vh; padding-top: 60px;">
-<div class="card shadow-lg">
+<div class="card shadow-lg" style="max-width: 550px; width: 100%;">
 <div class="card-body">
 
-<h4 class="card-title text-center mb-4 fw-bold">Attendance Reports</h4>
+<h4 class="card-title text-center mb-4 fw-bold">
+    Attendance Reports
+</h4>
 
-<form>
+<form method="get">
 
     <!-- From Date -->
     <div class="form-group mb-3">
         <label>From Date</label>
-        <input type="date" class="form-control" name="from_date">
+        <input type="date" class="form-control"
+               name="from_date" required>
     </div>
 
     <!-- To Date -->
     <div class="form-group mb-3">
         <label>To Date</label>
-        <input type="date" class="form-control" name="to_date">
+        <input type="date" class="form-control"
+               name="to_date" required>
     </div>
 
     <!-- Department -->
     <div class="form-group mb-3">
         <label>Department</label>
-        <select class="form-control" name="department">
-            <option selected>Select Department</option>
-            <option>CSE</option>
-            <option>ECE</option>
-            <option>MECH</option>
-            <option>CIVIL</option>
-            <option>EEE</option>
+        <select class="form-control"
+                name="department" required>
+            <option value="">Select Department</option>
+            <option value="CSE">CSE</option>
+            <option value="ECE">ECE</option>
+            <option value="MECH">MECH</option>
+            <option value="CIVIL">CIVIL</option>
+            <option value="EEE">EEE</option>
         </select>
     </div>
 
     <!-- Semester -->
     <div class="form-group mb-3">
         <label>Semester</label>
-        <select class="form-control" name="semester">
-            <option selected>Select Semester</option>
-            <option>S1</option>
-            <option>S2</option>
-            <option>S3</option>
-            <option>S4</option>
-            <option>S5</option>
-            <option>S6</option>
-            <option>S7</option>
-            <option>S8</option>
+        <select class="form-control"
+                name="semester" required>
+            <option value="">Select Semester</option>
+            <option value="S1">S1</option>
+            <option value="S2">S2</option>
+            <option value="S3">S3</option>
+            <option value="S4">S4</option>
+            <option value="S5">S5</option>
+            <option value="S6">S6</option>
+            <option value="S7">S7</option>
+            <option value="S8">S8</option>
         </select>
     </div>
 
     <div class="text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
-        <button type="reset" class="btn btn-light">Reset</button>
+        <button type="submit" class="btn btn-primary me-2">
+            Generate Report
+        </button>
+        <button type="reset" class="btn btn-light">
+            Reset
+        </button>
     </div>
 
 </form>
 
+
 </div>
 </div>
 </div>
 
-</body>
-</html>
 {% endblock %}

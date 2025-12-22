@@ -1,92 +1,127 @@
-<!DOCTYPE html>
 {% extends 'index.html' %}
 {% block content %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>View Attendance</title>
 
-    <style>
-        .card {
-            width: 100%;
-            max-width: 550px;
-            margin: 0 auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            border-radius: 15px;
-            background: #fff;
-        }
-        .card-body { padding: 30px; }
-        .form-control { border-radius: 8px; }
-    </style>
-</head>
+<style>
+    .card {
+        width: 100%;
+        max-width: 550px;
+        margin: 0 auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        border-radius: 15px;
+        background: #fff;
+    }
+    .card-body {
+        padding: 30px;
+    }
+    .form-control {
+        border-radius: 8px;
+    }
+</style>
 
-<body>
+<div class="d-flex justify-content-center align-items-start"
+     style="min-height: 90vh; padding-top: 60px;">
 
-<div class="d-flex justify-content-center align-items-start" style="min-height: 90vh; padding-top: 60px;">
-<div class="card shadow-lg">
-<div class="card-body">
+    <div class="card shadow-lg">
+        <div class="card-body">
 
-<h4 class="card-title text-center mb-4 fw-bold">View Attendance</h4>
+            <h4 class="card-title text-center mb-4 fw-bold">
+                View Attendance
+            </h4>
 
-<form>
+            <!-- FORM -->
+            <form method="post">
+                {% csrf_token %}
 
-    <!-- Select Date -->
-    <div class="form-group mb-3">
-        <label>Select Date</label>
-        <input type="date" class="form-control" name="att_date">
+                <!-- Select Date -->
+                <div class="form-group mb-3">
+                    <label>Select Date</label>
+                    <input type="date" class="form-control" name="att_date" required>
+                </div>
+
+                <!-- Department (UI only) -->
+                <div class="form-group mb-3">
+                    <label>Department</label>
+                    <select class="form-control">
+                        <option selected disabled>Select Department</option>
+                        <option>CSE</option>
+                        <option>ECE</option>
+                        <option>CIVIL</option>
+                        <option>EEE</option>
+                        <option>MECH</option>
+                    </select>
+                </div>
+
+                <!-- Semester (UI only) -->
+                <div class="form-group mb-3">
+                    <label>Semester</label>
+                    <select class="form-control">
+                        <option selected disabled>Select Semester</option>
+                        <option>S1</option>
+                        <option>S2</option>
+                        <option>S3</option>
+                        <option>S4</option>
+                        <option>S5</option>
+                        <option>S6</option>
+                        <option>S7</option>
+                        <option>S8</option>
+                    </select>
+                </div>
+
+                <!-- Subject -->
+                <div class="form-group mb-3">
+                    <label>Select Subject</label>
+                    <select class="form-control" name="subject" required>
+                        <option selected disabled>Select Subject</option>
+                        {% for i in subjects %}
+                            <option value="{{ i.id }}">
+                                {{ i.subject_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary me-2">
+                        View
+                    </button>
+                    <button type="reset" class="btn btn-light">
+                        Reset
+                    </button>
+                </div>
+            </form>
+
+            <!-- ATTENDANCE RESULT -->
+            {% if attendance %}
+                <hr>
+                <h5 class="text-center fw-bold mt-4">
+                    Attendance Details
+                </h5>
+
+                <table class="table table-bordered text-center mt-3">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in attendance %}
+                        <tr>
+                            <td>{{ a.student.name }}</td>
+                            <td>{{ a.status }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            {% elif attendance is not None %}
+                <p class="text-center text-muted mt-3">
+                    No attendance found for selected date and subject
+                </p>
+            {% endif %}
+
+        </div>
     </div>
-
-    <!-- Department -->
-    <div class="form-group mb-3">
-        <label>Department</label>
-        <select class="form-control" name="department">
-            <option selected>Select Department</option>
-            <option>CSE</option>
-            <option>ECE</option>
-            <option>CIVIL</option>
-            <option>EEE</option>
-            <option>MECH</option>
-        </select>
-    </div>
-
-    <!-- Semester -->
-    <div class="form-group mb-3">
-        <label>Semester</label>
-        <select class="form-control" name="semester">
-            <option selected>Select Semester</option>
-            <option>S1</option>
-            <option>S2</option>
-            <option>S3</option>
-            <option>S4</option>
-            <option>S5</option>
-            <option>S6</option>
-            <option>S7</option>
-            <option>S8</option>
-        </select>
-    </div>
-
-    <!-- Subject -->
-    <div class="form-group mb-3">
-        <label>Select Subject</label>
-        <select class="form-control" name="subject">
-            <option>Select Subject</option>
-                    {% for i in subjects %}
-                        <option value="{{ i.id }}">{{ i.subject_name }}</option>
-                    {% endfor %}
-        </select>
-    </div>
-
-    <div class="text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">View</button>
-        <button type="reset" class="btn btn-light">Reset</button>
-    </div>
-
-</form>
-
 </div>
-</div>
-</div>
 
-</body>
-</html>
 {% endblock %}

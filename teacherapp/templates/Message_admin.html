@@ -1,0 +1,46 @@
+{% extends 'teacher_index.html' %}
+{% block content %}
+
+<div class="container mt-4 mb-5">
+    <div class="row justify-content-center">
+
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+
+                <div class="card-header bg-primary text-white text-center">
+                    <strong>Message Admin</strong>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Subject</label>
+                            <input type="text" class="form-control" placeholder="Enter subject">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" rows="5"
+                                      placeholder="Write your message to admin..."></textarea>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">
+                                Send Message
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

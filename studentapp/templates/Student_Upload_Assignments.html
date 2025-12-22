@@ -1,0 +1,65 @@
+{% extends 'student_index.html' %}
+{% block content %}
+
+<div class="container px-4 mt-3" style="margin-bottom:520px;">
+
+    <!-- HEADER -->
+    <div class="card border-0 shadow-sm mb-3" style="margin-top:40px;" >
+        <div class="card-body py-3" >
+            <h5 class="fw-bold mb-1" style="text-align:center;" >📤 Upload Assignment</h5>
+<!--            <small class="text-muted" style="text-align:center;">Submit your assignment before deadline</small>-->
+        </div>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            {% if assignments %}
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Assignment Dropdown -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Select Assignment</label>
+                    <select name="assignment" class="form-select" required>
+                        <option value="">-- Select Assignment --</option>
+                        {% for a in assignments %}
+                            <option value="{{ a.id }}">
+                                {{ a.subject.subject_name }} – {{ a.title }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- File Upload -->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Upload File</label>
+                    <input type="file"
+                           name="file"
+                           class="form-control"
+                           required>
+                </div>
+
+                <!-- Buttons -->
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary px-4">
+                        Submit Assignment
+                    </button>
+                </div>
+
+            </form>
+            {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted mb-0">
+                        🎉 All assignments submitted
+                    </p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

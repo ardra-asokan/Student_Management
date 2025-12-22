@@ -17,6 +17,7 @@ urlpatterns = [
     path('teacher_view_marks/', teacher_views.teacher_view_marks, name="teacher_view_marks"),
     path('edit_marks/<int:mark_id>/', teacher_views.edit_marks, name='edit_marks'),
     path('update_marks/<int:mark_id>/', teacher_views.update_marks, name='update_marks'),
+    path('delete-mark/<int:mark_id>/', teacher_views.delete_mark, name='delete_mark'),
     path('upload_assignments/', teacher_views.upload_assignments, name="upload_assignments"),
     path('save_assignment/', teacher_views.save_assignment, name="save_assignment"),
     path('student_submissions/', teacher_views.student_submissions, name="student_submissions"),

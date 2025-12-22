@@ -10,7 +10,7 @@
             <div class="card-body">
 
                 <table class="table table-bordered text-center">
-                    <thead>
+                    <thead class="table-light">
                         <tr>
                             <th>Subject</th>
                             <th>Total Classes</th>
@@ -20,18 +20,22 @@
                     </thead>
 
                     <tbody>
-                        {% for a in attendance %}
-                        <tr>
-                            <td>{{ a.subject__subject_name }}</td>
-                            <td>{{ a.total }}</td>
-                            <td>{{ a.present }}</td>
-                            <td>{{ a.percent }}%</td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="4">No attendance available</td>
-                        </tr>
-                        {% endfor %}
+                        {% if attendance_data %}
+                            {% for a in attendance_data %}
+                            <tr>
+                                <td>{{ a.subject__subject_name }}</td>
+                                <td>{{ a.total_classes }}</td>
+                                <td>{{ a.present_count }}</td>
+                                <td>{{ a.percentage }}%</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">
+                                    No attendance available
+                                </td>
+                            </tr>
+                        {% endif %}
                     </tbody>
                 </table>
 

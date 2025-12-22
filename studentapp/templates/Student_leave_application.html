@@ -1,0 +1,124 @@
+{% extends 'student_index.html' %}
+{% block content %}
+
+<div class="container px-4 mt-4 mb-5">
+
+    <!-- PAGE HEADER -->
+    <div class="leave-header text-center mb-5">
+        <h3 class="fw-bold  mb-1" style="font-size:30px;">📝 Leave Application</h3>
+<!--        <p class=" mb-0">-->
+<!--            Submit your leave request to the admin / teacher-->
+<!--        </p>-->
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="row justify-content-center" style="margin-bottom:140px;">
+        <div class="col-lg-6 col-md-8">
+
+            <div class="card leave-card border-0">
+                <div class="card-body p-4">
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- SUBJECT -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Leave Subject</label>
+                            <input type="text"
+                                   name="subject"
+                                   class="form-control"
+                                   placeholder="Eg: Medical Leave"
+                                   required>
+                        </div>
+
+                        <!-- DATE ROW -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">From Date</label>
+                                <input type="date"
+                                       name="from_date"
+                                       class="form-control"
+                                       required>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold">To Date</label>
+                                <input type="date"
+                                       name="to_date"
+                                       class="form-control"
+                                       required>
+                            </div>
+                        </div>
+
+                        <!-- REASON -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Reason for Leave</label>
+                            <textarea name="reason"
+                                      class="form-control"
+                                      rows="4"
+                                      placeholder="Explain your reason briefly"
+                                      required></textarea>
+                        </div>
+
+                        <!-- BUTTONS -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="reset" class="btn btn-light px-4">
+                                Reset
+                            </button>
+                            <button type="submit" class="btn btn-primary px-4">
+                                Submit Leave
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- STYLES -->
+<style>
+    /* HEADER */
+    .leave-header {
+
+        padding: 35px 20px;
+        border-radius: 16px;
+    }
+
+    /* CARD */
+    .leave-card {
+        border-radius: 16px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+
+    /* FORM */
+    .form-control {
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+
+    .form-control:focus {
+        border-color: #185a9d;
+        box-shadow: 0 0 0 0.15rem rgba(24,90,157,0.2);
+    }
+
+    /* BUTTON */
+    .btn-primary {
+        background: linear-gradient(135deg, #43cea2, #185a9d);
+        border: none;
+        border-radius: 20px;
+        font-size: 14px;
+    }
+
+    .btn-light {
+        border-radius: 20px;
+        font-size: 14px;
+    }
+</style>
+
+{% endblock %}

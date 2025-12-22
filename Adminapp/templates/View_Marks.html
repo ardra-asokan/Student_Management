@@ -5,49 +5,80 @@
 <head>
     <meta charset="UTF-8">
     <title>View Marks</title>
-    <style>
-
-    </style>
 </head>
 
 <body>
 
-<div class="container d-flex justify-content-center mt-5" style="margin-bottom: 380px;">
-    <div class="card shadow-lg w-100" style="max-width: 600px;">
-<div class="card-body">
+<div class="container d-flex justify-content-center mt-5" style="margin-bottom: 300px;">
+    <div class="card shadow-lg w-100" style="max-width: 800px;">
+        <div class="card-body">
 
-<h4 class="text-center fw-bold mb-4">View Marks</h4>
+            <h4 class="text-center fw-bold mb-4">View Marks</h4>
 
-<form>
+            <!-- FORM -->
+          <form method="get">
 
-    <div class="form-group mb-3">
-        <label>Student Roll Number</label>
-        <input type="text" class="form-control" name="roll">
-    </div>
+    <label>Student Roll Number</label>
+    <input type="text"
+           name="roll_no"
+           class="form-control"
+           required>
 
-    <div class="form-group mb-3">
-        <label>Select Semester</label>
-        <select class="form-control" name="semester">
-            <option selected>Select Semester</option>
-            <option>S1</option>
-            <option>S2</option>
-            <option>S3</option>
-            <option>S4</option>
-            <option>S5</option>
-            <option>S6</option>
-            <option>S7</option>
-            <option>S8</option>
-        </select>
-    </div>
+    <label>Select Semester</label>
+    <select name="semester" class="form-control" required>
+        <option value="">Select Semester</option>
+        <option value="S1">S1</option>
+        <option value="S2">S2</option>
+        <option value="S3">S3</option>
+        <option value="S4">S4</option>
+        <option value="S5">S5</option>
+        <option value="S6">S6</option>
+        <option value="S7">S7</option>
+        <option value="S8">S8</option>
+    </select>
 
-    <div class="text-center mt-4">
-        <button type="submit" class="btn btn-primary">View Marks</button>
-    </div>
+    <button type="submit" class="btn btn-primary mt-3">
+        View Marks
+    </button>
 
 </form>
 
-</div>
-</div>
+
+            <!-- MARKS TABLE -->
+            {% if marks %}
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Roll No</th>
+                            <th>Subject</th>
+                            <th>Exam</th>
+                            <th>Marks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in marks %}
+                        <tr>
+                            <td>{{ m.student.name }}</td>
+                            <td>{{ m.student.roll_no }}</td>
+                            <td>{{ m.subject.subject_name }}</td>
+                            <td>{{ m.exam_type }}</td>
+                            <td>{{ m.marks }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% elif roll_no %}
+                <p class="text-danger text-center">
+                    No marks found for this student.
+                </p>
+            {% endif %}
+
+        </div>
+    </div>
 </div>
 
 </body>

@@ -98,6 +98,7 @@
                             <th>Student Name</th>
                             <th>Roll No</th>
                             <th>Marks</th>
+                            <th>Exam Type</th>
                             <th>Edit</th>
                         </tr>
                     </thead>
@@ -108,15 +109,23 @@
         <td>{{ m.student.name }}</td>
         <td>{{ m.student.roll_no }}</td>
         <td>
-            <span class="badge bg-success px-3 py-2">
+            <span class="badge px-3 py-2">
                 {{ m.marks }}
             </span>
         </td>
+         <td>{{ m.exam_type }}</td>
         <td>
-            <a href="{% url 'teacherapp:edit_marks' m.id %}" class="btn btn-warning btn-sm px-3">
-                Edit
-            </a>
-        </td>
+    <a href="{% url 'teacherapp:edit_marks' m.id %}" class="btn btn-success btn-sm px-3">
+        Edit
+    </a>
+
+    <a href="{% url 'teacherapp:delete_mark' m.id %}"
+       class="btn btn-danger btn-sm px-3"
+       onclick="return confirm('Are you sure?')">
+        Delete
+    </a>
+</td>
+
     </tr>
     {% endfor %}
 </tbody>

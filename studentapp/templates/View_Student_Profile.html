@@ -61,7 +61,7 @@
 }
 
 .info-label {
-    width: 150px;
+    width: 170px;
     font-weight: 600;
     color: #374151;
 }
@@ -100,13 +100,23 @@
                     <div class="section-title">Student Details</div>
 
                     <div class="info-row">
-                        <div class="info-label">Department</div>
-                        <div class="info-value">{{ student.department }}</div>
+                        <div class="info-label">Name</div>
+                        <div class="info-value">{{ student.name }}</div>
                     </div>
 
                     <div class="info-row">
-                        <div class="info-label">Semester</div>
-                        <div class="info-value">{{ student.semester }}</div>
+                        <div class="info-label">Roll No</div>
+                        <div class="info-value">{{ student.roll_no }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Date of Birth</div>
+                        <div class="info-value">{{ student.dob }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Gender</div>
+                        <div class="info-value">{{ student.gender }}</div>
                     </div>
 
                     <div class="info-row">
@@ -120,29 +130,34 @@
                     </div>
 
                     <div class="info-row">
+                        <div class="info-label">Department</div>
+                        <div class="info-value">{{ student.department }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Semester</div>
+                        <div class="info-value">{{ student.semester }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Batch</div>
+                        <div class="info-value">{{ student.batch }}</div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-label">Username</div>
+                        <div class="info-value">{{ student.username }}</div>
+                    </div>
+
+                    <div class="info-row">
                         <div class="info-label">Address</div>
                         <div class="info-value">{{ student.address }}</div>
                     </div>
                 </div>
 
-                <!-- PARENT DETAILS -->
-                <div class="section-card">
-                    <div class="section-title">Parent Details</div>
-
-                    <div class="info-row">
-                        <div class="info-label">Parent Name</div>
-                        <div class="info-value">{{ student.parent_name }}</div>
-                    </div>
-
-                    <div class="info-row">
-                        <div class="info-label">Parent Phone</div>
-                        <div class="info-value">{{ student.parent_phone }}</div>
-                    </div>
-                </div>
-
                 <!-- EDIT BUTTON -->
                 <div class="edit-btn">
-                    <a href="{% url 'edit_profile' %}" class="btn btn-primary">
+                    <a href="{% url 'studentapp:student_edit_profile' %}" class="btn btn-primary">
                         Edit Profile
                     </a>
                 </div>

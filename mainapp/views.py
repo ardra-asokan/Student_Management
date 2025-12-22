@@ -109,7 +109,7 @@ def student_login(request):
             request.session['student_id'] = student.id
             request.session['student_name'] = student.name
 
-            return redirect('student_dashboard')
+            return redirect('studentapp:student_dashboard')
 
         except StudentDb.DoesNotExist:
             return redirect('student_log_in')

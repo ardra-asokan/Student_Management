@@ -24,7 +24,7 @@ urlpatterns = [
     path('delete_teacher/<int:tr_id>/', admin_views.delete_teacher, name='delete_teacher'),
 
     path('add_subject/', admin_views.add_subject, name="add_subject"),
-    path('*view_subjects/', admin_views.view_subjects, name='admin_view_subjects'),
+    path('view_subjects/', admin_views.view_subjects, name='admin_view_subjects'),
     path('save_subject/', admin_views.save_subject, name='admin_save_subject'),
     path('edit_subject/<int:subject_id>/', admin_views.edit_subject, name='edit_subject'),
     path('update_subject/<int:s_id>/', admin_views.update_subject, name='update_subject'),
@@ -41,13 +41,12 @@ urlpatterns = [
     path('attendance_report/', admin_views.attendance_report, name="attendance_report"),
     path('view_marks/', admin_views.view_marks, name="view_marks"),
     path('generate_result/', admin_views.generate_result, name="generate_result"),
-    path('view_assignment/', admin_views.view_assignment, name="view_assignment"),
+    path('view_teacher_assignment/', admin_views.view_teacher_assignment, name="view_teacher_assignment"),
     path('student_submission/', admin_views.student_submission, name="student_submission"),
     path('send_announcement/', admin_views.send_announcement, name="send_announcement"),
     path('view_teacher_announcements/',admin_views.view_teacher_announcements,name='view_teacher_announcements'),
-    path('student_report/', admin_views.student_report, name="student_report"),
-    path('attendance_analytics/', admin_views.attendance_analytics, name="attendance_analytics"),
-    path('marks_analytics/', admin_views.marks_analytics, name="marks_analytics"),
+    path('admin_delete_announcement/<int:announcement_id>/',admin_views.admin_delete_announcement,name='admin_delete_announcement'),
+
 
 
 ]

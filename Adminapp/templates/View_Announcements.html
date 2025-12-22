@@ -1,42 +1,116 @@
-<!DOCTYPE html>
 {% extends 'index.html' %}
 {% block content %}
-<html>
-<head>
-    <title>Teacher Announcements</title>
-</head>
 
-<body>
+<style>
+/* Page background */
+.announcement-page {
+    background: #f5f7fb;
+    padding: 40px 0;
+}
 
-<div class="container mt-5" style="margin-bottom: 620px;">
-    <div class="row justify-content-center">
-        <div class="col-lg-9">
+/* Center container */
+.announcement-wrapper {
+    max-width: 900px;
+    margin: auto;
+}
 
-            <h4 class="fw-bold text-center mb-4">
-                Teacher Announcements
-            </h4>
+/* Page header */
+.page-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+.page-header h4 {
+    font-weight: 600;
+    color: #2f4050;
+}
+.page-header p {
+    font-size: 14px;
+}
+
+/* Announcement card */
+.announcement-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    border-left: 5px solid #4e73df;
+}
+
+/* Title */
+.announcement-title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #1f2937;
+    margin-bottom: 8px;
+}
+
+/* Message */
+.announcement-message {
+    color: #374151;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+/* Meta info */
+.announcement-meta {
+    font-size: 13px;
+    color: #6b7280;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Delete button */
+.delete-btn {
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+</style>
+
+<div class="announcement-page">
+    <div class="container" style="margin-bottom:470px;">
+
+        <div class="announcement-wrapper">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+                <h4 style="font-weight:bold; font-size:30px;">Teacher Announcements</h4>
+            </div>
 
             {% if announcements %}
                 {% for a in announcements %}
                     {% if a.sender_type == "Teacher" %}
-                        <div class="card shadow-sm mb-3">
-                            <div class="card-body">
 
-                                <h6 class="fw-bold mb-1">
-                                    {{ a.title }}
-                                </h6>
+                        <div class="announcement-card mb-4">
 
-                                <p class="mb-2">
-                                    {{ a.message }}
-                                </p>
-
-                                <div class="text-muted small">
-                                    Sent by: {{ a.sender_name }} |
-                                    {{ a.created_at|date:"d M Y, h:i A" }}
-                                </div>
-
+                            <div class="announcement-title">
+                                {{ a.title }}
                             </div>
+
+                            <div class="announcement-message">
+                                {{ a.message }}
+                            </div>
+
+                            <div class="announcement-meta">
+                                <span>
+                                    Sent by <strong>{{ a.sender_name }}</strong> |
+                                    {{ a.created_at|date:"d M Y, h:i A" }}
+                                </span>
+
+                                <form method="post"
+                                      action="{% url 'Adminapp:admin_delete_announcement' a.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="btn btn-outline-danger delete-btn"
+                                            onclick="return confirm('Are you sure you want to delete this announcement?');">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+
                         </div>
+
                     {% endif %}
                 {% endfor %}
             {% else %}
@@ -46,9 +120,8 @@
             {% endif %}
 
         </div>
+
     </div>
 </div>
 
-</body>
-</html>
 {% endblock %}

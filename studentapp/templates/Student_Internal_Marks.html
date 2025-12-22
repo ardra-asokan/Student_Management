@@ -2,36 +2,175 @@
 {% block content %}
 
 <div class="content-body">
-    <div class="container-fluid mt-4">
+    <div class="container-fluid mt-4 mb-5">
 
-        <h4 class="mb-4">Internal Marks</h4>
+        <!-- PAGE HEADER -->
+        <div class="marks-hero mb-5">
+            <h3 class="fw-bold mb-1">📊 Internal Marks</h3>
+            <p class="mb-0">
+                Your continuous assessment performance overview
+            </p>
+        </div>
 
         {% if marks %}
-        <table class="table table-bordered text-center">
-            <thead class="table-light">
-                <tr>
-                    <th>Subject</th>
-                    <th>Exam Type</th>
-                    <th>Marks</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for m in marks %}
-                <tr>
-                    <td>{{ m.subject }}</td>
-                    <td>{{ m.exam_type }}</td>
-                    <td>{{ m.marks }}</td>
-                    <td>{{ m.date }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="card marks-card border-0">
+
+            <div class="card-body p-0">
+
+                <div class="table-responsive">
+                    <table class="table marks-table mb-0 text-center">
+
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Exam Type</th>
+                                <th>Marks</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for m in marks %}
+                            <tr>
+                                <td class="subject-name">
+                                    {{ m.subject }}
+                                </td>
+
+                                <td>
+                                    <span class="exam-chip">
+                                        {{ m.exam_type }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="marks-score">
+                                        {{ m.marks }}
+                                    </span>
+                                </td>
+
+                                <td class="date-text">
+                                    {{ m.date|date:"d M Y" }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
         {% else %}
-            <p class="text-muted text-center">No internal marks available</p>
+        <!-- EMPTY STATE -->
+        <div class="card empty-card border-0">
+            <div class="card-body text-center py-5">
+                <div class="empty-icon mb-3">📭</div>
+                <h5 class="fw-semibold">No Internal Marks Available</h5>
+                <p class="text-muted mb-0">
+                    Marks will appear here once teachers upload them.
+                </p>
+            </div>
+        </div>
         {% endif %}
 
     </div>
 </div>
+
+<!-- STYLES -->
+<style>
+/* HERO HEADER */
+.marks-hero {
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    padding: 35px 30px;
+    border-radius: 18px;
+    color: #fff;
+    box-shadow: 0 15px 35px rgba(37,117,252,0.25);
+}
+
+.marks-hero p {
+    opacity: 0.85;
+}
+
+/* MAIN CARD */
+.marks-card {
+    border-radius: 18px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+/* TABLE */
+.marks-table thead {
+    background: #f6f7fb;
+}
+
+.marks-table thead th {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px;
+    color: #555;
+}
+
+.marks-table tbody td {
+    padding: 18px 14px;
+    vertical-align: middle;
+}
+
+.marks-table tbody tr {
+    transition: all 0.25s ease;
+}
+
+.marks-table tbody tr:hover {
+    background: #f9faff;
+    transform: scale(1.01);
+}
+
+/* SUBJECT */
+.subject-name {
+    font-weight: 600;
+    color: #333;
+}
+
+/* EXAM CHIP */
+.exam-chip {
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    color: #5a1a1a;
+    padding: 6px 16px;
+    border-radius: 25px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* MARKS SCORE */
+.marks-score {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+    color: #0b5e34;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-block;
+    min-width: 60px;
+}
+
+/* DATE */
+.date-text {
+    color: #777;
+    font-size: 13px;
+}
+
+/* EMPTY STATE */
+.empty-card {
+    border-radius: 18px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}
+
+.empty-icon {
+    font-size: 48px;
+}
+</style>
 
 {% endblock %}

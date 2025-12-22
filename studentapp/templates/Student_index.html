@@ -276,7 +276,7 @@
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="{% url 'studentapp:student_profile' %}">View Profile</a></li>
-                    <li><a href="{% url 'studentapp:edit_profile' %}">Edit Profile</a></li>
+                    <li><a href="{% url 'studentapp:student_edit_profile' %}">Edit Profile</a></li>
                 </ul>
             </li>
 
@@ -289,10 +289,10 @@
                     <li><a href="{% url 'studentapp:view_student_subjects' %}">View Subjects</a></li>
 
                 </ul>
-            </li>*
+            </li>
 
             <!-- Attendance -->
-            <li>*
+            <li>
                 <a href="{% url 'studentapp:student_attendance' %}" aria-expanded="false">
                     <i class="icon-check menu-icon"></i><span class="nav-text">Attendance</span>
                 </a>
@@ -305,20 +305,20 @@
                 </a>
                 <ul aria-expanded="false">
                     <li><a href="{% url 'studentapp:student_internal_marks' %}">Internal Marks</a></li>
-                    <li><a href="{% url 'studentapp:student_semester_results' %}">Semester Results</a></li>
-                    <li><a href="#">Download Marksheet</a></li>
+<!--                    <li><a href="{% url 'studentapp:student_semester_results' %}">Semester Results</a></li>-->
+
                 </ul>
             </li>
 
-            <!-- Assignments -->*
+            <!-- Assignments -->
             <li>
                 <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
                     <i class="icon-note menu-icon"></i><span class="nav-text">Assignments</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">Pending Assignments</a></li>
-                    <li><a href="#">Submitted Assignments</a></li>
-                    <li><a href="#">Upload Assignment</a></li>
+                    <li><a href="{% url 'studentapp:pending_assignments' %}">Pending Assignments</a></li>
+                    <li><a href="{% url 'studentapp:student_upload_assignment' %}">Upload Assignment</a></li>
+                    <li><a href="{% url 'studentapp:submitted_assignments' %}">Submitted Assignments</a></li>
                 </ul>
             </li>
 
@@ -328,35 +328,34 @@
                     <i class="icon-clock menu-icon"></i><span class="nav-text">Timetable</span>
                 </a>
                 <ul aria-expanded="false">
-                    <li><a href="#">Class Timetable</a></li>
                     <li><a href="#">Exam Timetable</a></li>
                 </ul>
             </li>
 
             <!-- Announcements -->
             <li>
-                <a href="#" aria-expanded="false">
+                <a href="{% url 'studentapp:student_announcements' %}" aria-expanded="false">
                     <i class="icon-bell menu-icon"></i><span class="nav-text">Announcements</span>
                 </a>
             </li>
-*
+
             <!-- Study Materials -->
             <li>
-                <a href="#" aria-expanded="false">
+                <a href="{% url 'studentapp:student_study_materials' %}" aria-expanded="false">
                     <i class="icon-graduation menu-icon"></i><span class="nav-text">Study Materials</span>
                 </a>
             </li>
 
-            <!-- Feedback (optional) -->
-            <li>
-                <a href="#" aria-expanded="false">
-                    <i class="icon-speech menu-icon"></i><span class="nav-text">Feedback</span>
-                </a>
-            </li>
+            <!-- Feedback -->
+<!--            <li>-->
+<!--                <a href="#" aria-expanded="false">-->
+<!--                    <i class="icon-speech menu-icon"></i><span class="nav-text">Feedback</span>-->
+<!--                </a>-->
+<!--            </li>-->
 
             <!-- Leave Application (optional) -->
             <li>
-                <a href="#" aria-expanded="false">
+                <a href="{% url 'studentapp:student_leave_application' %}" aria-expanded="false">
                     <i class="icon-envelope menu-icon"></i><span class="nav-text">Leave Application</span>
                 </a>
             </li>
@@ -383,55 +382,53 @@
         <div class="content-body">
 
             <div class="container-fluid mt-3">
-                <div class="row">
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="card gradient-1">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Teachers</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">4565</h2>
+                <div class="row justify-content-center">
 
-                                </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-shopping-cart"></i></span>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-lg-3 col-sm-6">
-                        <div class="card gradient-2">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Students</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">$ 8541</h2>
+    <div class="card gradient-3">
+        <div class="card-body">
+            <h3 class="card-title text-white">My Subjects</h3>
+            <div class="d-inline-block">
+                <h2 class="text-white">{{ subject_count }}</h2>
+            </div>
+            <span class="float-right display-5 opacity-5">
+                <i class="fa fa-book"></i>
+            </span>
+        </div>
+    </div>
+</div>
 
-                                </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-money"></i></span>
-                            </div>
-                        </div>
-                    </div>
+
+
                     <div class="col-lg-3 col-sm-6">
-                        <div class="card gradient-3">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Subjects</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">4565</h2>
+    <div class="card gradient-4">
+        <div class="card-body">
+            <h3 class="card-title text-white">Pending Tasks</h3>
+            <div class="d-inline-block">
+                <h2 class="text-white">{{ pending_assignments }}</h2>
+            </div>
+            <span class="float-right display-5 opacity-5">
+                <i class="fa fa-tasks"></i>
+            </span>
+        </div>
+    </div>
+</div>
 
-                                </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="card gradient-4">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Assignments</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">99%</h2>
+                   <div class="col-lg-3 col-sm-6">
+    <div class="card gradient-2">
+        <div class="card-body">
+            <h3 class="card-title text-white">Announcements</h3>
+            <div class="d-inline-block">
+                <h2 class="text-white">{{ announcement_count }}</h2>
+            </div>
+            <span class="float-right display-5 opacity-5">
+                <i class="fa fa-bell"></i>
+            </span>
+        </div>
+    </div>
+</div>
 
-                                </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-heart"></i></span>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
 
 

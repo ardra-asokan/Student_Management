@@ -41,6 +41,9 @@ class SubjectDb(models.Model):
     semester = models.CharField(max_length=100,null=True,blank=True)
     teacher = models.ForeignKey(TeacherDb, on_delete=models.SET_NULL, null=True, blank=True)
 
+    def __str__(self):
+        return self.subject_name
+
 class AssignedSubjectDb(models.Model):
     teacher = models.CharField(max_length=100,null=True,blank=True)
     subject = models.ForeignKey(SubjectDb, on_delete=models.CASCADE, null=True, blank=True)

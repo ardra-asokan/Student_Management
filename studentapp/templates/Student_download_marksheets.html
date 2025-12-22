@@ -1,0 +1,118 @@
+{% extends 'student_index.html' %}
+{% block content %}
+
+<div class="content-body">
+    <div class="container-fluid mt-4 mb-5">
+
+        <!-- PAGE HEADER -->
+        <div class="marksheet-header text-center mb-5">
+            <h3 class="fw-bold text-white mb-1">📄 Download Marksheet</h3>
+            <p class="text-white-50 mb-0">
+                View and download your academic records
+            </p>
+        </div>
+
+        <div class="row justify-content-center">
+
+            <!-- SEMESTER MARKSHEET -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card marksheet-card text-center">
+                    <div class="card-body">
+                        <div class="icon-circle bg-primary mb-3">
+                            📘
+                        </div>
+                        <h5 class="fw-semibold mb-2">Semester Marksheet</h5>
+                        <p class="text-muted small">
+                            Download your semester-wise result sheet
+                        </p>
+
+                        <a href="#" class="btn btn-primary btn-sm px-4">
+                            Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERNAL MARKS -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card marksheet-card text-center">
+                    <div class="card-body">
+                        <div class="icon-circle bg-success mb-3">
+                            📝
+                        </div>
+                        <h5 class="fw-semibold mb-2">Internal Marks</h5>
+                        <p class="text-muted small">
+                            Download internal assessment marks
+                        </p>
+
+                        <a href="#" class="btn btn-success btn-sm px-4">
+                            Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONSOLIDATED -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card marksheet-card text-center">
+                    <div class="card-body">
+                        <div class="icon-circle bg-warning mb-3">
+                            📊
+                        </div>
+                        <h5 class="fw-semibold mb-2">Consolidated Marksheet</h5>
+                        <p class="text-muted small">
+                            Complete academic performance report
+                        </p>
+
+                        <a href="#" class="btn btn-warning btn-sm px-4">
+                            Download
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- STYLES -->
+<style>
+    .marksheet-header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        padding: 35px 20px;
+        border-radius: 16px;
+    }
+
+    .marksheet-card {
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .marksheet-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .icon-circle {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: #fff;
+        margin: 0 auto;
+    }
+
+    .btn {
+        border-radius: 20px;
+        font-size: 14px;
+    }
+</style>
+
+{% endblock %}

@@ -15,18 +15,21 @@
 
 <h4 class="text-center fw-bold mb-4">Generate Result PDF</h4>
 
-<form>
+<form method="get" action="{% url 'Adminapp:generate_result' %}">
 
     <div class="form-group mb-3">
         <label>Student Roll Number</label>
-        <input type="text" class="form-control" name="roll">
+        <input type="text" class="form-control" name="roll_no" required>
     </div>
 
     <div class="text-center mt-4">
-        <button class="btn btn-primary">Generate PDF</button>
+        <button type="submit" class="btn btn-primary">
+            Generate PDF
+        </button>
     </div>
 
 </form>
+
 
 </div>
 </div>

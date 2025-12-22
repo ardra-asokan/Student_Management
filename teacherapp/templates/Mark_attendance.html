@@ -131,6 +131,8 @@ select {
 
                 <form method="POST" action="{% url 'teacherapp:save_attendance' %}">
                     {% csrf_token %}
+                   <input type="hidden" name="att_date" value="{{ today|date:'Y-m-d' }}">
+
                     <input type="hidden" name="subject_id" value="{{ selected_subject }}">
 
                     <table class="attendance-table">

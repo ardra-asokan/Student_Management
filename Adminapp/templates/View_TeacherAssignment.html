@@ -1,42 +1,114 @@
 {% extends 'index.html' %}
 {% block content %}
 
-<div class="container d-flex justify-content-center mt-5" style="margin-bottom: 380px;">
-    <div class="card shadow-lg w-100" style="max-width: 600px;">
+<style>
+    .card-box {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
 
-        <div class="card-body p-4">
+    table th {
+        background: #6f6cf3;
+        color: white;
+        text-align: center;
+    }
 
-            <h4 class="text-center fw-bold mb-4">Teacher Assignments</h4>
+    table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
 
-            <form>
+<div class="content-body">
+    <div class="container-fluid mt-4">
 
-                <div class="form-group mb-3">
+        <h3 class="text-center mb-4">Teacher Uploaded Assignments</h3>
+
+        <!-- FILTER FORM -->
+        <form method="GET" class="card-box mb-4">
+            <div class="row g-3 align-items-end">
+
+                <!-- Teacher -->
+                <div class="col-md-5">
                     <label>Teacher</label>
-                    <select class="form-control">
-                        <option>Select Teacher</option>
-                    {% for i in teachers %}
-                        <option>{{ i.name }}</option>
-                    {% endfor %}
+                    <select class="form-control" name="teacher">
+                        <option value="">Select Teacher</option>
+                        {% for t in teachers %}
+                            <option value="{{ t.id }}"
+                                {% if selected_teacher == t.id|stringformat:"s" %}selected{% endif %}>
+                                {{ t.name }}
+                            </option>
+                        {% endfor %}
                     </select>
                 </div>
 
-                <div class="form-group mb-3">
+                <!-- Subject -->
+                <div class="col-md-5">
                     <label>Subject</label>
-                    <select class="form-control">
-                        <option>Select Subject</option>
-                    {% for i in subjects %}
-                        <option>{{ i.subject_name }}</option>
-                    {% endfor %}
+                    <select class="form-control" name="subject">
+                        <option value="">Select Subject</option>
+                        {% for s in subjects %}
+                            <option value="{{ s.id }}"
+                                {% if selected_subject == s.id|stringformat:"s" %}selected{% endif %}>
+                                {{ s.subject_name }}
+                            </option>
+                        {% endfor %}
                     </select>
                 </div>
 
-                <div class="text-center mt-4">
-                    <button class="btn btn-primary px-4">View Assignments</button>
+                <!-- Button -->
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        View Assignments
+                    </button>
                 </div>
 
-            </form>
+            </div>
+        </form>
 
+        <!-- ASSIGNMENTS TABLE -->
+        {% if assignments %}
+        <div class="card-box">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Teacher Name</th>
+                            <th>Subject</th>
+                            <th>Assignment Title</th>
+                            <th>File</th>
+                            <th>Uploaded Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in assignments %}
+                        <tr>
+                            <td>{{ a.teacher.name }}</td>
+                            <td>{{ a.subject.subject_name }}</td>
+                            <td>{{ a.title }}</td>
+                            <td>
+                                <a href="{{ a.file.url }}" target="_blank"
+                                   class="btn btn-sm btn-info">
+                                    View File
+                                </a>
+                            </td>
+                           <td>{{ a.created_at|date:"d-m-Y" }}</td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        {% elif selected_teacher %}
+        <div class="text-center text-danger mt-4">
+            <strong>No assignments found.</strong>
+        </div>
+        {% endif %}
+
     </div>
 </div>
 

@@ -1,39 +1,76 @@
-<!DOCTYPE html>
 {% extends 'index.html' %}
 {% block content %}
-<html>
-<head><title>Student Submissions</title></head>
 
-<body>
+<div class="container d-flex justify-content-center mt-5" style="margin-bottom:380px;">
+    <div class="card shadow-lg w-100" style="max-width: 900px;">
+        <div class="card-body">
 
-<div class="container d-flex justify-content-center mt-5" style="margin-bottom: 480px;">
-    <div class="card shadow-lg w-100" style="max-width: 600px;">
-<div class="card-body">
+            <h4 class="text-center fw-bold mb-4">Student Submissions</h4>
 
-<h4 class="text-center fw-bold mb-4">Student Submissions</h4>
+            <!-- FORM -->
+            <form method="GET" class="mb-4">
+                <div class="row align-items-end">
 
-<form>
+                    <div class="col-md-8">
+                        <label class="mb-2">Assignment</label>
+                        <select name="assignment" class="form-control" required>
+                            <option value="">Select Assignment</option>
+                            {% for a in assignments %}
+                                <option value="{{ a.id }}"
+                                    {% if selected_assignment == a.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ a.title }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-    <div class="form-group mb-3">
-        <label>Assignment</label>
-        <select class="form-control">
-            <option>Select Assignment</option>
-            <option>Assignment 1</option>
-            <option>Assignment 2</option>
-            <option>Project Work</option>
-        </select>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary w-100">
+                            View Submissions
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+
+            <!-- TABLE -->
+            {% if submissions %}
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Roll No</th>
+                            <th>File</th>
+                            <th>Submitted Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in submissions %}
+                        <tr>
+                            <td>{{ s.student.name }}</td>
+                            <td>{{ s.student.roll_no }}</td>
+                            <td>
+                                <a href="{{ s.file.url }}" target="_blank"
+                                   class="btn btn-sm btn-success">
+                                    View File
+                                </a>
+                            </td>
+                            <td>{{ s.submitted_at|date:"d-m-Y H:i" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% elif selected_assignment %}
+                <p class="text-danger text-center">
+                    No submissions found for this assignment.
+                </p>
+            {% endif %}
+
+        </div>
     </div>
-
-    <div class="text-center mt-4">
-        <button class="btn btn-primary">View Submissions</button>
-    </div>
-
-</form>
-
-</div>
-</div>
 </div>
 
-</body>
-</html>
 {% endblock %}
