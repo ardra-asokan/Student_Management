@@ -1,0 +1,177 @@
+{% extends 'teacher_index.html' %}
+
+{% block sweet_alerts %}{% endblock %}
+
+{% block content %}
+
+<style>
+.chat-wrapper {
+    height: calc(100vh - 160px);
+    display: flex;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+/* LEFT PANEL */
+.chat-users {
+    width: 260px;
+    border-right: 1px solid #e6e6e6;
+    background: #f9fafc;
+    overflow-y: auto;
+}
+
+.chat-users h6 {
+    padding: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+}
+
+.chat-users a {
+    display: block;
+    padding: 12px 15px;
+    margin: 5px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #333;
+}
+
+.chat-users a:hover,
+.chat-users a.active {
+    background: #e7f0ff;
+}
+
+/* RIGHT PANEL */
+.chat-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+.chat-header {
+    padding: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+    background: #f8f9fc;
+}
+
+/* MESSAGES */
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f5f7fb;
+}
+
+/* MESSAGE */
+.msg {
+    max-width: 65%;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+/* TEACHER → RIGHT */
+.msg-teacher {
+    background: #dcf8c6;
+    margin-left: auto;
+}
+
+/* STUDENT → LEFT */
+.msg-student {
+    background: #ffffff;
+    margin-right: auto;
+}
+
+.chat-input {
+    padding: 12px;
+    border-top: 1px solid #ddd;
+    display: flex;
+    background: #fff;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+.chat-input button {
+    margin-left: 10px;
+    border-radius: 20px;
+}
+</style>
+
+<div class="content-body">
+    <div class="container-fluid mt-4">
+        <div class="chat-wrapper">
+
+            <!-- LEFT -->
+            <div class="chat-users">
+                <h6>Students</h6>
+                {% for s in students %}
+                    <a href="?student_id={{ s.id }}"
+                       class="{% if selected_student_id|stringformat:'s' == s.id|stringformat:'s' %}active{% endif %}">
+                        {{ s.name }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            <!-- RIGHT -->
+            <div class="chat-box">
+
+                <div class="chat-header">
+                    {% if selected_student_id %}
+                        Chat with Student
+                    {% else %}
+                        Select a student
+                    {% endif %}
+                </div>
+
+                <div class="chat-messages" id="chatBox">
+{% for m in messages %}
+
+    {% if m.sender_teacher.id == teacher.id %}
+        <!-- TEACHER SENT → RIGHT -->
+        <div class="msg msg-teacher">
+            {{ m.message }}
+            <small>{{ m.timestamp|date:"h:i A" }}</small>
+        </div>
+    {% else %}
+        <!-- STUDENT SENT → LEFT -->
+        <div class="msg msg-student">
+            {{ m.message }}
+            <small>{{ m.timestamp|date:"h:i A" }}</small>
+        </div>
+    {% endif %}
+
+{% empty %}
+    <p class="text-center text-muted mt-5">No messages yet 🙂</p>
+{% endfor %}
+</div>
+
+
+                {% if selected_student_id %}
+                <form method="post" action="{% url 'chat:teacher_send_message' %}" class="chat-input">
+                    {% csrf_token %}
+                    <input type="hidden" name="student_id" value="{{ selected_student_id }}">
+                    <input type="text" name="message" placeholder="Type a message..." required>
+                    <button class="btn btn-primary">Send</button>
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const chatBox = document.getElementById("chatBox");
+if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+
+{% endblock %}

@@ -143,60 +143,54 @@
                                 </div>
                             </div>
                         </li>
-                        <li class="icons dropdown"><a href="javascript:void(0)" data-toggle="dropdown">
-                                <i class="mdi mdi-bell-outline"></i>
-                                <span class="badge badge-pill gradient-2">3</span>
-                            </a>
-                            <div class="drop-down animated fadeIn dropdown-menu dropdown-notfication">
-                                <div class="dropdown-content-heading d-flex justify-content-between">
-                                    <span class="">2 New Notifications</span>
-                                    <a href="javascript:void()" class="d-inline-block">
-                                        <span class="badge badge-pill gradient-2">5</span>
-                                    </a>
-                                </div>
-                                <div class="dropdown-content-body">
-                                    <ul>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <span class="mr-3 avatar-icon bg-success-lighten-2"><i class="icon-present"></i></span>
-                                                <div class="notification-content">
-                                                    <h6 class="notification-heading">Events near you</h6>
-                                                    <span class="notification-text">Within next 5 days</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <span class="mr-3 avatar-icon bg-danger-lighten-2"><i class="icon-present"></i></span>
-                                                <div class="notification-content">
-                                                    <h6 class="notification-heading">Event Started</h6>
-                                                    <span class="notification-text">One hour ago</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <span class="mr-3 avatar-icon bg-success-lighten-2"><i class="icon-present"></i></span>
-                                                <div class="notification-content">
-                                                    <h6 class="notification-heading">Event Ended Successfully</h6>
-                                                    <span class="notification-text">One hour ago</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <span class="mr-3 avatar-icon bg-danger-lighten-2"><i class="icon-present"></i></span>
-                                                <div class="notification-content">
-                                                    <h6 class="notification-heading">Events to Join</h6>
-                                                    <span class="notification-text">After two days</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
+                        <li class="icons dropdown">
+    <a href="javascript:void(0)" data-toggle="dropdown">
+        <i class="mdi mdi-bell-outline"></i>
+        <span class="badge badge-pill gradient-2">
+            {{ announcement_count }}
+        </span>
+    </a>
 
-                                </div>
-                            </div>
-                        </li>
+    <div class="drop-down animated fadeIn dropdown-menu dropdown-notfication">
+        <div class="dropdown-content-heading d-flex justify-content-between">
+            <span>{{ announcement_count }} New Notifications</span>
+        </div>
+
+        <div class="dropdown-content-body">
+            <ul>
+                {% for a in announcements %}
+                <li>
+                    <a href="{% url 'studentapp:student_announcements' %}">
+                        <span class="mr-3 avatar-icon
+                            {% if a.sender_type == 'Admin' %}
+                                bg-danger-lighten-2
+                            {% else %}
+                                bg-success-lighten-2
+                            {% endif %}
+                        ">
+                            <i class="icon-bell"></i>
+                        </span>
+
+                        <div class="notification-content">
+                            <h6 class="notification-heading">
+                                {{ a.title }}
+                            </h6>
+                            <span class="notification-text">
+                                {{ a.sender_type }} • {{ a.created_at|timesince }} ago
+                            </span>
+                        </div>
+                    </a>
+                </li>
+                {% empty %}
+                <li class="text-center text-muted p-3">
+                    No new announcements
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</li>
+
                         <li class="icons dropdown d-none d-md-flex">
                             <a href="javascript:void(0)" class="log-user"  data-toggle="dropdown">
                                 <span>English</span>  <i class="fa fa-angle-down f-s-14" aria-hidden="true"></i>
@@ -346,6 +340,9 @@
                 </a>
             </li>
 
+
+
+
             <!-- Feedback -->
 <!--            <li>-->
 <!--                <a href="#" aria-expanded="false">-->
@@ -358,6 +355,16 @@
                 <a href="{% url 'studentapp:student_leave_application' %}" aria-expanded="false">
                     <i class="icon-envelope menu-icon"></i><span class="nav-text">Leave Application</span>
                 </a>
+            </li>
+
+            <li>
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="icon-bubbles menu-icon"></i><span class="nav-text">Communication</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'chat:student_chat_teacher' %}">Chat with Teacher</a></li>
+
+                </ul>
             </li>
 
             <!-- Logout -->
@@ -500,6 +507,31 @@
 
 
     <script src="{% static 'dashboard/js/dashboard/dashboard-1.js' %}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% block sweet_alerts %}
+{% if messages %}
+    {% for i in messages %}
+        {% if i.tags == 'success' %}
+           <script>
+             swal('{{ i }}', '', 'success');
+           </script>
+        {% elif i.tags == 'warning' %}
+           <script>
+             swal('{{ i }}', '', 'warning');
+           </script>
+        {% elif i.tags == 'info' %}
+           <script>
+             swal('{{ i }}', '', 'info');
+           </script>
+        {% else %}
+           <script>
+             swal('{{ i }}', '', 'error');
+           </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock %}
+
 
 </body>
 

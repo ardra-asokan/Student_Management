@@ -377,15 +377,15 @@ body {
                 </ul>
             </li>
 
-<!--            <li>-->
-<!--                <a class="has-arrow" href="javascript:void()" aria-expanded="false">-->
-<!--                    <i class="icon-bubbles menu-icon"></i><span class="nav-text">Communication</span>-->
-<!--                </a>-->
-<!--                <ul aria-expanded="false">-->
-<!--                    <li><a href="#">Chat with Students</a></li>-->
-<!--                    <li><a href="#">Message Admin</a></li>-->
-<!--                </ul>-->
-<!--            </li>-->
+            <li>
+                <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                    <i class="icon-bubbles menu-icon"></i><span class="nav-text">Communication</span>
+                </a>
+                <ul aria-expanded="false">
+                    <li><a href="{% url 'chat:teacher_chat_students' %}">Chat with Students</a></li>
+
+                </ul>
+            </li>
 
             <li>
     <a class="has-arrow" href="javascript:void()" aria-expanded="false">
@@ -552,6 +552,32 @@ body {
 
 
     <script src="{% static 'dashboard/js/dashboard/dashboard-1.js' %}"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% block sweet_alerts %}
+{% if messages %}
+    {% for i in messages %}
+        {% if i.tags == 'success' %}
+           <script>
+             swal('{{ i }}', '', 'success');
+           </script>
+        {% elif i.tags == 'warning' %}
+           <script>
+             swal('{{ i }}', '', 'warning');
+           </script>
+        {% elif i.tags == 'info' %}
+           <script>
+             swal('{{ i }}', '', 'info');
+           </script>
+        {% else %}
+           <script>
+             swal('{{ i }}', '', 'error');
+           </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endblock %}
+
+
 
 </body>
 

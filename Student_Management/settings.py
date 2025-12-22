@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'Adminapp',
     'mainapp',
     'teacherapp',
-    'studentapp'
+    'studentapp',
+    'chat',
+
 ]
 
 MIDDLEWARE = [

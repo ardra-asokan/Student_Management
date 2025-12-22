@@ -1,0 +1,131 @@
+{% extends 'student_index.html' %}
+{% block sweet_alerts %}{% endblock %}
+{% block content %}
+
+<style>
+.chat-wrapper {
+    height: calc(100vh - 160px);
+    display: flex;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.chat-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    padding: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+    background: #f8f9fc;
+    text-align: center;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f5f7fb;
+}
+
+.msg {
+    max-width: 65%;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+
+/* STUDENT → RIGHT */
+.msg-student {
+    background: #4e73df;
+    color: #fff;
+    margin-left: auto;
+}
+
+/* TEACHER → LEFT */
+.msg-teacher {
+    background: #ffffff;
+    color: #111827;
+    margin-right: auto;
+}
+
+.msg small {
+    display: block;
+    font-size: 11px;
+    color: #6b7280;
+    margin-top: 4px;
+    text-align: right;
+}
+
+.chat-input {
+    padding: 12px;
+    border-top: 1px solid #ddd;
+    display: flex;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+.chat-input button {
+    margin-left: 10px;
+    border-radius: 20px;
+}
+</style>
+
+<div class="content-body">
+<div class="container-fluid mt-4">
+<div class="chat-wrapper">
+<div class="chat-box">
+
+<div class="chat-header">💬 Chat with Teacher</div>
+
+<div class="chat-messages" id="chatBox">
+{% for m in messages %}
+
+    {% if m.sender_student.id == student_id %}
+        <!-- STUDENT SENT → RIGHT -->
+        <div class="msg msg-student">
+            {{ m.message }}
+            <small>{{ m.timestamp|date:"h:i A" }}</small>
+        </div>
+    {% else %}
+        <!-- TEACHER SENT → LEFT -->
+        <div class="msg msg-teacher">
+            {{ m.message }}
+            <small>{{ m.timestamp|date:"h:i A" }}</small>
+        </div>
+    {% endif %}
+
+{% empty %}
+    <p class="text-center text-muted mt-5">No messages yet 🙂</p>
+{% endfor %}
+</div>
+
+
+<form method="post" action="{% url 'chat:student_send_message' %}" class="chat-input">
+    {% csrf_token %}
+    <input type="hidden" name="teacher_id" value="{{ teacher.id }}">
+    <input type="text" name="message" placeholder="Type a message..." required>
+    <button class="btn btn-primary">Send</button>
+</form>
+
+</div>
+</div>
+</div>
+</div>
+
+<script>
+const chatBox = document.getElementById("chatBox");
+if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+</script>
+
+{% endblock %}

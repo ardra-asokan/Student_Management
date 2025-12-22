@@ -22,14 +22,15 @@ from . import settings
 import mainapp.urls
 import teacherapp.urls
 import studentapp.urls
+import chat.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('Adminapp/',include(Adminapp.urls)),
     path('mainapp/',include(mainapp.urls)),
     path('teacherapp/',include(teacherapp.urls)),
-    path('studentapp/',include(studentapp.urls))
-
+    path('studentapp/',include(studentapp.urls)),
+    path("chat/", include("chat.urls")),
 ]
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

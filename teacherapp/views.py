@@ -14,15 +14,22 @@ from django.utils import timezone
 
 # Create your views here.
 def teacher_page(request):
+    messages.success(request, "Welcome to Teacher Dashboard")
     return render(request, "teacher_index.html")
 
 def teacher_assigned_subjects(request):
     teacher_id = request.session.get("teacher_id")
 
     if not teacher_id:
+        messages.error(request, "Please login to view your assigned subjects")
         return redirect("teacher_log_in")
 
     data = AssignedSubjectDb.objects.filter(teacher_id=teacher_id)
+
+    if not data.exists():
+        messages.info(request, "No subjects assigned to you yet")
+    else:
+        messages.success(request, "Assigned subjects loaded successfully")
 
     return render(request, 'teacher_assigned_subjects.html', {'data': data})
 
@@ -30,35 +37,39 @@ def view_subjects(request):
     teacher_name = request.session.get('teacher_name')
 
     if not teacher_name:
+        messages.error(request, "Please login to view subjects")
         return redirect('teacher_log_in')
 
     data = AssignedSubjectDb.objects.filter(
         teacher=teacher_name
     ).select_related('subject')
 
+    if not data.exists():
+        messages.info(request, "No subjects assigned yet")
+    else:
+        messages.success(request, "Subjects loaded successfully")
+
     return render(request, "View_subjects.html", {"data": data})
-
-
 
 def teacher_dashboard(request):
     teacher_name = request.session.get('teacher_name')
 
     if not teacher_name:
+        messages.error(request, "Please login to access the dashboard")
         return redirect('teacher_log_in')
+
+    messages.success(request, f"Welcome {teacher_name}")
 
     return render(request, 'teacher_index.html', {
         'teacher_name': teacher_name
     })
 
 
-
-
-
-
 def mark_attendance(request):
     teacher_name = request.session.get('teacher_name')
 
     if not teacher_name:
+        messages.error(request, "Please login to mark attendance")
         return redirect('teacher_log_in')
 
     assigned_subjects = AssignedSubjectDb.objects.filter(
@@ -77,6 +88,14 @@ def mark_attendance(request):
             semester=semester
         )
 
+        if not students.exists():
+            messages.info(request, "No students found for the selected class")
+        else:
+            messages.success(request, "Student list loaded for attendance")
+
+    else:
+        messages.info(request, "Please select subject, department, and semester")
+
     return render(request, "Mark_attendance.html", {
         "assigned_subjects": assigned_subjects,
         "students": students,
@@ -90,6 +109,11 @@ def save_attendance(request):
     if request.method == "POST":
 
         assigned_subject_id = request.POST.get("subject_id")
+
+        if not assigned_subject_id:
+            messages.error(request, "Subject not selected")
+            return redirect("teacherapp:mark_attendance")
+
         assigned_subject = AssignedSubjectDb.objects.get(id=assigned_subject_id)
         subject = assigned_subject.subject
 
@@ -103,6 +127,8 @@ def save_attendance(request):
         else:
             att_date = date.today()
 
+        attendance_marked = False
+
         for key, value in request.POST.items():
             if key.startswith("student_"):
                 student_id = key.split("_")[1]
@@ -114,12 +140,21 @@ def save_attendance(request):
                     date=att_date,
                     defaults={"status": value}
                 )
+                attendance_marked = True
+
+        if attendance_marked:
+            messages.success(request, "Attendance saved successfully")
+        else:
+            messages.warning(request, "No attendance data was submitted")
 
         return redirect("teacherapp:teacher_view_attendance")
 
-
 def teacher_view_attendance(request):
     teacher_name = request.session.get("teacher_name")
+
+    if not teacher_name:
+        messages.error(request, "Please login to view attendance")
+        return redirect("teacher_log_in")
 
     assigned_subjects = AssignedSubjectDb.objects.filter(
         teacher=teacher_name
@@ -134,6 +169,7 @@ def teacher_view_attendance(request):
         try:
             selected_date = datetime.strptime(selected_date, "%Y-%m-%d").date()
         except ValueError:
+            messages.error(request, "Invalid date format")
             selected_date = None
 
         if selected_date:
@@ -142,6 +178,13 @@ def teacher_view_attendance(request):
                 subject_id=selected_subject_id
             ).select_related("student", "subject")
 
+            if not records.exists():
+                messages.info(request, "No attendance records found for the selected date and subject")
+            else:
+                messages.success(request, "Attendance records loaded successfully")
+    else:
+        messages.info(request, "Please select subject and date to view attendance")
+
     return render(request, "Teacher_view_attendance.html", {
         "assigned_subjects": assigned_subjects,
         "records": records,
@@ -149,12 +192,11 @@ def teacher_view_attendance(request):
         "selected_subject": selected_subject_id,
     })
 
-
-
 def upload_marks(request):
     teacher_name = request.session.get('teacher_name')
 
     if not teacher_name:
+        messages.error(request, "Please login to upload marks")
         return redirect('teacher_log_in')
 
     assigned_subjects = AssignedSubjectDb.objects.filter(
@@ -172,7 +214,6 @@ def upload_marks(request):
         ).select_related('subject').first()
 
         if assigned and assigned.subject:
-            # ✅ TAKE FROM SUBJECT (NOT class_name)
             department = assigned.subject.department
             semester = assigned.subject.semester
 
@@ -180,6 +221,15 @@ def upload_marks(request):
                 department__iexact=department.strip(),
                 semester__iexact=semester.strip()
             )
+
+            if not students.exists():
+                messages.info(request, "No students found for the selected subject")
+            else:
+                messages.success(request, "Student list loaded for mark entry")
+        else:
+            messages.error(request, "Invalid subject selection")
+    else:
+        messages.info(request, "Please select subject and exam type")
 
     return render(request, "Upload_marks.html", {
         "assigned_subjects": assigned_subjects,
@@ -189,22 +239,30 @@ def upload_marks(request):
     })
 
 
-
 def save_marks(request):
     if request.method == "POST":
 
         exam_type = request.POST.get("exam_type")
         assigned_id = request.POST.get("assigned_id")
 
+        if not exam_type or not assigned_id:
+            messages.error(request, "Exam type or subject not selected")
+            return redirect("teacherapp:upload_marks")
+
         # Get assigned subject row
         assigned = AssignedSubjectDb.objects.get(id=assigned_id)
         subject = assigned.subject
+
+        marks_saved = False
 
         # Loop through submitted marks
         for key, value in request.POST.items():
             if key.startswith("marks_"):
                 student_id = key.split("_")[1]
                 marks = value
+
+                if marks == "":
+                    continue
 
                 # Save marks
                 MarksDb.objects.create(
@@ -214,11 +272,21 @@ def save_marks(request):
                     marks=marks,
                     date=date.today()
                 )
+                marks_saved = True
 
-        messages.success(request, "Marks saved successfully ✅")
+        if marks_saved:
+            messages.success(request, "Marks saved successfully ✅")
+        else:
+            messages.warning(request, "No marks were entered")
+
         return redirect("teacherapp:upload_marks")
+
 def teacher_view_marks(request):
     teacher_name = request.session.get("teacher_name")
+
+    if not teacher_name:
+        messages.error(request, "Please login to view marks")
+        return redirect("teacher_log_in")
 
     assigned_subjects = AssignedSubjectDb.objects.filter(
         teacher=teacher_name
@@ -234,14 +302,19 @@ def teacher_view_marks(request):
             exam_type=selected_exam
         ).select_related('student')
 
+        if not marks.exists():
+            messages.info(request, "No marks found for the selected subject and exam")
+        else:
+            messages.success(request, "Marks loaded successfully")
+    else:
+        messages.info(request, "Please select subject and exam to view marks")
+
     return render(request, "Teacher_view_marks.html", {
         "assigned_subjects": assigned_subjects,
         "marks": marks,
         "selected_subject": selected_subject,
         "selected_exam": selected_exam,
     })
-
-
 
 def edit_marks(request, mark_id):
     mark = MarksDb.objects.select_related(
@@ -256,10 +329,19 @@ def update_marks(request, mark_id):
     if request.method == "POST":
         new_marks = request.POST.get("marks")
 
-        MarksDb.objects.filter(id=mark_id).update(
+        if new_marks == "" or new_marks is None:
+            messages.error(request, "Marks cannot be empty")
+            return redirect("teacherapp:edit_marks", mark_id=mark_id)
+
+        updated = MarksDb.objects.filter(id=mark_id).update(
             marks=new_marks,
             date=date.today()
         )
+
+        if updated:
+            messages.success(request, "Marks updated successfully")
+        else:
+            messages.error(request, "Failed to update marks")
 
         return redirect("teacherapp:teacher_view_marks")
 
@@ -267,14 +349,18 @@ def update_marks(request, mark_id):
 def delete_mark(request, mark_id):
     mark = MarksDb.objects.get(id=mark_id)
     mark.delete()
+    messages.success(request, "Mark deleted successfully")
     return redirect('teacherapp:teacher_view_marks')
 
+
+from django.contrib import messages
 
 def upload_assignments(request):
     teacher_id = request.session.get("teacher_id")
     teacher_name = request.session.get("teacher_name")
 
     if not teacher_id or not teacher_name:
+        messages.error(request, "Please login to manage assignments")
         return redirect("teacher_log_in")
 
     # For SUBJECTS → CharField
@@ -287,11 +373,11 @@ def upload_assignments(request):
         teacher_id=teacher_id
     ).order_by("-id")
 
+
     return render(request, "Upload_Assignments.html", {
         "assigned_subjects": assigned_subjects,
         "assignments": assignments,
     })
-
 
 
 
@@ -318,8 +404,14 @@ def save_assignment(request):
         messages.success(request, "Assignment uploaded successfully!")
         return redirect("teacherapp:upload_assignments")
 
+from django.contrib import messages
+
 def student_submissions(request):
     teacher_id = request.session.get("teacher_id")
+
+    if not teacher_id:
+        messages.error(request, "Please login to view student submissions")
+        return redirect("teacher_log_in")
 
     # Load assignments created by this teacher
     assignments = AssignmentDb.objects.filter(teacher_id=teacher_id)
@@ -327,16 +419,19 @@ def student_submissions(request):
     selected_assignment = request.GET.get("assignment_id")
 
     submissions = []
+
     if selected_assignment:
         submissions = AssignmentSubmissionDb.objects.filter(
             assignment_id=selected_assignment
         ).select_related("student")
+
 
     return render(request, "student_submissions.html", {
         "assignments": assignments,
         "selected_assignment": selected_assignment,
         "submissions": submissions,
     })
+
 
 def grade_assignments(request):
     teacher_id = request.session.get("teacher_id")
@@ -389,13 +484,9 @@ def view_students(request):
             department__in=departments
         )
 
-    print("FINAL STUDENTS COUNT:", students.count())
-
     return render(request, "View_Students.html", {
         "students": students
     })
-
-
 
 
 def search_students(request):
@@ -467,7 +558,6 @@ def student_semester_results(request):
     })
 
 
-
 def delete_assignment(request, assignment_id):
     teacher_id = request.session.get("teacher_id")
 
@@ -477,18 +567,16 @@ def delete_assignment(request, assignment_id):
     assignment = get_object_or_404(
         AssignmentDb,
         id=assignment_id,
-        teacher_id=teacher_id   # ✅ security: only own assignments
+        teacher_id=teacher_id
     )
 
-    # ✅ delete uploaded file from media folder
     if assignment.assignment_file:
         file_path = assignment.assignment_file.path
         if os.path.exists(file_path):
             os.remove(file_path)
 
     assignment.delete()
-
-
+    messages.success(request, "Assignment deleted successfully")
     return redirect("teacherapp:upload_assignments")
 
 def teacher_send_announcements(request):
@@ -504,12 +592,18 @@ def teacher_send_announcements(request):
             sender_type="Teacher",
             sender_name=teacher_name
         )
+        messages.success(request, "Announcement sent successfully")
         return redirect("teacherapp:teacher_view_announcements")
 
     return render(request, "Teacher_Send_Announcements.html")
 
 def teacher_view_announcements(request):
     announcements = AnnouncementDb.objects.all().order_by('-created_at')
+
+    if not announcements.exists():
+        messages.info(request, "No announcements available")
+    else:
+        messages.success(request, "Announcements loaded successfully")
 
     return render(request, "Teacher_View_Announcements.html", {
         "announcements": announcements
@@ -557,5 +651,6 @@ def teacher_view_study_material(request):
 def delete_study_material(request, material_id):
     material = get_object_or_404(StudyMaterialDb, id=material_id)
     material.delete()
+    messages.success(request, "Study material deleted successfully")
     return redirect('teacherapp:teacher_view_study_material')
 

@@ -5,7 +5,8 @@ from django.db.models import Count, Q
 from django.utils import timezone
 from django.db.models import Avg, Sum, Count
 from django.contrib import messages
-from .models import LeaveApplicationDb
+from studentapp.models import LeaveApplicationDb
+from django.utils.timesince import timesince
 
 
 # Create your views here.
@@ -13,44 +14,51 @@ def student_page(request):
     student_id = request.session.get('student_id')
 
     if not student_id:
+        messages.error(request, "Please login to continue")
         return redirect('student_log_in')
 
     student = StudentDb.objects.get(id=student_id)
 
-    # Subject count
     subject_count = SubjectDb.objects.filter(
         department=student.department,
         semester=student.semester
     ).count()
 
-    # Pending assignments
     pending_assignments = AssignmentDb.objects.filter(
         subject__department=student.department,
         subject__semester=student.semester
     ).count()
 
-    # Announcements
-    announcement_count = AnnouncementDb.objects.filter(
+    # 🔔 Latest announcements (Admin + Teacher)
+    announcements = AnnouncementDb.objects.filter(
         sender_type__in=["Admin", "Teacher"]
-    ).count()
+    ).order_by("-created_at")[:5]
+
+    announcement_count = announcements.count()
 
     return render(request, "Student_index.html", {
         "subject_count": subject_count,
         "pending_assignments": pending_assignments,
-        "announcement_count": announcement_count
+        "announcement_count": announcement_count,
+        "announcements": announcements,
     })
+
+
 
 def student_profile(request):
     student_id = request.session.get("student_id")
 
     if not student_id:
+        messages.error(request, "Please login to view your profile")
         return redirect("student_login")
 
     try:
         student = StudentDb.objects.get(id=student_id)
     except StudentDb.DoesNotExist:
-        # If student record is deleted or invalid session
+        messages.error(request, "Your profile is not available. Please login again")
         return redirect("student_login")
+
+    messages.success(request, "Profile loaded successfully")
 
     return render(
         request,
@@ -62,11 +70,13 @@ def student_edit_profile(request):
     student_id = request.session.get('student_id')
 
     if not student_id:
+        messages.error(request, "Please login to edit your profile")
         return redirect('student_log_in')
 
     try:
         student = StudentDb.objects.get(id=student_id)
     except StudentDb.DoesNotExist:
+        messages.error(request, "Invalid session. Please login again")
         return redirect('student_log_in')
 
     if request.method == "POST":
@@ -74,12 +84,14 @@ def student_edit_profile(request):
         student.phone = request.POST.get('phone')
         student.address = request.POST.get('address')
 
-
         if 'photo' in request.FILES:
             student.profile_photo = request.FILES['photo']
 
         student.save()
+        messages.success(request, "Profile updated successfully")
         return redirect('studentapp:student_profile')
+
+    messages.info(request, "You can update your profile details here")
 
     return render(request, 'Edit_Student_Profile.html', {
         'student': student
@@ -89,14 +101,24 @@ def view_student_subjects(request):
     student_id = request.session.get("student_id")
 
     if not student_id:
+        messages.error(request, "Please login to view subjects")
         return redirect("student_log_in")
 
-    student = StudentDb.objects.get(id=student_id)
+    try:
+        student = StudentDb.objects.get(id=student_id)
+    except StudentDb.DoesNotExist:
+        messages.error(request, "Invalid session. Please login again")
+        return redirect("student_log_in")
 
     subjects = SubjectDb.objects.filter(
         department__iexact=student.department.strip(),
         semester__iexact=student.semester.strip()
     )
+
+    if not subjects.exists():
+        messages.info(request, "No subjects found for your department and semester")
+    else:
+        messages.success(request, "Subjects loaded successfully")
 
     return render(request, "View_Student_Subjects.html", {
         "subjects": subjects,
@@ -104,16 +126,17 @@ def view_student_subjects(request):
     })
 
 
-
 def student_subject_details(request, subject_id):
     student_id = request.session.get('student_id')
 
     if not student_id:
+        messages.error(request, "Please login to view subject details")
         return redirect('student_log_in')
 
     try:
         student = StudentDb.objects.get(id=student_id)
     except StudentDb.DoesNotExist:
+        messages.error(request, "Invalid session. Please login again")
         return redirect('student_log_in')
 
     subject = SubjectDb.objects.filter(
@@ -123,7 +146,10 @@ def student_subject_details(request, subject_id):
     ).first()
 
     if not subject:
-        return redirect('studentapp:view_student_subjects')  # or show error page
+        messages.error(request, "You are not authorized to view this subject")
+        return redirect('studentapp:view_student_subjects')
+
+    messages.success(request, "Subject details loaded successfully")
 
     return render(request, 'Student_Subject_Details.html', {
         'subject': subject
@@ -134,6 +160,7 @@ def student_attendance(request):
     student_id = request.session.get('student_id')
 
     if not student_id:
+        messages.error(request, "Please login to view attendance")
         return redirect('student_log_in')
 
     attendance_data = (
@@ -155,48 +182,63 @@ def student_attendance(request):
         else:
             a['percentage'] = 0
 
+    if not attendance_data:
+        messages.info(request, "Attendance not available yet")
+    else:
+        messages.success(request, "Attendance details loaded")
+
     return render(request, 'Student_attendance.html', {
         'attendance_data': attendance_data
     })
 
-
 def student_timetable(request):
     return render(request, 'Student_timetable.html')
-
-
 
 def student_assignments(request):
     student_name = request.session.get('student_name')
 
     if not student_name:
+        messages.error(request, "Please login to view assignments")
         return redirect('student_log_in')
 
-    student = StudentDb.objects.get(name=student_name)
+    try:
+        student = StudentDb.objects.get(name=student_name)
+    except StudentDb.DoesNotExist:
+        messages.error(request, "Invalid session. Please login again")
+        return redirect('student_log_in')
 
     assignments = AssignmentDb.objects.filter(
         class_name=student.class_name,
         semester=student.semester
     )
 
-    return render(request, 'Student_assignments.html', {
+    if not assignments.exists():
+        messages.info(request, "No assignments available right now")
+    else:
+        messages.success(request, "Assignments loaded successfully")
+
+    return render(request, 'Student_Assignments.html', {
         'assignments': assignments
     })
+
 def student_internal_marks(request):
     student_id = request.session.get('student_id')
 
     if not student_id:
+        messages.error(request, "Please login to view internal marks")
         return redirect('student_log_in')
 
     marks = MarksDb.objects.filter(student_id=student_id)
 
-    print("MARKS:", marks)  # DEBUG – check terminal
+    if not marks.exists():
+        messages.info(request, "Internal marks are not available yet")
+    else:
+        messages.success(request, "Internal marks loaded successfully")
 
-    return render(request, 'student_internal_marks.html', {
+
+    return render(request, 'Student_Internal_Marks.html', {
         'marks': marks
     })
-
-
-
 
 
 def student_notifications(request):
@@ -210,7 +252,10 @@ def student_dashboard(request):
     student_name = request.session.get('student_name')
 
     if not student_name:
+        messages.error(request, "Please login to access the dashboard")
         return redirect('student_log_in')
+
+    messages.success(request, f"Welcome {student_name}")
 
     return render(request, 'student_index.html', {
         'student_name': student_name
@@ -233,14 +278,21 @@ def student_semester_results(request):
         'results': results
     })
 
+
+
 def pending_assignments(request):
     student_name = request.session.get('student_name')
 
     if not student_name:
+        messages.error(request, "Please login to view pending assignments")
         return redirect('student_log_in')
 
-    # get logged-in student
-    student = StudentDb.objects.get(name=student_name)
+    try:
+        # get logged-in student
+        student = StudentDb.objects.get(name=student_name)
+    except StudentDb.DoesNotExist:
+        messages.error(request, "Invalid session. Please login again")
+        return redirect('student_log_in')
 
     # assignments already submitted by this student
     submitted_ids = AssignmentSubmissionDb.objects.filter(
@@ -252,19 +304,28 @@ def pending_assignments(request):
         id__in=submitted_ids
     )
 
+    if not pending_assignments.exists():
+        messages.info(request, "No pending assignments 🎉")
+    else:
+        messages.success(request, "Pending assignments loaded")
+
     return render(request, 'Pending_Assignments.html', {
         'assignments': pending_assignments
     })
-
 
 
 def student_upload_assignment(request):
     student_name = request.session.get('student_name')
 
     if not student_name:
+        messages.error(request, "Please login to upload assignments")
         return redirect('student_log_in')
 
-    student = StudentDb.objects.get(name=student_name)
+    try:
+        student = StudentDb.objects.get(name=student_name)
+    except StudentDb.DoesNotExist:
+        messages.error(request, "Invalid session. Please login again")
+        return redirect('student_log_in')
 
     # assignments not yet submitted by this student
     submitted_ids = AssignmentSubmissionDb.objects.filter(
@@ -277,6 +338,10 @@ def student_upload_assignment(request):
         assignment_id = request.POST.get('assignment')
         file = request.FILES.get('file')
 
+        if not assignment_id or not file:
+            messages.error(request, "Please select an assignment and upload a file")
+            return redirect('studentapp:student_upload_assignment')
+
         assignment = AssignmentDb.objects.get(id=assignment_id)
 
         AssignmentSubmissionDb.objects.create(
@@ -286,35 +351,56 @@ def student_upload_assignment(request):
             submitted_at=timezone.now()
         )
 
+        messages.success(request, "Assignment uploaded successfully")
         return redirect('studentapp:submitted_assignments')
+
+    messages.info(request, "Upload your pending assignments here")
 
     return render(request, 'Student_Upload_Assignments.html', {
         'assignments': assignments
     })
 
+
 def submitted_assignments(request):
     student_name = request.session.get('student_name')
 
     if not student_name:
+        messages.error(request, "Please login to view submitted assignments")
         return redirect('student_log_in')
 
-    student = StudentDb.objects.get(name=student_name)
+    try:
+        student = StudentDb.objects.get(name=student_name)
+    except StudentDb.DoesNotExist:
+        messages.error(request, "Invalid session. Please login again")
+        return redirect('student_log_in')
 
     submissions = AssignmentSubmissionDb.objects.filter(
         student=student
     ).select_related('assignment', 'assignment__subject')
 
+    if not submissions.exists():
+        messages.info(request, "You have not submitted any assignments yet")
+    else:
+        messages.success(request, "Submitted assignments loaded successfully")
+
     return render(request, 'Submitted_Assignments.html', {
         'submissions': submissions
     })
+
 
 def student_announcements(request):
     student_id = request.session.get('student_id')
 
     if not student_id:
+        messages.error(request, "Please login to view announcements")
         return redirect('student_log_in')
 
     announcements = AnnouncementDb.objects.all().order_by('-created_at')
+
+    if not announcements.exists():
+        messages.info(request, "No announcements available at the moment")
+    else:
+        messages.success(request, "Latest announcements loaded")
 
     return render(request, 'Student_Announcements.html', {
         'announcements': announcements
@@ -325,27 +411,39 @@ def student_study_materials(request):
     student_name = request.session.get('student_name')
 
     if not student_name:
+        messages.error(request, "Please login to view study materials")
         return redirect('student_log_in')
 
     materials = StudyMaterialDb.objects.select_related(
         'subject', 'teacher'
     ).order_by('-uploaded_at')
 
+    if not materials.exists():
+        messages.info(request, "No study materials available yet")
+    else:
+        messages.success(request, "Study materials loaded successfully")
+
     return render(request, 'Student_Study_Materials.html', {
         'materials': materials
     })
+
 
 def student_download_marksheet(request):
     student_id = request.session.get("student_id")
 
     if not student_id:
+        messages.error(request, "Please login to download marksheets")
         return redirect("student_log_in")
 
+    messages.info(request, "You can download your marksheets from here")
+
     return render(request, "Student_download_marksheets.html")
+
 def student_leave_application(request):
     student_name = request.session.get("student_name")
 
     if not student_name:
+        messages.error(request, "Please login to apply for leave")
         return redirect("student_login")
 
     if request.method == "POST":
@@ -353,6 +451,10 @@ def student_leave_application(request):
         from_date = request.POST.get("from_date")
         to_date = request.POST.get("to_date")
         reason = request.POST.get("reason")
+
+        if not subject or not from_date or not to_date or not reason:
+            messages.error(request, "All fields are required")
+            return redirect("studentapp:leave_application")
 
         LeaveApplicationDb.objects.create(
             student_name=student_name,
@@ -364,5 +466,7 @@ def student_leave_application(request):
 
         messages.success(request, "Leave application submitted successfully")
         return redirect("studentapp:leave_application")
+
+    messages.info(request, "Fill the form to apply for leave")
 
     return render(request, "Student_leave_application.html")

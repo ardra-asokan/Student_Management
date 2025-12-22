@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from mainapp.models import SignupDb
 from Adminapp.models import TeacherDb,StudentDb
+from django.contrib import messages
 
 
 # Create your views here.
@@ -35,32 +36,35 @@ def save_signup_data(request):
             return redirect(sign_up)
         else:
             obj.save()
+            messages.success(request, "Signup successful! Please login")
             return redirect(login)
 
 def admin_login(request):
     if request.method == "POST":
         un = request.POST.get('username')
         pswd = request.POST.get('password')
-        if SignupDb.objects.filter(Name=un,Password=pswd).exists():
-            request.session['Name']=un
+
+        if SignupDb.objects.filter(Name=un, Password=pswd).exists():
+            request.session['Name'] = un
             request.session['Password'] = pswd
+            messages.success(request, "Admin login successful")
             return redirect('Adminapp:admin_dashboard')
         else:
+            messages.error(request, "Invalid admin credentials")
             return redirect(login)
-    else:
-        return redirect(login)
+
+    return redirect(login)
 
 def admin_logout(request):
     del request.session['Name']
     del request.session['Password']
+    messages.success(request, "Admin logged out successfully")
     return redirect(login)
-
 
 
 # TEACHER LOGIN
 def teacher_log_in(request):
     return render(request, "Teacher_Login.html")
-
 
 
 def teacher_login(request):
@@ -76,17 +80,19 @@ def teacher_login(request):
 
             request.session['teacher_id'] = teacher.id
             request.session['teacher_name'] = teacher.name
-
             return redirect('teacherapp:teacher_dashboard')
 
         except TeacherDb.DoesNotExist:
+            messages.error(request, "Invalid username or password")
             return redirect('teacher_log_in')
 
     return redirect('teacher_log_in')
 
 
+
 def teacher_logout(request):
     request.session.flush()
+    messages.success(request, "Logout successfully")
     return redirect('teacher_log_in')
 
 
@@ -94,6 +100,10 @@ def teacher_logout(request):
 
 def student_log_in(request):
     return render(request, "Student_Login.html")
+
+def student_log_in(request):
+    return render(request, "Student_Login.html")
+
 
 def student_login(request):
     if request.method == "POST":
@@ -109,9 +119,11 @@ def student_login(request):
             request.session['student_id'] = student.id
             request.session['student_name'] = student.name
 
+            messages.success(request, f"Welcome {student.name}")
             return redirect('studentapp:student_dashboard')
 
         except StudentDb.DoesNotExist:
+            messages.error(request, "Invalid username or password")
             return redirect('student_log_in')
 
     return redirect('student_log_in')
@@ -119,5 +131,13 @@ def student_login(request):
 
 def student_logout(request):
     request.session.flush()
+    messages.success(request, "Logout successfully")
+    return redirect(student_log_in)
+
+
+
+def student_logout(request):
+    request.session.flush()
+    messages.success(request, "Logout successfully")
     return redirect(student_log_in)
 

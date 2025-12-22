@@ -81,17 +81,17 @@
             ">
                 <h3 class="text-center" style="color:#043565; font-weight:bold;">Teacher Login</h3>
                 <br>
-                <form method="POST" action="{% url 'teacher_login' %}">
+                <form method="POST" action="{% url 'teacher_login' %}" name="teacherform" onsubmit="LoginValidation()">
                     {% csrf_token %}
                     <input type="text" name="username" placeholder="Username"
-                           class="form-control" style="height:45px; margin-bottom: 20px;">
+                           class="form-control" id="username" style="height:45px; margin-bottom: 20px;">
                     <input type="password" name="password" placeholder="Password"
-                           class="form-control" style="height:45px; margin-bottom: 20px;">
+                           class="form-control" id="password" style="height:45px; margin-bottom: 20px;">
                     <button type="submit" class="btn btn-primary btn-block"
                             style="width: 100%; height: 45px; background:#043565;">Login</button>
-                    <div class="text-center" style="margin-top: 15px;">
-                        <a href="#" style="color:#043565;">Forgot Password?</a>
-                    </div>
+<!--                    <div class="text-center" style="margin-top: 15px;">-->
+<!--                        <a href="#" style="color:#043565;">Forgot Password?</a>-->
+<!--                    </div>-->
                 </form>
             </div>
         </div>
@@ -126,6 +126,52 @@
 	<script src="{% static 'login/vendor/countdowntime/countdowntime.js' %}"></script>
 <!--===============================================================================================-->
 	<script src="{% static 'login/js/main.js' %}"></script>
+
+
+    <script>
+function LoginValidation() {
+
+    x = document.teacherform.username.value;
+    y = document.teacherform.password.value;
+
+    if (x == "" || x == null) {
+        alert("Username can't be empty!");
+
+    }
+    else if (y == "" || y == null) {
+        alert("Password can't be empty!");
+
+    }
+    else if (y.length < 4) {
+        alert("Password must contain at least 4 characters!");
+    }
+}
+</script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+{% if messages %}
+    {% for i in messages %}
+        {% if i.tags == 'success' %}
+           <script>
+             swal('{{i}}', '', 'success')
+           </script>
+
+        {% elif i.tags == 'warning' %}
+           <script>
+             swal('{{i}}', '', 'warning')
+           </script>
+
+        {% elif i.tags == 'info' %}
+           <script>
+             swal('{{i}}', '', 'info')
+           </script>
+        {% else %}
+           <script>
+             swal('{{i}}', '', 'error')
+           </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
 
 </body>
 </html>
