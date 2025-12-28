@@ -1,126 +1,182 @@
 {% extends 'student_index.html' %}
 {% block content %}
 
-<div class="container px-4 mt-4 " style="margin-bottom:220px;">
+<div class="container px-4 mt-4" style="margin-bottom:220px;">
 
-    <!-- PAGE HEADER -->
-    <div class="announcement-header text-center mb-5" >
-        <h3 class="fw-bold  mb-1">📢 Announcements</h3>
-        <p class=" mb-0">
-            Important updates from Admin & Teachers
+    <!-- ===== ANNOUNCEMENT HEADER ===== -->
+    <div class="announcement-hero text-center mb-5">
+        <div class="hero-icon">
+            📣
+        </div>
+        <h2 class="hero-title">Announcements</h2>
+        <p class="hero-subtitle">
+            Important updates from Admin and Teachers
         </p>
     </div>
 
     {% if announcements %}
-        <div class="row justify-content-center">
-            <div class="col-lg-9">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
 
-                {% for a in announcements %}
-                <div class="card announcement-card border-0 mb-4">
-                    <div class="card-body p-4">
+            {% for a in announcements %}
+            <div class="card announcement-card mb-4 border-0">
+                <div class="card-body p-4">
 
-                        <!-- TITLE + TYPE -->
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <h6 class="fw-semibold text-dark mb-0" style="font-size:17px;">
-                                {{ a.title }}
-                            </h6>
+                    <!-- TITLE + TYPE -->
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h6 class="announcement-title mb-0">
+                            {{ a.title }}
+                        </h6>
 
-                            <span class="badge announcement-badge
-                                {% if a.sender_type == 'Admin' %}
-                                    bg-primary
-                                {% else %}
-                                    bg-success
-                                {% endif %}
-                            ">
-                                {{ a.sender_type }}
-                            </span>
-                        </div>
-
-                        <!-- MESSAGE -->
-                        <p class="text-muted mb-4 announcement-message">
-                            {{ a.message }}
-                        </p>
-
-                        <!-- FOOTER -->
-                        <div class="d-flex justify-content-between align-items-center small text-muted">
-                            <span>
-                                👤 {{ a.sender_name }}
-                            </span>
-                            <span>
-                                📅 {{ a.created_at|date:"M d, Y" }}
-                            </span>
-                        </div>
-
+                        <span class="announcement-badge
+                            {% if a.sender_type == 'Admin' %}
+                                badge-admin
+                            {% else %}
+                                badge-teacher
+                            {% endif %}
+                        ">
+                            {{ a.sender_type }}
+                        </span>
                     </div>
-                </div>
-                {% endfor %}
 
-            </div>
-        </div>
-    {% else %}
-        <!-- EMPTY STATE -->
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="empty-state text-center">
-                    <div class="empty-icon mb-3">📭</div>
-                    <h6 class="fw-semibold text-dark">No Announcements</h6>
-                    <p class="text-muted mb-0">
-                        There are no announcements at the moment
+                    <!-- MESSAGE -->
+                    <p class="announcement-message">
+                        {{ a.message }}
                     </p>
+
+                    <!-- FOOTER -->
+                    <div class="announcement-footer">
+                        <span>👤 {{ a.sender_name }}</span>
+                        <span>📅 {{ a.created_at|date:"M d, Y" }}</span>
+                    </div>
+
                 </div>
             </div>
+            {% endfor %}
+
         </div>
+    </div>
+
+    {% else %}
+    <!-- EMPTY STATE -->
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="empty-state text-center">
+                <div class="empty-icon">📭</div>
+                <h6 class="fw-semibold mt-2">No Announcements</h6>
+                <p class="text-muted mb-0">
+                    There are no announcements at the moment
+                </p>
+            </div>
+        </div>
+    </div>
     {% endif %}
 
 </div>
 
-<!-- STYLES -->
+<!-- ===== STYLES ===== -->
 <style>
-    /* HEADER */
-    .announcement-header {
 
-        padding: 35px 20px;
-        border-radius: 18px;
-    }
+/* ===== HERO HEADER ===== */
+.announcement-hero {
+    background: #ffffff;
+    padding: 50px 30px;
+    border-radius: 26px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.08);
+}
 
-    /* CARD */
-    .announcement-card {
-        border-radius: 16px;
-        box-shadow: 0 10px 28px rgba(0,0,0,0.07);
-        transition: all 0.3s ease;
-    }
+.hero-icon {
+    width: 78px;
+    height: 78px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    color: #ffffff;
+    font-size: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 28px rgba(37,99,235,0.35);
+}
 
-    .announcement-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 18px 40px rgba(0,0,0,0.12);
-    }
+.hero-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
 
-    /* MESSAGE */
-    .announcement-message {
-        line-height: 1.7;
-        font-size: 15px;
-    }
+.hero-subtitle {
+    font-size: 15px;
+    color: #475569;
+}
 
-    /* BADGE */
-    .announcement-badge {
-        font-size: 12px;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-weight: 600;
-        color:white;
-    }
+/* ===== ANNOUNCEMENT CARD ===== */
+.announcement-card {
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
 
-    /* EMPTY STATE */
-    .empty-state {
-        background: #ffffff;
-        padding: 50px 25px;
-        border-radius: 18px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-    }
+.announcement-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.14);
+}
 
-    .empty-icon {
-        font-size: 42px;
-    }
+/* TITLE */
+.announcement-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* MESSAGE */
+.announcement-message {
+    font-size: 15px;
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+
+/* FOOTER */
+.announcement-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* BADGES */
+.announcement-badge {
+    font-size: 12px;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.badge-admin {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+}
+
+.badge-teacher {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+/* EMPTY STATE */
+.empty-state {
+    background: #ffffff;
+    padding: 55px 30px;
+    border-radius: 24px;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.08);
+}
+
+.empty-icon {
+    font-size: 44px;
+}
+
 </style>
 
 {% endblock %}

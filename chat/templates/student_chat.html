@@ -3,129 +3,193 @@
 {% block content %}
 
 <style>
-.chat-wrapper {
-    height: calc(100vh - 160px);
-    display: flex;
-    background: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+/* PAGE BACKGROUND */
+.content-body {
+    background: #eef1f5;
 }
 
+/* CHAT CONTAINER */
+.chat-wrapper {
+    height: calc(100vh - 170px);
+    max-width: 900px;
+    margin: auto;
+    display: flex;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.10);
+    overflow: hidden;
+}
+
+/* CHAT BOX */
 .chat-box {
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
+/* HEADER */
 .chat-header {
-    padding: 15px;
+    padding: 18px 22px;
+    font-size: 16px;
     font-weight: 600;
-    border-bottom: 1px solid #ddd;
-    background: #f8f9fc;
+    background: linear-gradient(90deg, #1e40af, #2563eb);
+    color: #ffffff;
     text-align: center;
 }
 
+/* MESSAGE AREA */
 .chat-messages {
     flex: 1;
-    padding: 15px;
+    padding: 28px 24px;
     overflow-y: auto;
-    background: #f5f7fb;
+    background: #f8fafc;
 }
 
+/* MESSAGE BASE */
 .msg {
-    max-width: 65%;
-    padding: 10px 14px;
-    margin-bottom: 10px;
-    border-radius: 12px;
+    max-width: 60%;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    border-radius: 14px;
     font-size: 14px;
+    line-height: 1.6;
+    word-break: break-word;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
-/* STUDENT → RIGHT */
+/* STUDENT MESSAGE (RIGHT) */
 .msg-student {
-    background: #4e73df;
-    color: #fff;
+    background: linear-gradient(135deg, #1e3a8a, #2563eb);
+    color: #ffffff;
     margin-left: auto;
+    border-bottom-right-radius: 6px;
 }
 
-/* TEACHER → LEFT */
+/* TEACHER MESSAGE (LEFT) */
 .msg-teacher {
-    background: #ffffff;
-    color: #111827;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    color: #0f172a;
     margin-right: auto;
+    border-bottom-left-radius: 6px;
 }
 
+
+/* TEACHER NAME */
+.msg-teacher strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #111827;
+}
+
+/* TIME */
 .msg small {
     display: block;
     font-size: 11px;
-    color: #6b7280;
-    margin-top: 4px;
+    margin-top: 8px;
     text-align: right;
+    opacity: 0.8;
 }
 
+/* INPUT BAR */
 .chat-input {
-    padding: 12px;
-    border-top: 1px solid #ddd;
+    padding: 16px 18px;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
     display: flex;
+    gap: 12px;
 }
 
+/* INPUT */
 .chat-input input {
     flex: 1;
-    padding: 10px 14px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
+    padding: 14px 16px;
+    font-size: 14px;
+    border-radius: 30px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
 }
 
+.chat-input input:focus {
+    outline: none;
+    border-color: #2563eb;
+    background: #ffffff;
+}
+
+/* SEND BUTTON */
 .chat-input button {
-    margin-left: 10px;
-    border-radius: 20px;
+    padding: 12px 26px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #1e40af, #2563eb);
+    border: none;
+    color: #ffffff;
+}
+
+/* EMPTY STATE */
+.chat-messages p {
+    font-size: 14px;
+    color: #6b7280;
 }
 </style>
 
 <div class="content-body">
-<div class="container-fluid mt-4">
-<div class="chat-wrapper">
-<div class="chat-box">
+    <div class="container-fluid mt-4">
+        <div class="chat-wrapper">
+            <div class="chat-box">
 
-<div class="chat-header">💬 Chat with Teacher</div>
+                <!-- HEADER -->
+                <div class="chat-header">
+                    💬 Chat with {{ teacher.name }}
+                </div>
 
-<div class="chat-messages" id="chatBox">
-{% for m in messages %}
+                <!-- MESSAGES -->
+                <div class="chat-messages" id="chatBox">
+                {% for m in messages %}
 
-    {% if m.sender_student.id == student_id %}
-        <!-- STUDENT SENT → RIGHT -->
-        <div class="msg msg-student">
-            {{ m.message }}
-            <small>{{ m.timestamp|date:"h:i A" }}</small>
+                    {% if m.sender_student %}
+                        <!-- STUDENT MESSAGE -->
+                        <div class="msg msg-student">
+                            {{ m.message }}
+                            <small>{{ m.timestamp|date:"h:i A" }}</small>
+                        </div>
+                    {% else %}
+                        <!-- TEACHER MESSAGE -->
+                        <div class="msg msg-teacher">
+                            {% if forloop.first %}
+                                <strong>{{ teacher.name }}</strong>
+                            {% endif %}
+                            {{ m.message }}
+                            <small>{{ m.timestamp|date:"h:i A" }}</small>
+                        </div>
+                    {% endif %}
+
+                {% empty %}
+                    <p class="text-center text-muted mt-5">
+                        No messages yet 🙂
+                    </p>
+                {% endfor %}
+                </div>
+
+                <!-- INPUT -->
+                <form method="post" action="{% url 'chat:student_send_message' %}" class="chat-input">
+                    {% csrf_token %}
+                    <input type="hidden" name="teacher_id" value="{{ teacher.id }}">
+                    <input type="text" name="message" placeholder="Type your message..." required>
+                    <button type="submit">Send</button>
+                </form>
+
+            </div>
         </div>
-    {% else %}
-        <!-- TEACHER SENT → LEFT -->
-        <div class="msg msg-teacher">
-            {{ m.message }}
-            <small>{{ m.timestamp|date:"h:i A" }}</small>
-        </div>
-    {% endif %}
-
-{% empty %}
-    <p class="text-center text-muted mt-5">No messages yet 🙂</p>
-{% endfor %}
-</div>
-
-
-<form method="post" action="{% url 'chat:student_send_message' %}" class="chat-input">
-    {% csrf_token %}
-    <input type="hidden" name="teacher_id" value="{{ teacher.id }}">
-    <input type="text" name="message" placeholder="Type a message..." required>
-    <button class="btn btn-primary">Send</button>
-</form>
-
-</div>
-</div>
-</div>
+    </div>
 </div>
 
 <script>
 const chatBox = document.getElementById("chatBox");
-if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+if (chatBox) {
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 </script>
 
 {% endblock %}

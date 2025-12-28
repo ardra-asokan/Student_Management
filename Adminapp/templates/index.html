@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{% static 'dashboard/plugins/chartist-plugin-tooltips/css/chartist-plugin-tooltip.css' %}">
     <!-- Custom Stylesheet -->
     <link href="{% static 'dashboard/css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>
 
@@ -49,9 +50,15 @@
                 <a href="index.html">
                     <b class="logo-abbr"><img src="{% static 'dashboard/images/logo.png' %}" alt=""> </b>
                     <span class="logo-compact"><img src="{% static 'dashboard/images/logo-compact.png' %}" alt=""></span>
-                    <span class="brand-title">
-                        <img src="{% static 'dashboard/images/logo-text.png' %}" alt="">
-                    </span>
+                    <span style="
+            margin-left:10px;
+            font-size:20px;
+            font-weight:600;
+            color:#ffffff;
+            letter-spacing:0.5px;
+        ">
+            CampusConnect
+        </span>
                 </a>
             </div>
         </div>
@@ -390,73 +397,71 @@
         <div class="content-body">
 
             <div class="container-fluid mt-3">
-                <div class="row">
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="card gradient-1">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Teachers</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">{{ teacher_count }}</h2>
+    <div class="row">
 
-                                </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-shopping-cart"></i></span>
-                            </div>
-                        </div>
+        <!-- TEACHERS -->
+        <div class="col-lg-3 col-sm-6">
+            <div class="card gradient-1">
+                <div class="card-body">
+                    <h3 class="card-title text-white">Teachers</h3>
+                    <div class="d-inline-block">
+                        <h2 class="text-white">{{ teacher_count }}</h2>
                     </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="card gradient-2">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Students</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">{{ student_count }}</h2>
-
-                                </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-money"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="card gradient-3">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Subjects</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">{{ subject_count }}</h2>
-
-                                </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-users"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="card gradient-4">
-                            <div class="card-body">
-                                <h3 class="card-title text-white">Assignments</h3>
-                                <div class="d-inline-block">
-                                    <h2 class="text-white">{{ assignment_percent }}%</h2>
-
-                                </div>
-                                <span class="float-right display-5 opacity-5"><i class="fa fa-heart"></i></span>
-                            </div>
-                        </div>
-                    </div>
+                    <span class="float-right display-5 opacity-5">
+                        <i class="fa fa-chalkboard-teacher"></i>
+                    </span>
                 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </div>
+        </div>
+
+        <!-- STUDENTS -->
+        <div class="col-lg-3 col-sm-6">
+            <div class="card gradient-2">
+                <div class="card-body">
+                    <h3 class="card-title text-white">Students</h3>
+                    <div class="d-inline-block">
+                        <h2 class="text-white">{{ student_count }}</h2>
+                    </div>
+                    <span class="float-right display-5 opacity-5">
+                        <i class="fa fa-user-graduate"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBJECTS -->
+        <div class="col-lg-3 col-sm-6">
+            <div class="card gradient-3">
+                <div class="card-body">
+                    <h3 class="card-title text-white">Subjects</h3>
+                    <div class="d-inline-block">
+                        <h2 class="text-white">{{ subject_count }}</h2>
+                    </div>
+                    <span class="float-right display-5 opacity-5">
+                        <i class="fa fa-book-open"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ASSIGNMENTS -->
+        <div class="col-lg-3 col-sm-6">
+            <div class="card gradient-4">
+                <div class="card-body">
+                    <h3 class="card-title text-white">Assignments</h3>
+                    <div class="d-inline-block">
+                        <h2 class="text-white">{{ assignment_percent }}%</h2>
+                    </div>
+                    <span class="float-right display-5 opacity-5">
+                        <i class="fa fa-tasks"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
             <!-- #/ container -->
         </div>
         <!--**********************************

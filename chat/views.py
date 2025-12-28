@@ -20,8 +20,9 @@ def teacher_chat_students(request):
         student = StudentDb.objects.get(id=selected_student_id)
 
         messages = ChatMessageDb.objects.filter(
-            sender_teacher=teacher,
             sender_student=student
+        ).filter(
+            Q(sender_teacher=teacher) | Q(sender_teacher__isnull=True)
         ).order_by("timestamp")
 
     return render(request, "teacher_chat.html", {
@@ -39,7 +40,7 @@ def teacher_send_message(request):
 
         ChatMessageDb.objects.create(
             sender_teacher=teacher,
-            sender_student=student,
+            sender_student=student,   # ✅ TARGET STUDENT
             message=request.POST["message"]
         )
 
@@ -67,8 +68,8 @@ def student_chat_teacher(request):
     teacher = TeacherDb.objects.get(id=teacher)
 
     messages = ChatMessageDb.objects.filter(
-        sender_teacher=teacher,
-        sender_student=student
+        Q(sender_teacher=teacher, sender_student__isnull=True) |
+        Q(sender_student=student, sender_teacher__isnull=True)
     ).order_by("timestamp")
 
     return render(request, "student_chat.html", {
@@ -83,7 +84,7 @@ def student_send_message(request):
         teacher = TeacherDb.objects.get(id=request.POST["teacher_id"])
 
         ChatMessageDb.objects.create(
-            sender_teacher=teacher,
+            sender_teacher=None,
             sender_student=student,
             message=request.POST["message"]
         )
