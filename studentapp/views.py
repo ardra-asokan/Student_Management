@@ -7,42 +7,22 @@ from django.db.models import Avg, Sum, Count
 from django.contrib import messages
 from studentapp.models import LeaveApplicationDb
 from django.utils.timesince import timesince
+from chat.models import ChatMessageDb
 
 
 # Create your views here.
 def student_page(request):
-    student_id = request.session.get('student_id')
+    student_name = request.session.get('student_name')
 
-    if not student_id:
-        messages.error(request, "Please login to continue")
+    if not student_name:
+        messages.error(request, "Please login to access the dashboard")
         return redirect('student_log_in')
 
-    student = StudentDb.objects.get(id=student_id)
+    messages.success(request, f"Welcome {student_name}")
 
-    subject_count = SubjectDb.objects.filter(
-        department=student.department,
-        semester=student.semester
-    ).count()
-
-    pending_assignments = AssignmentDb.objects.filter(
-        subject__department=student.department,
-        subject__semester=student.semester
-    ).count()
-
-    # 🔔 Latest announcements (Admin + Teacher)
-    announcements = AnnouncementDb.objects.filter(
-        sender_type__in=["Admin", "Teacher"]
-    ).order_by("-created_at")[:5]
-
-    announcement_count = announcements.count()
-
-    return render(request, "Student_index.html", {
-        "subject_count": subject_count,
-        "pending_assignments": pending_assignments,
-        "announcement_count": announcement_count,
-        "announcements": announcements,
+    return render(request, 'Student_index.html', {
+        'student_name': student_name
     })
-
 
 
 def student_profile(request):
@@ -60,9 +40,7 @@ def student_profile(request):
 
     messages.success(request, "Profile loaded successfully")
 
-    return render(
-        request,
-        "View_Student_Profile.html",
+    return render(request,"View_Student_Profile.html",
         {"student": student}
     )
 
@@ -163,17 +141,12 @@ def student_attendance(request):
         messages.error(request, "Please login to view attendance")
         return redirect('student_log_in')
 
-    attendance_data = (
-        AttendanceDb.objects
-        .filter(student_id=student_id)
+    attendance_data = (AttendanceDb.objects.filter(student_id=student_id)
         .values('subject__subject_name')
-        .annotate(
-            total_classes=Count('id'),
-            present_count=Count('id', filter=Q(status__iexact='Present'))
+        .annotate(total_classes=Count('id'),present_count=Count('id', filter=Q(status__iexact='Present'))
         )
     )
 
-    # calculate percentage
     for a in attendance_data:
         if a['total_classes'] > 0:
             a['percentage'] = round(
@@ -243,23 +216,75 @@ def student_internal_marks(request):
 
 def student_notifications(request):
     return render(request, 'Student_notifications.html')
-#
-# def student_support(request):
-#     return render(request, 'student/support.html')
-#
+
 
 def student_dashboard(request):
-    student_name = request.session.get('student_name')
+    student_id = request.session.get('student_id')
 
-    if not student_name:
-        messages.error(request, "Please login to access the dashboard")
+    if not student_id:
+        messages.error(request, "Please login to continue")
         return redirect('student_log_in')
 
-    messages.success(request, f"Welcome {student_name}")
+    student = StudentDb.objects.get(id=student_id)
 
-    return render(request, 'student_index.html', {
-        'student_name': student_name
+    # ---------------- SUBJECT COUNT ----------------
+    subject_count = SubjectDb.objects.filter(
+        department=student.department,
+        semester=student.semester
+    ).count()
+
+    # ---------------- PENDING ASSIGNMENTS ----------------
+    all_assignments = AssignmentDb.objects.filter(
+        subject__department=student.department,
+        subject__semester=student.semester
+    )
+
+    submitted_ids = AssignmentSubmissionDb.objects.filter(
+        student=student
+    ).values_list('assignment_id', flat=True)
+
+    pending_assignments = all_assignments.exclude(
+        id__in=submitted_ids
+    ).count()
+
+    # ---------------- ATTENDANCE % ----------------
+    attendance_qs = AttendanceDb.objects.filter(student=student)
+    total_classes = attendance_qs.count()
+    present_classes = attendance_qs.filter(status__iexact="Present").count()
+
+    attendance_percent = round(
+        (present_classes / total_classes) * 100, 2
+    ) if total_classes > 0 else 0
+
+    # ---------------- ANNOUNCEMENTS ----------------
+    announcements = AnnouncementDb.objects.filter(
+        sender_type__in=["Admin", "Teacher"]
+    ).order_by("-created_at")[:5]
+
+    # ----------------  TEACHER → STUDENT CHAT MESSAGES ----------------
+    student_messages = ChatMessageDb.objects.filter(
+        sender_teacher__isnull=False,   # message sent by teacher
+        sender_student=student          # message for this student
+    ).order_by("-timestamp")[:5]
+
+    message_count = student_messages.count()
+
+    return render(request, "Student_index.html", {
+        # Dashboard cards
+        "subject_count": subject_count,
+        "pending_assignments": pending_assignments,
+        "attendance_percent": attendance_percent,
+
+        # Announcements
+        "announcement_count": announcements.count(),
+        "announcements": announcements,
+
+        # Messages
+        "student_messages": student_messages,
+        "message_count": message_count,
     })
+
+
 
 def student_semester_results(request):
     student_name = request.session.get('student_name')
@@ -288,24 +313,22 @@ def pending_assignments(request):
         return redirect('student_log_in')
 
     try:
-        # get logged-in student
         student = StudentDb.objects.get(name=student_name)
     except StudentDb.DoesNotExist:
         messages.error(request, "Invalid session. Please login again")
         return redirect('student_log_in')
 
-    # assignments already submitted by this student
+
     submitted_ids = AssignmentSubmissionDb.objects.filter(
         student=student
     ).values_list('assignment_id', flat=True)
 
-    # pending assignments (not submitted)
     pending_assignments = AssignmentDb.objects.exclude(
         id__in=submitted_ids
     )
 
     if not pending_assignments.exists():
-        messages.info(request, "No pending assignments 🎉")
+        messages.info(request, "No pending assignments")
     else:
         messages.success(request, "Pending assignments loaded")
 

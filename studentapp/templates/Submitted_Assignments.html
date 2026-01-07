@@ -1,30 +1,91 @@
 {% extends 'student_index.html' %}
 {% block content %}
 
-<div class="container px-4 mt-3" style="margin-bottom:500px;">
+<style>
+/* Page title */
+.page-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #1f2937;
+}
 
-    <!-- PAGE HEADER -->
-    <div class="card border-0 shadow-sm mb-3">
-        <div class="card-body py-3">
-            <h5 class="fw-bold mb-1">✅ Submitted Assignments</h5>
-            <small class="text-muted">Assignments you have already submitted</small>
-        </div>
+/* Subtitle */
+.page-subtitle {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Card */
+.submission-card {
+    border-radius: 16px;
+    background: #ffffff;
+}
+
+/* Table */
+.submission-table th {
+    font-weight: 600;
+    background: #f9fafb;
+    color: #374151;
+}
+
+.submission-table td {
+    vertical-align: middle;
+    color: #374151;
+}
+
+/* Badges */
+.badge-graded {
+    background: #dcfce7;
+    color: #166534;
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+.badge-pending {
+    background: #e5e7eb;
+    color: #374151;
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+/* View button */
+.view-btn {
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 13px;
+}
+
+/* Empty state */
+.empty-state {
+    font-size: 16px;
+    color: #6b7280;
+}
+</style>
+
+<div class="container mt-4" style="margin-bottom:500px;">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h2 class="page-title">Submitted Assignments</h2>
+        <p class="page-subtitle">Assignments you have already submitted</p>
     </div>
 
-    <!-- TABLE CARD -->
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
+    <!-- Card -->
+    <div class="card submission-card shadow-sm border-0">
+        <div class="card-body p-4">
 
             {% if submissions %}
             <div class="table-responsive">
-                <table class="table table-hover align-middle text-center">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle text-center submission-table">
+                    <thead>
                         <tr>
-                            <th>Subject</th>
-                            <th>Title</th>
-                            <th>Submitted On</th>
-                            <th>File</th>
-                            <th>Marks</th>
+                            <th> Subject</th>
+                            <th> Title</th>
+                            <th> Submitted On</th>
+                            <th> File</th>
+                            <th> Marks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,18 +106,18 @@
                             <td>
                                 <a href="{{ s.file.url }}"
                                    target="_blank"
-                                   class="btn btn-sm btn-outline-primary">
+                                   class="btn btn-sm btn-outline-primary view-btn">
                                     View
                                 </a>
                             </td>
 
                             <td>
                                 {% if s.marks %}
-                                    <span class="badge bg-success">
+                                    <span class="badge-graded">
                                         {{ s.marks }}
                                     </span>
                                 {% else %}
-                                    <span class="badge bg-secondary">
+                                    <span class="badge-pending">
                                         Not graded
                                     </span>
                                 {% endif %}
@@ -67,8 +128,10 @@
                 </table>
             </div>
             {% else %}
-                <div class="text-center py-4">
-                    <p class="text-muted mb-0">
+                <!-- Empty State -->
+                <div class="text-center py-5">
+                    <i class="fa fa-file-text-o fa-3x text-muted mb-3"></i>
+                    <p class="empty-state mb-0">
                         No submitted assignments yet 📄
                     </p>
                 </div>

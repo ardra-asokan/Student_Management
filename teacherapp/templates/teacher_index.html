@@ -116,129 +116,90 @@ body {
                     <ul class="clearfix">
                         <li class="icons dropdown"><a href="javascript:void(0)" data-toggle="dropdown">
                                 <i class="mdi mdi-email-outline"></i>
-                                <span class="badge badge-pill gradient-1">3</span>
+                                <span class="badge badge-pill gradient-1">
+    {{ message_count }}
+</span>
+
                             </a>
                             <div class="drop-down animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-heading d-flex justify-content-between">
-                                    <span class="">3 New Messages</span>
+                                    <span class="">{{ message_count }} New Messages</span>
                                     <a href="javascript:void()" class="d-inline-block">
-                                        <span class="badge badge-pill gradient-1">3</span>
+                                        <span class="badge badge-pill gradient-1">{{ message_count }}</span>
                                     </a>
                                 </div>
                                 <div class="dropdown-content-body">
-                                    <ul>
-                                        <li class="notification-unread">
-                                            <a href="javascript:void()">
-                                                <img class="float-left mr-3 avatar-img" src="{% static 'dashboard/images/avatar/1.jpg' %}" alt="">
-                                                <div class="notification-content">
-                                                    <div class="notification-heading">Saiful Islam</div>
-                                                    <div class="notification-timestamp">08 Hours ago</div>
-                                                    <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li class="notification-unread">
-                                            <a href="javascript:void()">
-                                                <img class="float-left mr-3 avatar-img" src="{% static 'dashboard/images/avatar/2.jpg' %}" alt="">
-                                                <div class="notification-content">
-                                                    <div class="notification-heading">Adam Smith</div>
-                                                    <div class="notification-timestamp">08 Hours ago</div>
-                                                    <div class="notification-text">Can you do me a favour?</div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <img class="float-left mr-3 avatar-img" src="{% static 'dashboard/images/avatar/3.jpg' %}" alt="">
-                                                <div class="notification-content">
-                                                    <div class="notification-heading">Barak Obama</div>
-                                                    <div class="notification-timestamp">08 Hours ago</div>
-                                                    <div class="notification-text">Hi Teddy, Just wanted to let you ...</div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <img class="float-left mr-3 avatar-img" src="{% static 'dashboard/images/avatar/4.jpg' %}" alt="">
-                                                <div class="notification-content">
-                                                    <div class="notification-heading">Hilari Clinton</div>
-                                                    <div class="notification-timestamp">08 Hours ago</div>
-                                                    <div class="notification-text">Hello</div>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
+    <ul>
+        {% for msg in student_messages %}
+        <li class="notification-unread">
+            <a href="{% url 'chat:teacher_chat_students' %}?student_id={{ msg.sender_student.id }}">
+                <img class="float-left mr-3 avatar-img"
+                     src="{% static 'dashboard/images/avatar/1.jpg' %}" alt="">
+                <div class="notification-content">
+                    <div class="notification-heading">
+                        {{ msg.sender_student.name }}
+                    </div>
+                    <div class="notification-timestamp">
+                        {{ msg.timestamp|timesince }} ago
+                    </div>
+                    <div class="notification-text">
+                        {{ msg.message|truncatechars:30 }}
+                    </div>
+                </div>
+            </a>
+        </li>
+        {% empty %}
+        <li class="text-center text-muted p-2">
+            No new messages
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 
-                                </div>
                             </div>
                         </li>
                         <li class="icons dropdown"><a href="javascript:void(0)" data-toggle="dropdown">
                                 <i class="mdi mdi-bell-outline"></i>
-                                <span class="badge badge-pill gradient-2">3</span>
+                               <span class="badge badge-pill gradient-2">
+    {{ notification_count }}
+</span>
                             </a>
                             <div class="drop-down animated fadeIn dropdown-menu dropdown-notfication">
                                 <div class="dropdown-content-heading d-flex justify-content-between">
-                                    <span class="">2 New Notifications</span>
+                                    <span class="">{{ notification_count }} New Notifications</span>
                                     <a href="javascript:void()" class="d-inline-block">
-                                        <span class="badge badge-pill gradient-2">5</span>
+                                        <span class="badge badge-pill gradient-2">{{ notification_count }}</span>
                                     </a>
                                 </div>
                                 <div class="dropdown-content-body">
-                                    <ul>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <span class="mr-3 avatar-icon bg-success-lighten-2"><i class="icon-present"></i></span>
-                                                <div class="notification-content">
-                                                    <h6 class="notification-heading">Events near you</h6>
-                                                    <span class="notification-text">Within next 5 days</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <span class="mr-3 avatar-icon bg-danger-lighten-2"><i class="icon-present"></i></span>
-                                                <div class="notification-content">
-                                                    <h6 class="notification-heading">Event Started</h6>
-                                                    <span class="notification-text">One hour ago</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <span class="mr-3 avatar-icon bg-success-lighten-2"><i class="icon-present"></i></span>
-                                                <div class="notification-content">
-                                                    <h6 class="notification-heading">Event Ended Successfully</h6>
-                                                    <span class="notification-text">One hour ago</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:void()">
-                                                <span class="mr-3 avatar-icon bg-danger-lighten-2"><i class="icon-present"></i></span>
-                                                <div class="notification-content">
-                                                    <h6 class="notification-heading">Events to Join</h6>
-                                                    <span class="notification-text">After two days</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </ul>
+    <ul>
+        {% for n in admin_notifications %}
+        <li>
+            <a href="{% url 'teacherapp:teacher_view_announcements' %}">
+                <span class="mr-3 avatar-icon bg-primary-lighten-2">
+                    <i class="icon-bell"></i>
+                </span>
+                <div class="notification-content">
+                    <h6 class="notification-heading">
+                        {{ n.title }}
+                    </h6>
+                    <span class="notification-text">
+                        {{ n.created_at|timesince }} ago
+                    </span>
+                </div>
+            </a>
+        </li>
+        {% empty %}
+        <li class="text-center text-muted p-2">
+            No notifications
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 
-                                </div>
                             </div>
                         </li>
-                        <li class="icons dropdown d-none d-md-flex">
-                            <a href="javascript:void(0)" class="log-user"  data-toggle="dropdown">
-                                <span>English</span>  <i class="fa fa-angle-down f-s-14" aria-hidden="true"></i>
-                            </a>
-                            <div class="drop-down dropdown-language animated fadeIn  dropdown-menu">
-                                <div class="dropdown-content-body">
-                                    <ul>
-                                        <li><a href="javascript:void()">English</a></li>
-                                        <li><a href="javascript:void()">Dutch</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
+
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative"   data-toggle="dropdown">
                                 <span class="activity active"></span>
@@ -255,11 +216,7 @@ body {
                                         <li>
                                             <a href="app-profile.html" style="color:black;"><i class="icon-user"></i> <span>Profile</span></a>
                                         </li>
-                                        <li>
-                                            <a href="javascript:void()" style="color:black;">
-                                                <i class="icon-envelope-open" ></i> <span>Inbox</span> <div class="badge gradient-3 badge-pill gradient-1">3</div>
-                                            </a>
-                                        </li>
+
 
                                         <hr class="my-2">
 <!--                                        <li>-->
@@ -292,7 +249,7 @@ body {
             <li class="nav-label">Teacher Dashboard</li>
 
             <li>
-                <a href="{% url 'teacherapp:teacher_page' %}" aria-expanded="false">
+                <a href="{% url 'teacherapp:teacher_dashboard' %}" aria-expanded="false">
                     <i class="icon-speedometer menu-icon"></i><span class="nav-text">Dashboard</span>
                 </a>
             </li>
@@ -473,19 +430,21 @@ body {
                 </div>
 
                 <!-- Add teacher-specific blocks below -->
-                <div class="row mt-4">
-                    <div class="col-lg-8">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5>Recent Activities</h5>
-                                <ul>
-                                    <li>Marked attendance for CSE Batch A</li>
-                                    <li>Uploaded Assignment 2</li>
-                                    <li>Reviewed Python submissions</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+               <div class="row mt-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <h5>Recent Activities</h5>
+                <ul>
+                    {% for activity in recent_activities %}
+                        <li>{{ activity }}</li>
+                    {% empty %}
+                        <li>No recent activities</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 
                     <div class="col-lg-4">
                         <div class="card">

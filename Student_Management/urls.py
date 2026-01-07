@@ -26,7 +26,7 @@ import chat.urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('Adminapp/',include(Adminapp.urls)),
+    path('',include(Adminapp.urls)),
     path('mainapp/',include(mainapp.urls)),
     path('teacherapp/',include(teacherapp.urls)),
     path('studentapp/',include(studentapp.urls)),

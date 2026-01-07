@@ -40,7 +40,7 @@ def teacher_send_message(request):
 
         ChatMessageDb.objects.create(
             sender_teacher=teacher,
-            sender_student=student,   # ✅ TARGET STUDENT
+            sender_student=student,
             message=request.POST["message"]
         )
 
@@ -83,12 +83,7 @@ def student_send_message(request):
         student = StudentDb.objects.get(id=request.session["student_id"])
         teacher = TeacherDb.objects.get(id=request.POST["teacher_id"])
 
-        ChatMessageDb.objects.create(
-            sender_teacher=None,
-            sender_student=student,
-            message=request.POST["message"]
-        )
-
+        ChatMessageDb.objects.create(sender_teacher=None, sender_student=student,message=request.POST["message"])
         return redirect("chat:student_chat_teacher")
 
 

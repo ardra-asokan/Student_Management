@@ -1,67 +1,133 @@
 {% extends 'student_index.html' %}
 {% block content %}
 
+<style>
+/* Page Title */
+.page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+/* Subtitle */
+.page-subtitle {
+    font-size: 15px;
+    color: #6b7280;
+}
+
+/* Card */
+.assignment-card {
+    border-radius: 16px;
+    background: #ffffff;
+}
+
+/* Table */
+.assignment-table th {
+    font-weight: 600;
+    color: #374151;
+    background: #f9fafb;
+}
+
+.assignment-table td {
+    vertical-align: middle;
+    color: #374151;
+}
+
+/* Deadline badge */
+.deadline-badge {
+    background: #fee2e2;
+    color: #b91c1c;
+    padding: 6px 12px;
+    font-size: 13px;
+    border-radius: 20px;
+}
+
+/* View button */
+.view-btn {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    border: none;
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 13px;
+}
+
+.view-btn:hover {
+    opacity: 0.9;
+}
+
+/* Empty state */
+.empty-state {
+    font-size: 16px;
+    color: #6b7280;
+}
+</style>
+
 <!-- PAGE WRAPPER -->
-<div class="d-flex flex-column" style="min-height: calc(100vh - 120px);">
+<div class="container mt-4 " style="margin-bottom:500px;">
 
-    <!-- PAGE CONTENT -->
-    <div class="container mt-4 flex-grow-1">
-
-        <!-- Page Title -->
-        <div class="row mb-3">
-            <div class="col-12">
-                <h4 class="fw-bold text-dark" style="text-align:center; font-size:30px; margin-top:10px;"> Pending Assignments</h4>
-                <p class="text-muted mb-0" style="text-align:center;">Assignments yet to be submitted</p>
-            </div>
-        </div>
-
-        <!-- Card -->
-        <div class="card shadow-sm border-0" style="margin-top:50px;">
-            <div class="card-body">
-
-                {% if assignments %}
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle text-center">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Subject</th>
-                                <th>Title</th>
-                                <th>Deadline</th>
-                                <th>Assignment</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for a in assignments %}
-                            <tr>
-                                <td class="fw-semibold">
-                                    {{ a.subject.subject_name }}
-                                </td>
-                                <td>{{ a.title }}</td>
-                                <td>{{ a.deadline }}</td>
-                                <td>
-                                    <a href="{{ a.assignment_file.url }}"
-                                       target="_blank"
-                                       class="btn btn-sm btn-primary">
-                                        View File
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                    <div class="text-center py-4">
-                        <p class="text-muted mb-0">
-                            🎉 No pending assignments
-                        </p>
-                    </div>
-                {% endif %}
-
-            </div>
-        </div>
-
+    <!-- Title -->
+    <div class="text-center mb-4">
+        <h2 class="page-title"> Pending Assignments</h2>
+        <p class="page-subtitle">Assignments you still need to submit</p>
     </div>
+
+    <!-- Card -->
+    <div class="card assignment-card shadow-sm border-0">
+        <div class="card-body p-4">
+
+            {% if assignments %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center assignment-table">
+                    <thead>
+                        <tr>
+                            <th> Subject</th>
+                            <th> Title</th>
+                            <th> Deadline</th>
+                            <th> Assignment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for a in assignments %}
+                        <tr>
+                            <td class="fw-semibold">
+                                {{ a.subject.subject_name }}
+                            </td>
+
+                            <td>
+                                {{ a.title }}
+                            </td>
+
+                            <td>
+                                <span class="deadline-badge">
+                                    {{ a.deadline }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <a href="{{ a.assignment_file.url }}"
+                                   target="_blank"
+                                   class="btn btn-sm text-white view-btn">
+                                    View File
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <!-- Empty State -->
+                <div class="text-center py-5">
+                    <i class="fa fa-check-circle fa-3x text-success mb-3"></i>
+                    <p class="empty-state mb-0">
+                         You have no pending assignments!
+                    </p>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}

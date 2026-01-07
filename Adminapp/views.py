@@ -5,9 +5,9 @@ from Adminapp.models import *
 from django.contrib import messages
 from teacherapp.models import AttendanceDb,MarksDb,AssignmentDb,AssignmentSubmissionDb
 from datetime import datetime
-
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
+
 
 # Create your views here.
 def index_page(request):
@@ -24,11 +24,17 @@ def index_page(request):
     else:
         assignment_percent = 0
 
+    teacher_announcements = AnnouncementDb.objects.filter(
+        sender_type="Teacher"
+    ).order_by("-created_at")[:5]
+
     return render(request, "index.html", {
         "teacher_count": teacher_count,
         "student_count": student_count,
         "subject_count": subject_count,
         "assignment_percent": assignment_percent,
+        "teacher_announcements": teacher_announcements,
+        "teacher_announcement_count": teacher_announcements.count()
     })
 
 
@@ -148,7 +154,7 @@ def delete_teacher(request, tr_id):
 
 
 
-
+    # SUBJECT
 def add_subject(request):
     teachers = TeacherDb.objects.all()
     return render(request,"Add_Subjects.html", {'teachers': teachers} )
@@ -295,11 +301,7 @@ def attendance_report(request):
         from_date = datetime.strptime(from_date, "%Y-%m-%d").date()
         to_date = datetime.strptime(to_date, "%Y-%m-%d").date()
 
-        reports = AttendanceDb.objects.filter(
-            date__range=(from_date, to_date),
-            student__department=department,
-            student__semester=semester
-        ).select_related("student", "subject")
+        reports = AttendanceDb.objects.filter(date__range=(from_date, to_date), student__department=department, student__semester=semester.select_related("student", "subject"))
 
         if not reports.exists():
             reports = None
@@ -390,15 +392,9 @@ def view_teacher_assignment(request):
     subject_id = request.GET.get("subject")
 
     if teacher_id and subject_id:
-        assignments = AssignmentDb.objects.filter(
-            teacher_id=teacher_id,
-            subject_id=subject_id
-        ).select_related("teacher", "subject")
+        assignments = AssignmentDb.objects.filter(teacher_id=teacher_id, subject_id=subject_id).select_related("teacher", "subject")
 
-    return render(
-        request,
-        "View_TeacherAssignment.html",
-        {
+    return render(request,"View_TeacherAssignment.html",{
             "teachers": teachers,
             "subjects": subjects,
             "assignments": assignments,
@@ -414,19 +410,13 @@ def student_submission(request):
     assignment_id = request.GET.get("assignment")
 
     if assignment_id:
-        submissions = AssignmentSubmissionDb.objects.filter(
-            assignment_id=assignment_id
-        ).select_related("student", "assignment")
+        submissions = AssignmentSubmissionDb.objects.filter(assignment_id=assignment_id).select_related("student", "assignment")
 
-    return render(
-        request,
-        "Student_Submission.html",
-        {
+    return render(request,"Student_Submission.html",{
             "assignments": assignments,
             "submissions": submissions,
             "selected_assignment": assignment_id,
-        }
-    )
+        })
 def send_announcement(request):
     admin_name = request.session.get("admin_name")  # session value
 
@@ -446,16 +436,13 @@ def send_announcement(request):
             return redirect("Adminapp:send_announcement")
         else:
             messages.error(request, "All fields are required")
-
-
     return render(request, "Admin_Send_Announcement.html")
 
 
 
 def view_teacher_announcements(request):
     announcements = AnnouncementDb.objects.filter(
-        sender_type="Teacher"
-    ).order_by('-created_at')
+        sender_type="Teacher").order_by('-created_at')
 
     return render(request, "View_Announcements.html", {
         "announcements": announcements
@@ -471,7 +458,7 @@ def admin_delete_announcement(request, announcement_id):
 
 
 def dashboard(request):
-    if 'Name' in request.session:  # Optional: check if admin is logged in
+    if 'Name' in request.session:
         return render(request, 'index.html')
     else:
         return redirect('login')

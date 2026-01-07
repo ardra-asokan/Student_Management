@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.db.models import Avg
-
+from chat.models import ChatMessageDb
 from django.utils import timezone
 
 
@@ -52,17 +52,81 @@ def view_subjects(request):
     return render(request, "View_subjects.html", {"data": data})
 
 def teacher_dashboard(request):
-    teacher_name = request.session.get('teacher_name')
+    teacher_name = request.session.get("teacher_name")
 
     if not teacher_name:
         messages.error(request, "Please login to access the dashboard")
-        return redirect('teacher_log_in')
+        return redirect("teacher_log_in")
 
-    messages.success(request, f"Welcome {teacher_name}")
+    # ---------------- SUBJECTS ----------------
+    assigned_subjects = AssignedSubjectDb.objects.filter(
+        teacher=teacher_name
+    ).select_related("subject")
 
-    return render(request, 'teacher_index.html', {
-        'teacher_name': teacher_name
+    subject_count = assigned_subjects.count()
+
+    # ---------------- STUDENTS ----------------
+    departments = assigned_subjects.values_list(
+        "subject__department", flat=True
+    )
+    semesters = assigned_subjects.values_list(
+        "subject__semester", flat=True
+    )
+
+    student_count = StudentDb.objects.filter(
+        department__in=departments,
+        semester__in=semesters
+    ).count()
+
+    # ---------------- ATTENDANCE ----------------
+    subjects = assigned_subjects.values_list("subject", flat=True)
+
+    attendance_done = AttendanceDb.objects.filter(
+        subject__in=subjects
+    ).count()
+
+    # ---------------- ASSIGNMENTS ----------------
+    assignment_count = AssignmentDb.objects.filter(
+        subject__in=subjects
+    ).count()
+
+    # ---------------- ADMIN → TEACHER NOTIFICATIONS ----------------
+    admin_notifications = AnnouncementDb.objects.filter(
+        sender_type="Admin"
+    ).order_by("-created_at")[:5]
+
+    notification_count = admin_notifications.count()
+
+    # ---------------- STUDENT → TEACHER CHAT MESSAGES ----------------
+    teacher = TeacherDb.objects.get(name=teacher_name)
+
+    student_messages = ChatMessageDb.objects.filter(
+        sender_student__isnull=False,
+        sender_teacher__isnull=True
+    ).order_by("-timestamp")[:5]
+
+    message_count = student_messages.count()
+
+    # ---------------- RENDER ----------------
+    return render(request, "teacher_index.html", {
+        "teacher_name": teacher_name,
+
+        # Dashboard cards
+        "subject_count": subject_count,
+        "student_count": student_count,
+        "attendance_done": attendance_done,
+        "assignment_count": assignment_count,
+
+        # Notifications
+        "admin_notifications": admin_notifications,
+        "notification_count": notification_count,
+
+        # Messages
+        "student_messages": student_messages,
+        "message_count": message_count,
     })
+
+
 
 
 def mark_attendance(request):
@@ -80,7 +144,7 @@ def mark_attendance(request):
     department = request.GET.get('department')
     semester = request.GET.get('semester')
 
-    students = StudentDb.objects.none()  # ✅ IMPORTANT
+    students = StudentDb.objects.none()
 
     if selected_subject and department and semester:
         students = StudentDb.objects.filter(
@@ -227,9 +291,8 @@ def upload_marks(request):
             else:
                 messages.success(request, "Student list loaded for mark entry")
         else:
-            messages.error(request, "Invalid subject selection")
-    else:
-        messages.info(request, "Please select subject and exam type")
+            messages.info(request, "Please select subject and exam type")
+
 
     return render(request, "Upload_marks.html", {
         "assigned_subjects": assigned_subjects,
@@ -249,13 +312,13 @@ def save_marks(request):
             messages.error(request, "Exam type or subject not selected")
             return redirect("teacherapp:upload_marks")
 
-        # Get assigned subject row
+
         assigned = AssignedSubjectDb.objects.get(id=assigned_id)
         subject = assigned.subject
 
         marks_saved = False
 
-        # Loop through submitted marks
+
         for key, value in request.POST.items():
             if key.startswith("marks_"):
                 student_id = key.split("_")[1]
@@ -264,7 +327,7 @@ def save_marks(request):
                 if marks == "":
                     continue
 
-                # Save marks
+
                 MarksDb.objects.create(
                     student_id=student_id,
                     subject=subject,
@@ -275,7 +338,7 @@ def save_marks(request):
                 marks_saved = True
 
         if marks_saved:
-            messages.success(request, "Marks saved successfully ✅")
+            messages.success(request, "Marks saved successfully ")
         else:
             messages.warning(request, "No marks were entered")
 
@@ -288,19 +351,14 @@ def teacher_view_marks(request):
         messages.error(request, "Please login to view marks")
         return redirect("teacher_log_in")
 
-    assigned_subjects = AssignedSubjectDb.objects.filter(
-        teacher=teacher_name
-    ).select_related('subject')
+    assigned_subjects = AssignedSubjectDb.objects.filter(teacher=teacher_name).select_related('subject')
 
     marks = None
     selected_subject = request.GET.get("subject")
     selected_exam = request.GET.get("exam")
 
     if selected_subject and selected_exam:
-        marks = MarksDb.objects.filter(
-            subject_id=selected_subject,
-            exam_type=selected_exam
-        ).select_related('student')
+        marks = MarksDb.objects.filter(subject_id=selected_subject,exam_type=selected_exam).select_related('student')
 
         if not marks.exists():
             messages.info(request, "No marks found for the selected subject and exam")
@@ -317,9 +375,7 @@ def teacher_view_marks(request):
     })
 
 def edit_marks(request, mark_id):
-    mark = MarksDb.objects.select_related(
-        "student", "subject"
-    ).get(id=mark_id)
+    mark = MarksDb.objects.select_related("student", "subject").get(id=mark_id)
 
     return render(request, "Teacher_Edit_Marks.html", {
         "mark": mark
@@ -353,8 +409,6 @@ def delete_mark(request, mark_id):
     return redirect('teacherapp:teacher_view_marks')
 
 
-from django.contrib import messages
-
 def upload_assignments(request):
     teacher_id = request.session.get("teacher_id")
     teacher_name = request.session.get("teacher_name")
@@ -363,12 +417,11 @@ def upload_assignments(request):
         messages.error(request, "Please login to manage assignments")
         return redirect("teacher_log_in")
 
-    # For SUBJECTS → CharField
     assigned_subjects = AssignedSubjectDb.objects.filter(
         teacher=teacher_name
     ).select_related("subject")
 
-    # For ASSIGNMENTS → ForeignKey / ID
+
     assignments = AssignmentDb.objects.filter(
         teacher_id=teacher_id
     ).order_by("-id")
@@ -392,19 +445,11 @@ def save_assignment(request):
 
         subject = SubjectDb.objects.get(id=subject_id)
 
-        AssignmentDb.objects.create(
-            teacher_id=teacher_id,
-            subject=subject,
-            title=title,
-            deadline=deadline,
-            assignment_file=file
-        )
-
+        AssignmentDb.objects.create(teacher_id=teacher_id,subject=subject,title=title, deadline=deadline, assignment_file=file)
 
         messages.success(request, "Assignment uploaded successfully!")
         return redirect("teacherapp:upload_assignments")
 
-from django.contrib import messages
 
 def student_submissions(request):
     teacher_id = request.session.get("teacher_id")
@@ -413,7 +458,6 @@ def student_submissions(request):
         messages.error(request, "Please login to view student submissions")
         return redirect("teacher_log_in")
 
-    # Load assignments created by this teacher
     assignments = AssignmentDb.objects.filter(teacher_id=teacher_id)
 
     selected_assignment = request.GET.get("assignment_id")
@@ -426,7 +470,7 @@ def student_submissions(request):
         ).select_related("student")
 
 
-    return render(request, "student_submissions.html", {
+    return render(request, "Student_submissions.html", {
         "assignments": assignments,
         "selected_assignment": selected_assignment,
         "submissions": submissions,
@@ -518,12 +562,10 @@ def search_students(request):
 def teacher_student_profile(request,student_id):
     student = StudentDb.objects.get(id=student_id)
 
-    # Attendance Summary
     total = AttendanceDb.objects.filter(student=student).count()
     present = AttendanceDb.objects.filter(student=student, status="Present").count()
     percent = round((present / total * 100), 2) if total > 0 else 0
 
-    # Assignment Summary
     submissions = AssignmentSubmissionDb.objects.filter(student=student)
     submitted = submissions.count()
     average = submissions.aggregate(avg=Avg('marks'))['avg'] or 0
@@ -540,6 +582,7 @@ def teacher_student_profile(request,student_id):
             "average": round(average, 2)
         }
     })
+
 def student_semester_results(request):
     student_name = request.session.get('student_name')
 
@@ -564,11 +607,7 @@ def delete_assignment(request, assignment_id):
     if not teacher_id:
         return redirect("teacher_log_in")
 
-    assignment = get_object_or_404(
-        AssignmentDb,
-        id=assignment_id,
-        teacher_id=teacher_id
-    )
+    assignment = get_object_or_404(AssignmentDb,id=assignment_id,teacher_id=teacher_id)
 
     if assignment.assignment_file:
         file_path = assignment.assignment_file.path
@@ -623,14 +662,7 @@ def upload_study_material(request):
 
         subject = SubjectDb.objects.get(id=subject_id)
 
-        StudyMaterialDb.objects.create(
-            teacher=teacher,
-            subject=subject,
-            title=title,
-            description=description,
-            material_file=file
-        )
-
+        StudyMaterialDb.objects.create(teacher=teacher,subject=subject,title=title,description=description,material_file=file)
         messages.success(request, "Study material uploaded successfully")
         return redirect("teacherapp:upload_study_material")
 
