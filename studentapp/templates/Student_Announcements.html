@@ -1,34 +1,44 @@
 {% extends 'student_index.html' %}
 {% block content %}
 
-<div class="container px-4 mt-4" style="margin-bottom:220px;">
+<div class="container px-4 mt-4" style="margin-bottom:450px;">
 
-    <!-- ===== ANNOUNCEMENT HEADER ===== -->
-    <div class="announcement-hero text-center mb-5">
-        <div class="hero-icon">
-            📣
-        </div>
-        <h2 class="hero-title">Announcements</h2>
-        <p class="hero-subtitle">
-            Important updates from Admin and Teachers
+    <!-- ===== PAGE HEADER ===== -->
+    <div class="timeline-header text-center mb-5">
+        <h2 class="timeline-title">Announcements</h2>
+        <p class="timeline-subtitle">
+            Latest updates from Admin and Teachers
         </p>
     </div>
 
     {% if announcements %}
-    <div class="row justify-content-center">
-        <div class="col-lg-9">
+    <div class="timeline">
 
-            {% for a in announcements %}
-            <div class="card announcement-card mb-4 border-0">
-                <div class="card-body p-4">
+        {% for a in announcements %}
+        <div class="timeline-item">
 
-                    <!-- TITLE + TYPE -->
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h6 class="announcement-title mb-0">
+            <!-- DOT -->
+            <div class="timeline-dot
+                {% if a.sender_type == 'Admin' %}
+                    dot-admin
+                {% else %}
+                    dot-teacher
+                {% endif %}
+            ">
+            </div>
+
+            <!-- CONTENT -->
+            <div class="timeline-content">
+
+                <div class="timeline-card">
+
+                    <!-- TOP -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="timeline-card-title mb-0">
                             {{ a.title }}
                         </h6>
 
-                        <span class="announcement-badge
+                        <span class="timeline-badge
                             {% if a.sender_type == 'Admin' %}
                                 badge-admin
                             {% else %}
@@ -40,141 +50,156 @@
                     </div>
 
                     <!-- MESSAGE -->
-                    <p class="announcement-message">
+                    <p class="timeline-message">
                         {{ a.message }}
                     </p>
 
                     <!-- FOOTER -->
-                    <div class="announcement-footer">
+                    <div class="timeline-footer">
                         <span>👤 {{ a.sender_name }}</span>
                         <span>📅 {{ a.created_at|date:"M d, Y" }}</span>
                     </div>
 
                 </div>
-            </div>
-            {% endfor %}
 
+            </div>
         </div>
+        {% endfor %}
+
     </div>
 
     {% else %}
-    <!-- EMPTY STATE -->
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="empty-state text-center">
-                <div class="empty-icon">📭</div>
-                <h6 class="fw-semibold mt-2">No Announcements</h6>
-                <p class="text-muted mb-0">
-                    There are no announcements at the moment
-                </p>
-            </div>
-        </div>
+    <div class="text-center mt-5">
+        <div class="empty-icon">📭</div>
+        <h6>No Announcements</h6>
+        <p class="text-muted">There are no announcements at the moment</p>
     </div>
     {% endif %}
 
 </div>
 
-<!-- ===== STYLES ===== -->
 <style>
 
-/* ===== HERO HEADER ===== */
-.announcement-hero {
-    background: #ffffff;
-    padding: 50px 30px;
-    border-radius: 26px;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 18px 45px rgba(0,0,0,0.08);
+/* ===== BACKGROUND ===== */
+body {
+    background: #f1f5f9;
 }
 
-.hero-icon {
-    width: 78px;
-    height: 78px;
-    margin: 0 auto 18px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #2563eb, #1e40af);
-    color: #ffffff;
-    font-size: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 12px 28px rgba(37,99,235,0.35);
-}
-
-.hero-title {
-    font-size: 28px;
+/* ===== HEADER ===== */
+.timeline-title {
     font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 6px;
+    font-size: 28px;
+    color: #1e293b;
 }
 
-.hero-subtitle {
-    font-size: 15px;
-    color: #475569;
+.timeline-subtitle {
+    font-size: 14px;
+    color: #64748b;
 }
 
-/* ===== ANNOUNCEMENT CARD ===== */
-.announcement-card {
-    border-radius: 20px;
+/* ===== TIMELINE WRAPPER ===== */
+.timeline {
+    position: relative;
+    max-width: 850px;
+    margin: auto;
+}
+
+/* Vertical line */
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: #cbd5e1;
+}
+
+/* ===== TIMELINE ITEM ===== */
+.timeline-item {
+    position: relative;
+    margin-bottom: 40px;
+    padding-left: 60px;
+}
+
+/* DOT */
+.timeline-dot {
+    position: absolute;
+    left: 12px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 0 3px #cbd5e1;
+}
+
+.dot-admin {
+    background: #2563eb;
+}
+
+.dot-teacher {
+    background: #16a34a;
+}
+
+/* CARD */
+.timeline-card {
     background: #ffffff;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
-    transition: all 0.3s ease;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.06);
+    transition: 0.3s ease;
 }
 
-.announcement-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 45px rgba(0,0,0,0.14);
+.timeline-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 32px rgba(0,0,0,0.12);
 }
 
 /* TITLE */
-.announcement-title {
-    font-size: 17px;
+.timeline-card-title {
+    font-size: 16px;
     font-weight: 600;
-    color: #0f172a;
+    color: #111827;
 }
 
 /* MESSAGE */
-.announcement-message {
-    font-size: 15px;
-    color: #475569;
-    line-height: 1.7;
-    margin-bottom: 18px;
+.timeline-message {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.6;
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 /* FOOTER */
-.announcement-footer {
+.timeline-footer {
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
+    font-size: 12px;
     color: #6b7280;
 }
 
 /* BADGES */
-.announcement-badge {
-    font-size: 12px;
-    padding: 6px 18px;
+.timeline-badge {
+    font-size: 11px;
+    padding: 4px 12px;
     border-radius: 20px;
-    font-weight: 600;
-    color: #ffffff;
+    font-weight: 500;
+    color: white;
 }
 
 .badge-admin {
-    background: linear-gradient(135deg, #2563eb, #1e40af);
+    background: #2563eb;
 }
 
 .badge-teacher {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+    background: #16a34a;
 }
 
-/* EMPTY STATE */
-.empty-state {
-    background: #ffffff;
-    padding: 55px 30px;
-    border-radius: 24px;
-    box-shadow: 0 14px 35px rgba(0,0,0,0.08);
-}
-
+/* EMPTY */
 .empty-icon {
-    font-size: 44px;
+    font-size: 48px;
+    margin-bottom: 10px;
 }
 
 </style>

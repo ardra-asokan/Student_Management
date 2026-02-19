@@ -48,7 +48,7 @@ def admin_login(request):
             request.session['Name'] = un
             request.session['Password'] = pswd
             messages.success(request, "Admin login successful")
-            return redirect('Adminapp:admin_dashboard')
+            return redirect('Adminapp:index_page')
         else:
             messages.error(request, "Invalid admin credentials")
             return redirect(login)

@@ -47,7 +47,7 @@
         ***********************************-->
         <div class="nav-header">
             <div class="brand-logo">
-                <a href="index.html">
+                <a href="{% url 'Adminapp:index_page' %}">
                     <b class="logo-abbr"><img src="{% static 'dashboard/images/logo.png' %}" alt=""> </b>
                     <span class="logo-compact"><img src="{% static 'dashboard/images/logo-compact.png' %}" alt=""></span>
                     <span style="
@@ -162,9 +162,9 @@
                                         {% endif %}
                                     </div>
                                     <ul>
-                                        <li>
-                                            <a href="app-profile.html"><i class="icon-user"></i> <span>Profile</span></a>
-                                        </li>
+<!--                                        <li>-->
+<!--                                            <a href="app-profile.html"><i class="icon-user"></i> <span>Profile</span></a>-->
+<!--                                        </li>-->
 <!--                                        <li>-->
 <!--                                            <a href="javascript:void()">-->
 <!--                                                <i class="icon-envelope-open"></i> <span>Inbox</span> <div class="badge gradient-3 badge-pill gradient-1">3</div>-->
@@ -297,19 +297,19 @@
 
 
 
-                    <li>
-                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
-                            <i class="icon-notebook menu-icon"></i><span class="nav-text">Settings</span>
-                        </a>
-                        <ul aria-expanded="false">
-                            <li><a href="./page-login.html">Update Profile</a></li>
-                            <li><a href="./page-register.html">Change Password</a></li>
-                            <li><a href="./page-lock.html">Lock Screen</a></li>
+<!--                    <li>-->
+<!--                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">-->
+<!--                            <i class="icon-notebook menu-icon"></i><span class="nav-text">Settings</span>-->
+<!--                        </a>-->
+<!--                        <ul aria-expanded="false">-->
+<!--                            <li><a href="./page-login.html">Update Profile</a></li>-->
+<!--                            <li><a href="./page-register.html">Change Password</a></li>-->
+<!--                            <li><a href="./page-lock.html">Lock Screen</a></li>-->
 
 
-                        </ul>
+<!--                        </ul>-->
 
-                    </li>
+<!--                    </li>-->
                       <li>
                 <a href="{% url 'admin_logout' %}">
                     <i class="icon-key menu-icon"></i><span class="nav-text">Logout</span>
@@ -405,9 +405,10 @@
             Footer start
         ***********************************-->
         <div class="footer">
-            <div class="copyright">
-                <p>Copyright &copy; Designed & Developed by <a href="https://themeforest.net/user/quixlab">Quixlab</a> 2018</p>
-            </div>
+           <div class="container copyright text-center">
+    <p>© <span>Copyright</span> <strong class="px-1 sitename">CampusConnect</strong>
+      <span>All Rights Reserved</span> 2025</p>
+  </div>
         </div>
         <!--**********************************
             Footer end

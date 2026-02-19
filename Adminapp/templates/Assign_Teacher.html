@@ -40,7 +40,7 @@
       <form class="forms-sample" method="post" action="{% url 'Adminapp:save_assigned_subject' %}" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <!-- Select Teacher -->
+
         <div class="form-group mb-3">
           <label>Select Teacher</label>
           <select class="form-control" name="teacher">
@@ -51,7 +51,7 @@
           </select>
         </div>
 
-        <!-- Select Subject -->
+
         <div class="form-group mb-3">
           <label>Select Subject</label>
           <select class="form-control" name="subject">
@@ -62,7 +62,7 @@
           </select>
         </div>
 
-        <!-- Department -->
+
         <div class="form-group mb-3">
           <label>Department</label>
           <select class="form-control" name="department">
@@ -75,7 +75,7 @@
           </select>
         </div>
 
-        <!-- Semester -->
+
         <div class="form-group mb-3">
           <label>Semester</label>
           <select class="form-control" name="semester">
@@ -109,7 +109,6 @@
         </div>
 
 
-        <!-- Buttons -->
         <div class="text-center mt-4">
           <button type="submit" class="btn btn-primary me-2">Assign</button>
           <button type="reset" class="btn btn-light">Cancel</button>

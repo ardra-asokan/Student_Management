@@ -52,15 +52,17 @@ def view_subjects(request):
     return render(request, "View_subjects.html", {"data": data})
 
 def teacher_dashboard(request):
-    teacher_name = request.session.get("teacher_name")
+    teacher_id = request.session.get("teacher_id")
 
-    if not teacher_name:
+    if not teacher_id:
         messages.error(request, "Please login to access the dashboard")
         return redirect("teacher_log_in")
 
+    teacher = TeacherDb.objects.get(id=teacher_id)
+
     # ---------------- SUBJECTS ----------------
     assigned_subjects = AssignedSubjectDb.objects.filter(
-        teacher=teacher_name
+        teacher=teacher
     ).select_related("subject")
 
     subject_count = assigned_subjects.count()
@@ -90,16 +92,14 @@ def teacher_dashboard(request):
         subject__in=subjects
     ).count()
 
-    # ---------------- ADMIN → TEACHER NOTIFICATIONS ----------------
+    # ---------------- ADMIN NOTIFICATIONS ----------------
     admin_notifications = AnnouncementDb.objects.filter(
         sender_type="Admin"
     ).order_by("-created_at")[:5]
 
     notification_count = admin_notifications.count()
 
-    # ---------------- STUDENT → TEACHER CHAT MESSAGES ----------------
-    teacher = TeacherDb.objects.get(name=teacher_name)
-
+    # ---------------- STUDENT MESSAGES ----------------
     student_messages = ChatMessageDb.objects.filter(
         sender_student__isnull=False,
         sender_teacher__isnull=True
@@ -107,26 +107,17 @@ def teacher_dashboard(request):
 
     message_count = student_messages.count()
 
-    # ---------------- RENDER ----------------
     return render(request, "teacher_index.html", {
-        "teacher_name": teacher_name,
-
-        # Dashboard cards
+        "teacher_name": teacher.name,
         "subject_count": subject_count,
         "student_count": student_count,
         "attendance_done": attendance_done,
         "assignment_count": assignment_count,
-
-        # Notifications
         "admin_notifications": admin_notifications,
         "notification_count": notification_count,
-
-        # Messages
         "student_messages": student_messages,
         "message_count": message_count,
     })
-
-
 
 
 def mark_attendance(request):
@@ -518,28 +509,43 @@ def view_students(request):
     students = StudentDb.objects.none()
 
     if assigned_subjects.exists():
-        departments = []
 
-        for a in assigned_subjects:
-            if a.class_name:
-                departments.append(a.class_name.split()[0].strip())
+        for subject in assigned_subjects:
+            if subject.class_name:
+                department = subject.class_name.split()[0].strip()
 
-        students = StudentDb.objects.filter(
-            department__in=departments
-        )
+                students = StudentDb.objects.filter(
+                    department=department,
+                    semester=subject.semester
+                )
 
     return render(request, "View_Students.html", {
         "students": students
     })
 
-
 def search_students(request):
-    students = StudentDb.objects.all()
+    teacher_name = request.session.get("teacher_name")
 
+    assigned_subjects = AssignedSubjectDb.objects.filter(teacher=teacher_name)
+
+    students = StudentDb.objects.none()
+
+    # Restrict to assigned department + semester first
+    if assigned_subjects.exists():
+        for subject in assigned_subjects:
+            if subject.class_name:
+                department = subject.class_name.split()[0].strip()
+
+                students = students | StudentDb.objects.filter(
+                    department=department,
+                    semester=subject.semester
+                )
+
+        students = students.distinct()
+
+    # Now apply search filters on restricted students
     name = request.GET.get("name")
     roll = request.GET.get("roll")
-    department = request.GET.get("department")
-    semester = request.GET.get("semester")
 
     if name:
         students = students.filter(name__icontains=name)
@@ -547,16 +553,9 @@ def search_students(request):
     if roll:
         students = students.filter(roll_no__icontains=roll)
 
-    if department:
-        students = students.filter(department__iexact=department)
-
-    if semester:
-        students = students.filter(semester__iexact=semester)
-
     return render(request, "Search_Students.html", {
         "students": students,
     })
-
 
 
 def teacher_student_profile(request,student_id):

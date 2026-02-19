@@ -35,7 +35,7 @@
         <form method="post" action="{% url 'Adminapp:update_assigned_subject' a_id=assign.id %}">
             {% csrf_token %}
 
-            <!-- Select Teacher -->
+
             <div class="form-group mb-3">
                 <label>Teacher</label>
                 <select class="form-control" name="teacher">
@@ -46,7 +46,7 @@
                 </select>
             </div>
 
-            <!-- Select Subject -->
+
             <div class="form-group mb-3">
                 <label>Subject</label>
                 <select class="form-control" name="subject">
@@ -57,14 +57,14 @@
                 </select>
             </div>
 
-            <!-- Class -->
+        
             <div class="form-group mb-3">
                 <label>Class</label>
                 <input type="text" class="form-control" name="class"
                        value="{{ assigned.class_name }}" placeholder="Class (e.g., CSE A)">
             </div>
 
-            <!-- Semester -->
+
             <div class="form-group mb-3">
                 <label>Semester</label>
                 <select class="form-control" name="semester">

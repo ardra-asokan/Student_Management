@@ -7,10 +7,7 @@ class LeaveApplicationDb(models.Model):
     from_date = models.DateField()
     to_date = models.DateField()
     reason = models.TextField()
-    status = models.CharField(
-        max_length=20,
-        default="Pending"
-    )
+    status = models.CharField(max_length=20,default="Pending")
     applied_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

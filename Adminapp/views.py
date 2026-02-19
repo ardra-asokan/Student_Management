@@ -28,14 +28,16 @@ def index_page(request):
         sender_type="Teacher"
     ).order_by("-created_at")[:5]
 
-    return render(request, "index.html", {
+    context = {
         "teacher_count": teacher_count,
         "student_count": student_count,
         "subject_count": subject_count,
         "assignment_percent": assignment_percent,
         "teacher_announcements": teacher_announcements,
-        "teacher_announcement_count": teacher_announcements.count()
-    })
+        "teacher_announcement_count": teacher_announcements.count(),
+    }
+
+    return render(request, "index.html", context)
 
 
 def add_student(request):
@@ -64,29 +66,38 @@ def save_student(request):
 def edit_student(request, student_id):
     student = StudentDb.objects.get(id=student_id)
     return render(request, "Edit_Student.html", {'student': student})
+from datetime import datetime
+
 def update_student(request, s_id):
     if request.method == "POST":
-        name = request.POST.get('name'),
-        roll_no = request.POST.get('roll_no'),
-        dob = request.POST.get('dob'),
-        gender = request.POST.get('gender'),
-        email = request.POST.get('email'),
-        phone = request.POST.get('phone'),
-        department = request.POST.get('department'),
-        semester = request.POST.get('semester'),
-        batch = request.POST.get('batch'),
-        username = request.POST.get('username'),
-        password = request.POST.get('password'),
-        address = request.POST.get('address'),
 
-        try:
-            img = request.FILES['image']
-            fs = FileSystemStorage()
-            file = fs.save(img.name, img)
-        except MultiValueDictKeyError:
-            file = StudentDb.objects.get(id=s_id).profile_photo
-        StudentDb.objects.filter(id=s_id).update(name=name,roll_no=roll_no,dob=dob,gender=gender,email=email,phone=phone,department=department,semester=semester,batch=batch,username=username,password=password,address=address,profile_photo=file)
+        student = StudentDb.objects.get(id=s_id)
+
+        student.name = request.POST.get("name")
+        student.roll_no = request.POST.get("roll_no")
+
+        dob_str = request.POST.get("dob")
+        if dob_str:
+            student.dob = datetime.strptime(dob_str, "%Y-%m-%d").date()
+
+        student.gender = request.POST.get("gender")
+        student.email = request.POST.get("email")
+        student.phone = request.POST.get("phone")
+        student.department = request.POST.get("department")
+        student.semester = request.POST.get("semester")
+        student.batch = request.POST.get("batch")
+        student.username = request.POST.get("username")
+        student.password = request.POST.get("password")
+        student.address = request.POST.get("address")
+
+        if request.FILES.get("profile_photo"):
+            student.profile_photo = request.FILES.get("profile_photo")
+
+        student.save()
+
         return redirect('Adminapp:view_students')
+
+
 
 def delete_student(request, st_id):
     data = StudentDb.objects.filter(id=st_id)
@@ -286,7 +297,6 @@ def admin_view_attendance(request):
         "attendance": attendance
     })
 
-
 def attendance_report(request):
     reports = None
 
@@ -295,16 +305,17 @@ def attendance_report(request):
     department = request.GET.get("department")
     semester = request.GET.get("semester")
 
-    print(from_date, to_date, department, semester)  # DEBUG
-
     if from_date and to_date and department and semester:
         from_date = datetime.strptime(from_date, "%Y-%m-%d").date()
         to_date = datetime.strptime(to_date, "%Y-%m-%d").date()
 
-        reports = AttendanceDb.objects.filter(date__range=(from_date, to_date), student__department=department, student__semester=semester.select_related("student", "subject"))
+        reports = AttendanceDb.objects.filter(
+            date__range=(from_date, to_date),
+            student__department__iexact=department,
+            student__semester__iexact=semester
+        ).select_related("student", "subject")
 
-        if not reports.exists():
-            reports = None
+        print("Report count:", reports.count())
 
     return render(request, "Attendance_Report.html", {
         "reports": reports
@@ -404,19 +415,25 @@ def view_teacher_assignment(request):
     )
 
 def student_submission(request):
-    assignments = AssignmentDb.objects.all()
-    submissions = None
+    assignments = AssignmentDb.objects.select_related("subject","teacher")
 
+    submissions = None
     assignment_id = request.GET.get("assignment")
 
-    if assignment_id:
-        submissions = AssignmentSubmissionDb.objects.filter(assignment_id=assignment_id).select_related("student", "assignment")
+    if assignment_id:submissions = AssignmentSubmissionDb.objects.filter(assignment_id=assignment_id).select_related(
+            "student",
+            "assignment",
+            "assignment__subject",
+            "assignment__teacher"
+        )
 
-    return render(request,"Student_Submission.html",{
-            "assignments": assignments,
-            "submissions": submissions,
-            "selected_assignment": assignment_id,
-        })
+    return render(request, "Student_Submission.html", {
+        "assignments": assignments,
+        "submissions": submissions,
+        "selected_assignment": assignment_id,
+    })
+
+
 def send_announcement(request):
     admin_name = request.session.get("admin_name")  # session value
 

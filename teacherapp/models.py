@@ -11,17 +11,10 @@ class AttendanceDb(models.Model):
         return f"{self.student.name} – {self.subject.subject_name} – {self.status}"
 
 class MarksDb(models.Model):
-    student = models.ForeignKey(
-        StudentDb,
-        on_delete=models.CASCADE,
-        related_name="student_marks"
-    )
-
-    subject = models.ForeignKey(
-        SubjectDb,
-        on_delete=models.CASCADE,
-        related_name="subject_marks"
-    )
+    student = models.ForeignKey(StudentDb,on_delete=models.CASCADE,
+        related_name="student_marks")
+    subject = models.ForeignKey(SubjectDb,on_delete=models.CASCADE,
+        related_name="subject_marks")
 
     exam_type = models.CharField(max_length=50)
     marks = models.IntegerField()

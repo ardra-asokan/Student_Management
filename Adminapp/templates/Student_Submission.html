@@ -1,28 +1,41 @@
 {% extends 'index.html' %}
 {% block content %}
 
-<div class="container d-flex justify-content-center mt-5" style="margin-bottom:380px;">
-    <div class="card shadow-lg w-100" style="max-width: 900px;">
-        <div class="card-body">
+<div class="container d-flex justify-content-center mt-5" style="margin-bottom:490px;">
+    <div class="card shadow-lg w-100 border-0" style="max-width: 1000px; border-radius:20px;">
+        <div class="card-body p-4">
 
-            <h4 class="text-center fw-bold mb-4">Student Submissions</h4>
+            <h4 class="text-center fw-bold mb-4">📚 Student Submissions</h4>
 
-            <!-- FORM -->
+            <!-- ================= FORM ================= -->
             <form method="GET" class="mb-4">
                 <div class="row align-items-end">
 
                     <div class="col-md-8">
-                        <label class="mb-2">Assignment</label>
-                        <select name="assignment" class="form-control" required>
-                            <option value="">Select Assignment</option>
-                            {% for a in assignments %}
-                                <option value="{{ a.id }}"
-                                    {% if selected_assignment == a.id|stringformat:"s" %}selected{% endif %}>
-                                    {{ a.title }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
+    <label class="form-label fw-semibold text-primary">
+        Select Assignment
+    </label>
+
+    <div class="assignment-select-wrapper">
+        <select name="assignment" class="form-select assignment-select" required>
+            <option value="">-- Select Assignment --</option>
+
+            {% for a in assignments %}
+                <option value="{{ a.id }}"
+                    {% if selected_assignment == a.id|stringformat:"s" %}selected{% endif %}>
+
+                    {{ a.title }}
+                    ({{ a.subject.subject_name }} -
+                    {{ a.subject.department }} -
+                    {{ a.subject.semester }} -
+                    {{ a.teacher.name }})
+
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+
 
                     <div class="col-md-4">
                         <button class="btn btn-primary w-100">
@@ -33,11 +46,60 @@
                 </div>
             </form>
 
-            <!-- TABLE -->
+
+            <!-- ================= ASSIGNMENT DETAILS ================= -->
+            {% if submissions %}
+            <div class="assignment-details-card mb-4">
+
+                <div class="details-header">
+                    📌 Assignment Overview
+                </div>
+
+                <div class="details-grid">
+
+                    <div class="detail-box">
+                        <span class="label">Title</span>
+                        <span class="value">{{ submissions.0.assignment.title }}</span>
+                    </div>
+
+                    <div class="detail-box">
+                        <span class="label">Subject</span>
+                        <span class="value">{{ submissions.0.assignment.subject.subject_name }}</span>
+                    </div>
+
+                    <div class="detail-box">
+                        <span class="label">Department</span>
+                        <span class="value">{{ submissions.0.assignment.subject.department }}</span>
+                    </div>
+
+                    <div class="detail-box">
+                        <span class="label">Semester</span>
+                        <span class="value">{{ submissions.0.assignment.subject.semester }}</span>
+                    </div>
+
+                    <div class="detail-box">
+                        <span class="label">Teacher</span>
+                        <span class="value">{{ submissions.0.assignment.teacher.name }}</span>
+                    </div>
+
+                    <div class="detail-box deadline-box">
+                        <span class="label">Deadline</span>
+                        <span class="value text-danger fw-bold">
+                            {{ submissions.0.assignment.deadline|date:"d-m-Y" }}
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+            {% endif %}
+
+
+            <!-- ================= SUBMISSION TABLE ================= -->
             {% if submissions %}
             <div class="table-responsive">
-                <table class="table table-bordered text-center">
-                    <thead class="table-primary">
+                <table class="table table-hover text-center align-middle">
+                    <thead style="background:#4f46e5; color:white;">
                         <tr>
                             <th>Student Name</th>
                             <th>Roll No</th>
@@ -64,7 +126,7 @@
             </div>
 
             {% elif selected_assignment %}
-                <p class="text-danger text-center">
+                <p class="text-danger text-center fw-semibold">
                     No submissions found for this assignment.
                 </p>
             {% endif %}
@@ -72,5 +134,88 @@
         </div>
     </div>
 </div>
+
+
+<!-- ================= MODERN STYLES ================= -->
+<style>
+
+
+.assignment-select-wrapper {
+    position: relative;
+}
+
+.assignment-select {
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.assignment-select:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
+}
+
+.form-label {
+    font-size: 15px;
+}
+
+
+
+.assignment-details-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border: 1px solid #e5e7eb;
+}
+
+.details-header {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4f46e5;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 10px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+
+.detail-box {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 12px;
+    transition: 0.3s ease;
+}
+
+.detail-box:hover {
+    background: #eef2ff;
+    transform: translateY(-3px);
+}
+
+.label {
+    display: block;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 5px;
+}
+
+.value {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.deadline-box {
+    background: #fff1f2;
+}
+
+</style>
 
 {% endblock %}

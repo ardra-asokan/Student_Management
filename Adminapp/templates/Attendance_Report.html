@@ -1,78 +1,131 @@
-<!DOCTYPE html>
 {% extends 'index.html' %}
 {% block content %}
 
-<div class="d-flex justify-content-center align-items-start"
-     style="min-height: 90vh; padding-top: 60px;">
+<div class="container mt-5 mb-5" >
 
-<div class="card shadow-lg" style="max-width: 550px; width: 100%;">
-<div class="card-body">
+    <div class="row justify-content-center">
+        <div class="col-md-6" style="margin-bottom: 140px;">
 
-<h4 class="card-title text-center mb-4 fw-bold">
-    Attendance Reports
-</h4>
+            <div class="card shadow-lg">
+                <div class="card-body">
 
-<form method="get">
+                    <h4 class="text-center mb-4 fw-bold">
+                        Attendance Reports
+                    </h4>
 
-    <!-- From Date -->
-    <div class="form-group mb-3">
-        <label>From Date</label>
-        <input type="date" class="form-control"
-               name="from_date" required>
+                    <form method="get">
+
+                        <div class="form-group mb-3">
+                            <label>From Date</label>
+                            <input type="date" class="form-control"
+                                   name="from_date" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>To Date</label>
+                            <input type="date" class="form-control"
+                                   name="to_date" required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Department</label>
+                            <select class="form-control"
+                                    name="department" required>
+                                <option value="">Select Department</option>
+                                <option value="CSE">CSE</option>
+                                <option value="ECE">ECE</option>
+                                <option value="MECH">MECH</option>
+                                <option value="CIVIL">CIVIL</option>
+                                <option value="EEE">EEE</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Semester</label>
+                            <select class="form-control"
+                                    name="semester" required>
+                                <option value="">Select Semester</option>
+                                <option value="S1">S1</option>
+                                <option value="S2">S2</option>
+                                <option value="S3">S3</option>
+                                <option value="S4">S4</option>
+                                <option value="S5">S5</option>
+                                <option value="S6">S6</option>
+                                <option value="S7">S7</option>
+                                <option value="S8">S8</option>
+                            </select>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                Generate Report
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <!-- To Date -->
-    <div class="form-group mb-3">
-        <label>To Date</label>
-        <input type="date" class="form-control"
-               name="to_date" required>
+    <!-- ================= REPORT TABLE ================= -->
+
+    {% if reports %}
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-10">
+
+            <div class="card shadow">
+                <div class="card-body">
+
+                    <h5 class="mb-3 fw-bold text-success">
+                        Report Results ({{ reports|length }})
+                    </h5>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover text-center">
+
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Roll No</th>
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for r in reports %}
+                                <tr>
+                                    <td>{{ r.student.name }}</td>
+                                    <td>{{ r.student.roll_no }}</td>
+                                    <td>{{ r.subject.subject_name }}</td>
+                                    <td>{{ r.date }}</td>
+                                    <td>
+                                        {% if r.status == "Present" %}
+                                            <span class="badge bg-success">Present</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Absent</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <!-- Department -->
-    <div class="form-group mb-3">
-        <label>Department</label>
-        <select class="form-control"
-                name="department" required>
-            <option value="">Select Department</option>
-            <option value="CSE">CSE</option>
-            <option value="ECE">ECE</option>
-            <option value="MECH">MECH</option>
-            <option value="CIVIL">CIVIL</option>
-            <option value="EEE">EEE</option>
-        </select>
-    </div>
+    {% endif %}
 
-    <!-- Semester -->
-    <div class="form-group mb-3">
-        <label>Semester</label>
-        <select class="form-control"
-                name="semester" required>
-            <option value="">Select Semester</option>
-            <option value="S1">S1</option>
-            <option value="S2">S2</option>
-            <option value="S3">S3</option>
-            <option value="S4">S4</option>
-            <option value="S5">S5</option>
-            <option value="S6">S6</option>
-            <option value="S7">S7</option>
-            <option value="S8">S8</option>
-        </select>
-    </div>
-
-    <div class="text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">
-            Generate Report
-        </button>
-        <button type="reset" class="btn btn-light">
-            Reset
-        </button>
-    </div>
-
-</form>
-
-
-</div>
-</div>
 </div>
 
 {% endblock %}

@@ -418,10 +418,24 @@ def student_announcements(request):
         messages.error(request, "Please login to view announcements")
         return redirect('student_log_in')
 
-    announcements = AnnouncementDb.objects.all().order_by('-created_at')
+    student = StudentDb.objects.get(id=student_id)
+
+    # Get teachers assigned to this student's department & semester
+    assigned_subjects = AssignedSubjectDb.objects.filter(
+        class_name__icontains=student.department,
+        semester=student.semester
+    )
+
+    teacher_names = assigned_subjects.values_list('teacher', flat=True)
+
+    # Filter announcements
+    announcements = AnnouncementDb.objects.filter(
+        Q(sender_type="Admin") |
+        Q(sender_type="Teacher", sender_name__in=teacher_names)
+    ).order_by('-created_at')
 
     if not announcements.exists():
-        messages.info(request, "No announcements available at the moment")
+        messages.info(request, "No announcements available for your class")
     else:
         messages.success(request, "Latest announcements loaded")
 
@@ -431,24 +445,31 @@ def student_announcements(request):
 
 
 def student_study_materials(request):
-    student_name = request.session.get('student_name')
+    student_id = request.session.get('student_id')
 
-    if not student_name:
+    if not student_id:
         messages.error(request, "Please login to view study materials")
         return redirect('student_log_in')
 
+    student = StudentDb.objects.get(id=student_id)
+
+    # Filter materials based on student's department and semester
     materials = StudyMaterialDb.objects.select_related(
         'subject', 'teacher'
+    ).filter(
+        subject__department=student.department,
+        subject__semester=student.semester
     ).order_by('-uploaded_at')
 
     if not materials.exists():
-        messages.info(request, "No study materials available yet")
+        messages.info(request, "No study materials available for your class yet")
     else:
         messages.success(request, "Study materials loaded successfully")
 
     return render(request, 'Student_Study_Materials.html', {
         'materials': materials
     })
+
 
 
 def student_download_marksheet(request):
