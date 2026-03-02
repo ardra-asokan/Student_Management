@@ -2,6 +2,7 @@
 {% block content %}
 
 <style>
+
 /* Page Title */
 .page-title {
     font-size: 32px;
@@ -21,25 +22,42 @@
     background: #ffffff;
 }
 
-/* Table */
-.assignment-table th {
-    font-weight: 600;
-    color: #374151;
-    background: #f9fafb;
+/* ================= TABLE ================= */
+.assignment-table {
+    border-radius: 12px;
+    overflow: hidden;
 }
 
+/* TABLE HEADER - NEW COLOR */
+.assignment-table thead {
+    background: linear-gradient(90deg, #2563eb, #1d4ed8);
+}
+
+.assignment-table thead th {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    padding: 14px 12px;
+    text-transform: uppercase;
+    border: none;
+}
+
+/* TABLE BODY */
 .assignment-table td {
     vertical-align: middle;
     color: #374151;
+    padding: 14px 12px;
 }
 
 /* Deadline badge */
 .deadline-badge {
     background: #fee2e2;
     color: #b91c1c;
-    padding: 6px 12px;
+    padding: 6px 14px;
     font-size: 13px;
     border-radius: 20px;
+    font-weight: 600;
 }
 
 /* View button */
@@ -47,12 +65,15 @@
     background: linear-gradient(135deg, #6366f1, #4f46e5);
     border: none;
     border-radius: 20px;
-    padding: 6px 16px;
+    padding: 6px 18px;
     font-size: 13px;
+    font-weight: 600;
+    transition: 0.3s ease;
 }
 
 .view-btn:hover {
     opacity: 0.9;
+    transform: translateY(-2px);
 }
 
 /* Empty state */
@@ -60,14 +81,15 @@
     font-size: 16px;
     color: #6b7280;
 }
+
 </style>
 
 <!-- PAGE WRAPPER -->
-<div class="container mt-4 " style="margin-bottom:500px;">
+<div class="container mt-4" style="margin-bottom:500px;">
 
     <!-- Title -->
     <div class="text-center mb-4">
-        <h2 class="page-title"> Pending Assignments</h2>
+        <h2 class="page-title">Pending Assignments</h2>
         <p class="page-subtitle">Assignments you still need to submit</p>
     </div>
 
@@ -80,10 +102,10 @@
                 <table class="table table-hover align-middle text-center assignment-table">
                     <thead>
                         <tr>
-                            <th> Subject</th>
-                            <th> Title</th>
-                            <th> Deadline</th>
-                            <th> Assignment</th>
+                            <th>Subject</th>
+                            <th>Title</th>
+                            <th>Deadline</th>
+                            <th>Assignment</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -99,7 +121,7 @@
 
                             <td>
                                 <span class="deadline-badge">
-                                    {{ a.deadline }}
+                                    {{ a.deadline|date:"d M, Y" }}
                                 </span>
                             </td>
 
@@ -115,12 +137,13 @@
                     </tbody>
                 </table>
             </div>
+
             {% else %}
                 <!-- Empty State -->
                 <div class="text-center py-5">
                     <i class="fa fa-check-circle fa-3x text-success mb-3"></i>
                     <p class="empty-state mb-0">
-                         You have no pending assignments!
+                        You have no pending assignments!
                     </p>
                 </div>
             {% endif %}

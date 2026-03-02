@@ -59,7 +59,7 @@ def admin_logout(request):
     del request.session['Name']
     del request.session['Password']
     messages.success(request, "Admin logged out successfully")
-    return redirect(login)
+    return redirect(login_page)
 
 
 # TEACHER LOGIN
@@ -93,7 +93,7 @@ def teacher_login(request):
 def teacher_logout(request):
     request.session.flush()
     messages.success(request, "Logout successfully")
-    return redirect('teacher_log_in')
+    return redirect('login_page')
 
 
 # STUDENT LOGIN
@@ -139,5 +139,5 @@ def student_logout(request):
 def student_logout(request):
     request.session.flush()
     messages.success(request, "Logout successfully")
-    return redirect(student_log_in)
+    return redirect(login_page)
 

@@ -2,6 +2,7 @@
 {% block content %}
 
 <style>
+
 /* Page title */
 .page-title {
     font-size: 30px;
@@ -21,16 +22,32 @@
     background: #ffffff;
 }
 
-/* Table */
-.submission-table th {
-    font-weight: 600;
-    background: #f9fafb;
-    color: #374151;
+/* ================= TABLE ================= */
+.submission-table {
+    border-radius: 12px;
+    overflow: hidden;
 }
 
+/* TABLE HEADER - NEW COLOR */
+.submission-table thead {
+    background: linear-gradient(90deg, #7c3aed, #5b21b6);
+}
+
+.submission-table thead th {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    padding: 14px 12px;
+    text-transform: uppercase;
+    border: none;
+}
+
+/* TABLE BODY */
 .submission-table td {
     vertical-align: middle;
     color: #374151;
+    padding: 14px 12px;
 }
 
 /* Badges */
@@ -40,6 +57,7 @@
     font-size: 13px;
     padding: 6px 14px;
     border-radius: 20px;
+    font-weight: 600;
 }
 
 .badge-pending {
@@ -48,6 +66,7 @@
     font-size: 13px;
     padding: 6px 14px;
     border-radius: 20px;
+    font-weight: 600;
 }
 
 /* View button */
@@ -55,6 +74,12 @@
     border-radius: 20px;
     padding: 6px 18px;
     font-size: 13px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.view-btn:hover {
+    transform: translateY(-2px);
 }
 
 /* Empty state */
@@ -62,6 +87,7 @@
     font-size: 16px;
     color: #6b7280;
 }
+
 </style>
 
 <div class="container mt-4" style="margin-bottom:500px;">
@@ -81,11 +107,11 @@
                 <table class="table table-hover align-middle text-center submission-table">
                     <thead>
                         <tr>
-                            <th> Subject</th>
-                            <th> Title</th>
-                            <th> Submitted On</th>
-                            <th> File</th>
-                            <th> Marks</th>
+                            <th>Subject</th>
+                            <th>Title</th>
+                            <th>Submitted On</th>
+                            <th>File</th>
+                            <th>Marks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -106,7 +132,7 @@
                             <td>
                                 <a href="{{ s.file.url }}"
                                    target="_blank"
-                                   class="btn btn-sm btn-outline-primary view-btn">
+                                   class="btn btn-sm btn-outline-light view-btn">
                                     View
                                 </a>
                             </td>
@@ -127,6 +153,7 @@
                     </tbody>
                 </table>
             </div>
+
             {% else %}
                 <!-- Empty State -->
                 <div class="text-center py-5">
